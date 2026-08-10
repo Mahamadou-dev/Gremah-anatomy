@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
 
+# Les garde-fous chiffrés vivent ici plutôt que dans les scripts : chaque sprint
+# resserre une valeur, et la voir bouger dans la diff est le but.
+env:
+  # Sprint 2 descendra ce budget à 8192 une fois Draco et KTX2 câblés.
+  MODELS_BUDGET_KB: 30720
+  # Taille maximale d'un seul .glb (CLAUDE.md §9). Appliqué à partir du Sprint 2.
+  MODEL_MAX_KB: 30720
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -22,15 +30,35 @@ jobs:
 
       - run: npm run lint
 
+      - run: npm run typecheck
+
+      # Invariants du moteur : frontière React, FIT_SIZE, render-on-demand,
+      # double chemin de rendu. Ils cassent avant le build, pas après.
+      - run: npm test
+
       - run: npm run build
 
-      # Garde-fou du Sprint 2 : le Niger est la cible, pas une connexion de bureau.
-      # Le seuil descendra à 8 Mo une fois Draco et KTX2 câblés.
       - name: Budget des modèles 3D
         run: |
           total=$(du -sk public/models | cut -f1)
-          echo "public/models = ${total} Ko"
-          if [ "$total" -gt 30720 ]; then
-            echo "::error::public/models dépasse 30 Mo (${total} Ko)."
+          echo "public/models = ${total} Ko (budget ${MODELS_BUDGET_KB} Ko)"
+          if [ "$total" -gt "$MODELS_BUDGET_KB" ]; then
+            echo "::error::public/models dépasse le budget (${total} Ko > ${MODELS_BUDGET_KB} Ko)."
             exit 1
           fi
+          fail=0
+          while IFS= read -r file; do
+            size=$(du -k "$file" | cut -f1)
+            if [ "$size" -gt "$MODEL_MAX_KB" ]; then
+              echo "::error file=$file::${file} pèse ${size} Ko (max ${MODEL_MAX_KB} Ko)."
+              fail=1
+            fi
+          done < <(find public/models -name '*.glb')
+          exit $fail
+        shell: bash
+
+      # L'export statique est le livrable : s'il ne sort pas, rien n'est déployable.
+      - name: Vérifier l'export statique
+        run: |
+          test -f out/index.html || { echo "::error::out/index.html manquant"; exit 1; }
+          test -f out/a-propos/index.html || { echo "::error::/a-propos manquant"; exit 1; }

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import type { Hotspot } from "../anatomy-data";
+import type { Hotspot } from "../../lib/anatomy-data";
 
 export type Marker = {
   hotspot: Hotspot;
@@ -274,6 +274,26 @@ export class HotspotLayer {
       }
     }
     return best;
+  }
+
+  /**
+   * Point suivant / précédent dans l'ordre d'écriture des données.
+   * La navigation clavier suit l'ordre de la fiche, pas l'ordre à l'écran : c'est
+   * celui que l'étudiant retrouve dans son cours.
+   */
+  step(currentId: string | null, direction: 1 | -1) {
+    if (!this.markers.length) return null;
+    const index = this.markers.findIndex((marker) => marker.hotspot.id === currentId);
+    if (index === -1) return this.markers[direction === 1 ? 0 : this.markers.length - 1].hotspot;
+    const next = (index + direction + this.markers.length) % this.markers.length;
+    return this.markers[next].hotspot;
+  }
+
+  /** Position monde d'un point, pour que la caméra puisse s'y poser. */
+  worldPosition(id: string, out = new THREE.Vector3()) {
+    const marker = this.markers.find((item) => item.hotspot.id === id);
+    if (!marker) return null;
+    return marker.dot.getWorldPosition(out);
   }
 
   screenPosition(id: string, camera: THREE.PerspectiveCamera, width: number, height: number) {

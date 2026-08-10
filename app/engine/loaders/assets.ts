@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { disposeObject } from "./dispose";
+import type { AnatomyRenderer } from "../core/renderer";
 
 /** Edge length of the cube every organ is normalised into, so hotspot
  *  coordinates authored in `anatomy-data` mean the same thing for each model. */
@@ -24,10 +25,11 @@ export class AnatomyAssetManager {
   private current: LoadedOrgan | null = null;
   private maxAnisotropy: number;
 
-  constructor(renderer: THREE.WebGLRenderer) {
-    // Anisotropy is what stops the texture detail from crawling at grazing
-    // angles, which is most of the shimmer on a rotating organ.
-    this.maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  constructor(renderer: AnatomyRenderer) {
+    // L'anisotropie est ce qui empêche le détail des textures de ramper aux angles
+    // rasants — l'essentiel du scintillement sur un organe qui tourne. Le plafond
+    // vient du profil de qualité : sur `low` elle est le premier poste sacrifié.
+    this.maxAnisotropy = renderer.maxAnisotropy;
     this.loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   }
 

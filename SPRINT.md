@@ -331,19 +331,19 @@ sont cochées et le site est en ligne.
 
 ## Suivi
 
-| Sprint | État       | Branche                 | Notes                                                                                                       |
-| ------ | ---------- | ----------------------- | ----------------------------------------------------------------------------------------------------------- |
-| 0      | ✅ terminé | `sprint-0/fondations`   | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork. |
-| 1      | ⬜ à faire | `sprint-1/moteur-v2`    |                                                                                                             |
-| 2      | ⬜ à faire | `sprint-2/assets`       |                                                                                                             |
-| 3      | ⬜ à faire | `sprint-3/materiaux`    |                                                                                                             |
-| 4      | ⬜ à faire | `sprint-4/interaction`  |                                                                                                             |
-| 5      | ⬜ à faire | `sprint-5/contenu`      |                                                                                                             |
-| 6      | ⬜ à faire | `sprint-6/physiologie`  |                                                                                                             |
-| 7      | ⬜ à faire | `sprint-7/corps-entier` |                                                                                                             |
-| 8      | ⬜ à faire | `sprint-8/revision`     |                                                                                                             |
-| 9      | ⬜ à faire | `sprint-9/offline`      |                                                                                                             |
-| 10     | ⬜ à faire | `sprint-10/lancement`   |                                                                                                             |
+| Sprint | État       | Branche                 | Notes                                                                                                         |
+| ------ | ---------- | ----------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 0      | ✅ terminé | `sprint-0/fondations`   | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.   |
+| 1      | ✅ terminé | `sprint-1/moteur-v2`    | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils commutables, CameraRig, overlay `?debug=1`, 18 tests. |
+| 2      | ⬜ à faire | `sprint-2/assets`       |                                                                                                               |
+| 3      | ⬜ à faire | `sprint-3/materiaux`    |                                                                                                               |
+| 4      | ⬜ à faire | `sprint-4/interaction`  |                                                                                                               |
+| 5      | ⬜ à faire | `sprint-5/contenu`      |                                                                                                               |
+| 6      | ⬜ à faire | `sprint-6/physiologie`  |                                                                                                               |
+| 7      | ⬜ à faire | `sprint-7/corps-entier` |                                                                                                               |
+| 8      | ⬜ à faire | `sprint-8/revision`     |                                                                                                               |
+| 9      | ⬜ à faire | `sprint-9/offline`      |                                                                                                               |
+| 10     | ⬜ à faire | `sprint-10/lancement`   |                                                                                                               |
 
 ---
 

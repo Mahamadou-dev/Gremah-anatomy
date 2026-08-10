@@ -776,6 +776,99 @@ a:focus-visible {
   letter-spacing: 0;
 }
 
+/* Badge moteur : backend obtenu + profil de qualité, surchargeable.
+   Discret par défaut — c'est un réglage de secours quand ça saccade, pas un
+   tableau de bord. */
+.engine-badge {
+  position: absolute;
+  right: 17px;
+  bottom: 17px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft), var(--glass-hi);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+.engine-backend {
+  padding-left: 6px;
+  color: var(--text-muted);
+}
+.quality-switch {
+  display: flex;
+  gap: 2px;
+}
+.quality-switch button {
+  padding: 4px 9px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.quality-switch button:hover {
+  color: var(--text);
+}
+.quality-switch button.on {
+  background: linear-gradient(120deg, var(--accent), var(--sun));
+  color: var(--ink-950);
+}
+
+/* Overlay d'instrumentation (`?debug=1`). Hors flux de rendu, hors React. */
+.engine-debug {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 5;
+  display: grid;
+  gap: 1px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(10, 13, 11, 0.82);
+  color: #dfe7df;
+  font:
+    11px/1.5 ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+  pointer-events: none;
+}
+.engine-debug span {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+.engine-debug i {
+  color: #8fa08f;
+  font-style: normal;
+}
+.engine-debug b {
+  font-weight: 500;
+}
+.engine-debug b.warn {
+  color: var(--ng-orange-warm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quality-switch button {
+    transition: none;
+  }
+}
+
 .model-loader {
   position: absolute;
   inset: 0;

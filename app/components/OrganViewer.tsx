@@ -13,7 +13,8 @@ import {
   X,
 } from "lucide-react";
 import type { Hotspot, Organ } from "../lib/anatomy-data";
-import type { AnatomyViewer } from "../lib/three/viewer";
+import type { AnatomyViewer, EngineStatus } from "../engine/viewer";
+import { QUALITY_PROFILES, type QualityProfile } from "../engine/core/capabilities";
 
 type Props = {
   organ: Organ;
@@ -21,6 +22,13 @@ type Props = {
   onAutoRotate: (enabled: boolean) => void;
   compare: boolean;
   onCompare: () => void;
+};
+
+const BACKEND_LABEL = { webgpu: "WebGPU", webgl2: "WebGL2" } as const;
+const QUALITY_LABEL: Record<QualityProfile, string> = {
+  low: "Éco",
+  medium: "Standard",
+  high: "Élevé",
 };
 
 export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompare }: Props) {
@@ -33,6 +41,7 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
   const [progress, setProgress] = useState(0);
   const [slowLoad, setSlowLoad] = useState(false);
   const [activeTool, setActiveTool] = useState<string | null>(null);
+  const [engine, setEngine] = useState<EngineStatus | null>(null);
 
   // A typical organ is ready well inside a second — flashing a loading panel for
   // that reads as jank. It only appears if the fetch is genuinely slow; the flag
@@ -55,24 +64,36 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
     let cancelled = false;
     let viewer: AnatomyViewer | null = null;
 
-    void import("../lib/three/viewer").then(({ AnatomyViewer: Viewer }) => {
-      if (cancelled || !mountRef.current) return;
-      viewer = new Viewer(mountRef.current, {
-        onSelect: setSelected,
-        onLoading: (isLoading, value) => {
-          setLoading(isLoading);
-          setProgress(value);
-          if (isLoading) setSlowLoad(false);
-        },
+    // La création est asynchrone parce que WebGPU exige un `init()` : entre
+    // l'import et la fin de l'init, le composant peut très bien avoir été démonté.
+    void import("../engine/viewer")
+      .then(({ AnatomyViewer: Viewer }) => {
+        if (cancelled || !mountRef.current) return null;
+        return Viewer.create(mountRef.current, {
+          onSelect: setSelected,
+          onLoading: (isLoading, value) => {
+            setLoading(isLoading);
+            setProgress(value);
+            if (isLoading) setSlowLoad(false);
+          },
+          onReady: setEngine,
+        });
+      })
+      .then((created) => {
+        if (!created) return;
+        if (cancelled) {
+          created.dispose();
+          return;
+        }
+        viewer = created;
+        viewerRef.current = created;
+        created.setAutoRotate(autoRotateRef.current);
+        const current = organRef.current;
+        created.setOrgan(current.model, current.hotspots, current.accent).catch(() => {
+          setLoading(false);
+          setProgress(0);
+        });
       });
-      viewerRef.current = viewer;
-      viewer.setAutoRotate(autoRotateRef.current);
-      const current = organRef.current;
-      viewer.setOrgan(current.model, current.hotspots, current.accent).catch(() => {
-        setLoading(false);
-        setProgress(0);
-      });
-    });
 
     return () => {
       cancelled = true;
@@ -109,6 +130,11 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
       viewer.reset();
       setActiveTool(null);
     }
+  };
+
+  const setQuality = (profile: QualityProfile | null) => {
+    const status = viewerRef.current?.setQuality(profile);
+    if (status) setEngine(status);
   };
 
   const tools = [
@@ -208,6 +234,43 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
           <i />
         </span>
       </button>
+
+      {engine && (
+        <div className="engine-badge">
+          <span className="engine-backend" title={`Rendu ${BACKEND_LABEL[engine.backend]}`}>
+            {BACKEND_LABEL[engine.backend]}
+          </span>
+          <div
+            className="quality-switch"
+            role="group"
+            aria-label="Qualité de rendu"
+            title="Qualité de rendu — baissez-la si l'affichage saccade"
+          >
+            {QUALITY_PROFILES.map((profile) => (
+              <button
+                key={profile}
+                type="button"
+                onClick={() => setQuality(profile)}
+                aria-pressed={engine.quality === profile}
+                className={engine.quality === profile ? "on" : ""}
+              >
+                {QUALITY_LABEL[profile]}
+              </button>
+            ))}
+            {/* Revenir à la détection : sans cette porte de sortie, un mauvais choix
+                fait sur un vieux téléphone suit l'étudiant sur tous les autres. */}
+            <button
+              type="button"
+              onClick={() => setQuality(null)}
+              aria-pressed={!engine.overridden}
+              className={engine.overridden ? "" : "on"}
+              title={`Automatique — détecté : ${QUALITY_LABEL[engine.detected]}`}
+            >
+              Auto
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="view-caption">
         <span>3D specimen · click a dot to explore</span>
