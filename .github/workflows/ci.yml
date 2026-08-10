@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run format:check
+
+      - run: npm run lint
+
+      - run: npm run build
+
+      # Garde-fou du Sprint 2 : le Niger est la cible, pas une connexion de bureau.
+      # Le seuil descendra à 8 Mo une fois Draco et KTX2 câblés.
+      - name: Budget des modèles 3D
+        run: |
+          total=$(du -sk public/models | cut -f1)
+          echo "public/models = ${total} Ko"
+          if [ "$total" -gt 30720 ]; then
+            echo "::error::public/models dépasse 30 Mo (${total} Ko)."
+            exit 1
+          fi

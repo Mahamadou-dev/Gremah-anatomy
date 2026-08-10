@@ -1,0 +1,1946 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   GREMAH ANATOMY — SYSTÈME DE THÈME
+   Drapeau du Niger (orange / blanc / vert + disque solaire) traité en surfaces
+   satinées : dégradés à trois arrêts, reflets étroits, verre dépoli, ombres
+   chaudes. Jamais d'aplats tricolores.
+
+   Le sombre est le thème par défaut — c'est là que la 3D respire. Le clair est
+   obligatoire : beaucoup d'étudiants révisent en plein jour.
+   ========================================================================= */
+
+:root {
+  /* Palette brute. Ne jamais utiliser directement dans une règle : passer par
+     les tokens sémantiques ci-dessous, sinon le mode clair ne suit pas. */
+  --ng-orange: #e05206;
+  --ng-orange-warm: #ff7a2f;
+  --ng-orange-deep: #8a2f02;
+  --ng-green: #0db02b;
+  --ng-green-deep: #05451a;
+  --ng-sun: #f4a31c;
+  --ink-950: #0a0d0b;
+  --bone: #f7f4ee;
+}
+
+/* --- Thème sombre (défaut) ------------------------------------------------ */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-0: #0a0d0b;
+  --surface-1: rgba(22, 30, 24, 0.72);
+  --surface-2: rgba(32, 42, 34, 0.78);
+  --surface-sunk: rgba(6, 9, 7, 0.5);
+
+  --text: #eef2ec;
+  --text-muted: #9aa79a;
+  --text-faint: #6d7a6e;
+
+  --line: rgba(224, 82, 6, 0.16);
+  --line-soft: rgba(238, 242, 236, 0.09);
+
+  --accent: var(--ng-orange-warm);
+  --accent-deep: var(--ng-orange-deep);
+  --accent-cool: #3fd15c;
+  --sun: var(--ng-sun);
+
+  /* Ombres teintées orange, jamais neutres : c'est ce qui fait « huilé ». */
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(224, 82, 6, 0.06);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.42);
+  --glass-hi: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --wash: rgba(255, 255, 255, 0.04);
+  --wash-strong: rgba(255, 255, 255, 0.08);
+
+  --focus: var(--ng-sun);
+
+  /* Fond de page : dégradé à trois arrêts, chaud en haut, vert profond en bas. */
+  --page-bg:
+    radial-gradient(ellipse 120% 70% at 50% -10%, rgba(224, 82, 6, 0.14), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 15% 105%, rgba(13, 176, 43, 0.09), transparent 65%),
+    linear-gradient(165deg, #0d120e, #0a0d0b 45%, #080b09);
+  --html-bg: #080b09;
+
+  /* Les illustrations sont en multiply : elles exigent un fond clair, sinon
+     elles virent au noir. Cette plaque reste claire dans les deux thèmes. */
+  --art-plate: #f4efe6;
+  --art-plate-hi: #fffdf8;
+}
+
+/* --- Thème clair ---------------------------------------------------------- */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --surface-0: #f7f4ee;
+  --surface-1: rgba(255, 253, 248, 0.82);
+  --surface-2: rgba(255, 255, 255, 0.7);
+  --surface-sunk: rgba(138, 47, 2, 0.05);
+
+  --text: #1d2a1f;
+  --text-muted: #6b7a6c;
+  --text-faint: #93a094;
+
+  --line: rgba(138, 47, 2, 0.16);
+  --line-soft: rgba(29, 42, 31, 0.08);
+
+  --accent: var(--ng-orange);
+  --accent-deep: var(--ng-orange-deep);
+  --accent-cool: #0a8a22;
+  --sun: #d98a08;
+
+  --shadow: 0 18px 48px rgba(138, 47, 2, 0.09), 0 2px 8px rgba(138, 47, 2, 0.04);
+  --shadow-soft: 0 12px 30px rgba(138, 47, 2, 0.07);
+  --glass-hi: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  --wash: rgba(255, 255, 255, 0.32);
+  --wash-strong: rgba(255, 255, 255, 0.6);
+
+  --focus: var(--ng-orange-deep);
+
+  --page-bg:
+    radial-gradient(ellipse 110% 60% at 50% -5%, rgba(244, 163, 28, 0.16), transparent 62%),
+    radial-gradient(ellipse 90% 60% at 12% 104%, rgba(13, 176, 43, 0.08), transparent 66%),
+    linear-gradient(165deg, #fbf7f0, #f7f4ee 48%, #f1ece2);
+  --html-bg: #efe9de;
+
+  --art-plate: #fdfaf4;
+  --art-plate-hi: #ffffff;
+}
+
+/* Aliases hérités : le reste de la feuille les utilise encore. Ils pointent
+   désormais sur les tokens sémantiques, donc les deux thèmes suivent. */
+:root {
+  --ink: var(--text);
+  --muted: var(--text-muted);
+  --canvas: var(--surface-0);
+  --paper: var(--surface-1);
+  --coral: var(--accent);
+  --lavender: var(--accent-cool);
+  --sage: var(--ng-green);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--html-bg);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--page-bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+}
+
+/* Grain : tue le banding des grands dégradés, qui est très visible sur les
+   dalles bon marché — exactement les écrans que vise le projet. */
+body:before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+button,
+input {
+  font: inherit;
+}
+button {
+  color: inherit;
+}
+button:focus-visible,
+input:focus-visible,
+canvas:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 22px 24px 24px;
+  overflow: hidden;
+}
+
+.topbar {
+  height: 68px;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) auto minmax(260px, 1fr) auto auto;
+  align-items: center;
+  gap: 22px;
+  max-width: 1720px;
+  margin: 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.brand strong {
+  font:
+    500 clamp(28px, 2.2vw, 42px)/1 var(--font-serif),
+    serif;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  /* Dégradé à trois arrêts : soleil → orange → vert. Le drapeau en filigrane
+     dans la typographie plutôt qu'en bandes. */
+  background: linear-gradient(100deg, var(--sun), var(--accent) 45%, var(--accent-cool));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand sup {
+  color: var(--accent);
+  font:
+    400 14px var(--font-sans),
+    sans-serif;
+  padding-left: 3px;
+}
+.brand em,
+.info-panel em,
+.learning-cards em,
+.learning-modal > em {
+  color: var(--accent-cool);
+  font-family: var(--font-sans), sans-serif;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+.brand em {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.main-nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 12px 15px;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.main-nav button.active {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent), transparent 92%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent), transparent 82%);
+}
+
+.search-box {
+  justify-self: end;
+  width: min(100%, 280px);
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--text-muted);
+}
+.search-box input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+}
+.search-box input::placeholder {
+  color: var(--text-faint);
+}
+
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent), transparent 60%);
+}
+/* Les deux icônes sont rendues ; le thème courant décide de la visible, ce qui
+   évite de refléter la préférence dans un état React (cf. ThemeToggle.tsx). */
+.theme-toggle > * {
+  grid-area: 1 / 1;
+}
+[data-theme="light"] .icon-when-dark,
+.icon-when-light {
+  display: none;
+}
+[data-theme="light"] .icon-when-light {
+  display: block;
+}
+
+.profile,
+.mobile-library-trigger {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.profile span {
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 55%);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  /* Le disque solaire du drapeau, en petit. */
+  background: radial-gradient(circle at 34% 28%, var(--sun), var(--accent) 55%, var(--accent-deep));
+  color: #fff;
+  font:
+    600 11px var(--font-serif),
+    serif;
+  box-shadow:
+    inset 0 0 0 3px var(--surface-0),
+    0 4px 12px color-mix(in srgb, var(--accent), transparent 70%);
+}
+.mobile-library-trigger {
+  display: none;
+}
+
+.workspace {
+  max-width: 1720px;
+  height: min(760px, calc(100vh - 128px));
+  min-height: 620px;
+  margin: 12px auto 0;
+  display: grid;
+  grid-template-columns: 285px minmax(620px, 1fr) 330px;
+  gap: 18px;
+}
+
+.organ-library,
+.viewer-shell,
+.info-panel {
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: var(--surface-1);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow), var(--glass-hi);
+}
+
+.organ-library {
+  padding: 16px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.panel-heading {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px 10px;
+}
+.panel-heading > span,
+.info-kicker,
+.info-panel h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 10px;
+  font-weight: 600;
+}
+.panel-heading button {
+  border: 1px solid var(--line);
+  background: var(--wash);
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.panel-heading .mobile-close {
+  display: none;
+}
+.organ-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: none;
+}
+.organ-item {
+  width: 100%;
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: 54px 1fr 18px;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: transparent;
+  cursor: pointer;
+}
+.organ-item:hover {
+  background: var(--wash);
+}
+.organ-item.active {
+  background: color-mix(in srgb, var(--item-accent), transparent 88%);
+  border-color: color-mix(in srgb, var(--item-accent), transparent 55%);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--item-accent), transparent 88%);
+}
+.organ-glyph {
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 35% 28%,
+    var(--art-plate-hi),
+    color-mix(in srgb, var(--item-accent), var(--art-plate) 82%)
+  );
+  box-shadow: inset 0 0 0 1px var(--line-soft);
+}
+.organ-glyph img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  transform: scale(1.14);
+}
+.organ-item b {
+  display: block;
+  font:
+    500 17px/1.1 var(--font-serif),
+    serif;
+}
+.organ-item small {
+  display: block;
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.organ-item .favorite {
+  color: var(--accent);
+}
+/* `:not(.organ-card-image)` keeps the clickable artwork out of the footer
+   button styling — both are direct children of the card. */
+.view-all,
+.learning-cards article > button:not(.organ-card-image) {
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--wash);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 13px;
+  cursor: pointer;
+  font:
+    500 12px var(--font-serif),
+    serif;
+}
+.view-all:hover,
+.learning-cards article > button:not(.organ-card-image):hover {
+  border-color: color-mix(in srgb, var(--accent), transparent 60%);
+  color: var(--accent);
+}
+.organ-library .view-all {
+  margin-top: 9px;
+}
+.organ-library blockquote {
+  display: none;
+}
+
+.viewer-shell {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  /* Halo solaire derrière le spécimen : la 3D est posée dans une lumière, pas
+     sur un fond plat. */
+  background:
+    radial-gradient(
+      circle at 55% 45%,
+      color-mix(in srgb, var(--sun), transparent 92%),
+      transparent 55%
+    ),
+    var(--surface-1);
+}
+.viewer-shell:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 90px color-mix(in srgb, var(--accent-deep), transparent 92%);
+}
+.viewer-glow {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  left: 50%;
+  top: 47%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--organ-accent), transparent 90%);
+  filter: blur(72px);
+  opacity: 0.55;
+}
+.three-mount {
+  position: absolute;
+  inset: 0;
+}
+.three-mount canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.viewer-tools {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  width: 62px;
+  padding: 8px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface-2);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft), var(--glass-hi);
+}
+.tool-button {
+  height: 60px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  font:
+    500 9px/1 var(--font-serif),
+    serif;
+}
+.tool-button.active {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent), transparent 90%);
+}
+.tool-button:nth-last-child(1) {
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 12px 12px;
+}
+
+.tip-note {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  z-index: 2;
+  width: 155px;
+  min-height: 140px;
+  padding: 14px 17px;
+  transform: rotate(-4deg);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--sun), var(--art-plate) 76%),
+    color-mix(in srgb, var(--sun), var(--art-plate) 86%)
+  );
+  box-shadow: var(--shadow-soft);
+  color: #3b2f16;
+}
+.tip-note span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ng-orange-deep);
+  font:
+    italic 12px var(--font-sans),
+    sans-serif;
+}
+.tip-note p {
+  margin: 8px 0 0;
+  font:
+    500 14px/1.55 var(--font-serif),
+    serif;
+}
+
+/* Anchor point only — the viewer writes the transform each frame so tracking a
+   spinning model costs no React renders. The dots themselves live in the canvas. */
+.hotspot-callout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: 0;
+  height: 0;
+  will-change: transform;
+}
+.callout-body {
+  position: absolute;
+  top: -30px;
+  width: 168px;
+  padding: 10px 26px 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-2);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--hotspot-color), transparent 78%),
+    var(--shadow-soft);
+  animation: callout-in 0.26s cubic-bezier(0.2, 0.85, 0.3, 1);
+  transition: opacity 0.2s ease;
+}
+.hotspot-callout[data-side="right"] .callout-body {
+  left: 22px;
+}
+.hotspot-callout[data-side="left"] .callout-body {
+  right: 22px;
+}
+.hotspot-callout[data-behind="true"] .callout-body {
+  opacity: 0.3;
+}
+.callout-body:before {
+  content: "";
+  position: absolute;
+  top: 32px;
+  width: 18px;
+  height: 1px;
+  background: var(--hotspot-color);
+  opacity: 0.55;
+}
+.hotspot-callout[data-side="right"] .callout-body:before {
+  right: 100%;
+}
+.hotspot-callout[data-side="left"] .callout-body:before {
+  left: 100%;
+}
+.callout-body b {
+  display: block;
+  padding-left: 13px;
+  font:
+    500 13px var(--font-serif),
+    serif;
+}
+.callout-body b:before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 15px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hotspot-color);
+}
+.callout-body small {
+  display: block;
+  margin-top: 3px;
+  padding-left: 13px;
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+.callout-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.callout-close:hover {
+  background: var(--wash-strong);
+}
+@keyframes callout-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px) scale(0.96);
+  }
+}
+
+.hotspot-index {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.auto-rotate {
+  position: absolute;
+  right: 17px;
+  bottom: 16px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 8px 10px 8px 12px;
+  background: var(--surface-2);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  font:
+    500 10px var(--font-serif),
+    serif;
+}
+.switch {
+  width: 29px;
+  height: 17px;
+  padding: 2px;
+  border-radius: 99px;
+  background: var(--surface-sunk);
+  box-shadow: inset 0 0 0 1px var(--line-soft);
+}
+.switch i {
+  display: block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--bone);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: margin-left 0.18s ease;
+}
+.switch.on {
+  background: linear-gradient(120deg, var(--accent), var(--sun));
+}
+.switch.on i {
+  margin-left: 12px;
+}
+.view-caption {
+  position: absolute;
+  left: 98px;
+  bottom: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.view-caption strong {
+  color: var(--text);
+  font:
+    500 13px var(--font-serif),
+    serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.model-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  background: color-mix(in srgb, var(--surface-0), transparent 45%);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.model-loader strong {
+  font:
+    500 18px var(--font-serif),
+    serif;
+}
+.model-loader span {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.loader-orbit {
+  width: 48px;
+  height: 48px;
+  border: 1px dashed var(--accent);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  animation: orbit 2.4s linear infinite;
+}
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.info-panel {
+  padding: 21px 20px 17px;
+  overflow: auto;
+  scrollbar-width: none;
+}
+.info-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-muted);
+}
+.info-kicker svg {
+  color: var(--accent);
+}
+.info-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 15px;
+}
+.info-title-row h1 {
+  margin: 0;
+  font:
+    500 44px/0.95 var(--font-serif),
+    serif;
+  letter-spacing: -0.02em;
+}
+.info-title-row em {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.specimen-stamp {
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(
+    circle,
+    var(--art-plate-hi) 25%,
+    color-mix(in srgb, var(--organ-accent, var(--accent)), var(--art-plate) 86%)
+  );
+  box-shadow: inset 0 0 0 1px var(--line-soft);
+}
+.specimen-stamp img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  animation: card-art-in 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.description {
+  margin: 22px 0 16px;
+  font:
+    500 15px/1.42 var(--font-serif),
+    serif;
+}
+.rule {
+  height: 1px;
+  background: var(--line);
+}
+.info-panel h2 {
+  margin: 17px 0 10px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.key-facts {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.key-facts > div {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+.key-facts dt {
+  display: flex;
+  gap: 8px;
+  font:
+    500 13px var(--font-serif),
+    serif;
+}
+.key-facts dt span {
+  color: var(--accent);
+  width: 16px;
+}
+.key-facts dd {
+  margin: 0;
+  color: var(--text-muted);
+  font:
+    500 12px/1.35 var(--font-serif),
+    serif;
+}
+.medical-note,
+.fun-note {
+  margin-top: 15px;
+  display: flex;
+  gap: 9px;
+  padding: 10px;
+  border-radius: 12px;
+}
+.medical-note {
+  background: color-mix(in srgb, var(--accent-cool), transparent 92%);
+  color: var(--accent-cool);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-cool), transparent 86%);
+}
+.fun-note {
+  background: color-mix(in srgb, var(--sun), transparent 90%);
+  color: var(--sun);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sun), transparent 86%);
+}
+.medical-note p,
+.fun-note p {
+  margin: 0;
+  font:
+    500 11px/1.35 var(--font-serif),
+    serif;
+  color: var(--text-muted);
+}
+.medical-note b,
+.fun-note b {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+}
+.medical-note svg,
+.fun-note svg {
+  flex: none;
+}
+.lesson-button {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 14px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(110deg, var(--accent-deep), var(--accent) 55%, var(--sun));
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 9px 20px color-mix(in srgb, var(--accent), transparent 72%);
+  font-size: 11px;
+}
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 9px;
+}
+.action-grid button {
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 66%);
+  border-radius: 9px;
+  background: var(--wash);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 10px;
+}
+.action-grid button:nth-child(2) {
+  border-color: color-mix(in srgb, var(--accent-cool), transparent 66%);
+  color: var(--accent-cool);
+}
+.action-grid button:last-child {
+  grid-column: 1/-1;
+  border-color: color-mix(in srgb, var(--sun), transparent 66%);
+  color: var(--sun);
+}
+.action-grid button.active {
+  background: color-mix(in srgb, var(--accent), transparent 88%);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.learning-cards {
+  /* Cap on the artwork box. The source illustrations are square, so this is
+     both the height and the width they letterbox into — raising it fills more
+     of the card but makes every card taller. */
+  --art-max: 220px;
+  /* One rhythm for every card: the same gap below the header and above the
+     footer button, whether the body is artwork or a list. */
+  --card-gap-top: 8px;
+  --card-gap-bottom: 12px;
+  max-width: 1720px;
+  margin: 18px auto 0;
+  display: grid;
+  grid-template-columns: 1.05fr repeat(5, 1fr);
+  gap: 16px;
+}
+.learning-cards article {
+  min-height: 212px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 23px;
+  background: var(--surface-1);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow), var(--glass-hi);
+  padding: 13px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.learning-cards article > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 38px;
+  flex: none;
+}
+.learning-cards em {
+  display: block;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+.learning-cards h3 {
+  margin: 3px 0 0;
+  font:
+    500 13px/1.2 var(--font-serif),
+    serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.learning-cards article > button:not(.organ-card-image) {
+  margin-top: auto;
+  width: 100%;
+  min-height: 30px;
+}
+.curiosity-card {
+  justify-content: center;
+  padding-left: 28px !important;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--accent), transparent 88%),
+    color-mix(in srgb, var(--accent-cool), transparent 92%)
+  ) !important;
+}
+.curiosity-card span {
+  color: var(--sun);
+  font-size: 28px;
+}
+.curiosity-card p {
+  margin: 5px 0 10px;
+  font:
+    500 16px/1.4 var(--font-serif),
+    serif;
+}
+.curiosity-card em {
+  text-transform: none;
+  font-size: 13px;
+}
+/* Stand-in for organs that ship as a 3D model without the painted asset set. */
+.art-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 40% 32%,
+    var(--art-plate-hi),
+    color-mix(in srgb, var(--art-accent), var(--art-plate) 82%)
+  );
+  color: color-mix(in srgb, var(--art-accent), var(--ng-orange-deep) 30%);
+  font-family: var(--font-serif), serif;
+  font-size: 34px;
+  line-height: 1;
+}
+.organ-card-image .art-fallback {
+  font-size: 42px;
+}
+.organ-glyph .art-fallback {
+  font-size: 21px;
+}
+.compare-organ > .art-fallback {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  font-size: 17px;
+}
+.microscope-visual .art-fallback {
+  font-size: 40px;
+}
+.modal-demo .art-fallback {
+  font-size: 52px;
+}
+
+/* A square box matches the square source art, so the illustration fills the
+   card's full width — up to --art-max, which stops wide columns from making
+   the cards enormous. `contain` means nothing is ever cut.
+   The plate is deliberately light in both themes: the art is multiply-blended
+   and would go black over a dark surface. */
+.organ-card-image {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  flex: none;
+  width: min(100%, var(--art-max));
+  max-width: 100%;
+  aspect-ratio: 1;
+  margin: var(--card-gap-top) auto var(--card-gap-bottom);
+  border-radius: 16px;
+  background: radial-gradient(circle at 45% 35%, var(--art-plate-hi), var(--art-plate));
+}
+.organ-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  mix-blend-mode: multiply;
+  animation: card-art-in 0.52s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@keyframes card-art-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+/* The tissue swatch is a circular crop by design, so it keeps filling its mask
+   and stays square to avoid becoming an ellipse. */
+.microscope-visual {
+  width: min(var(--art-max), 100%);
+  max-height: none;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 5px var(--wash-strong),
+    var(--shadow-soft);
+}
+.microscope-visual img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+.comparison-visual {
+  border-radius: 12px;
+}
+/* Reset for the two artwork boxes that are themselves buttons. */
+button.organ-card-image {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+button.organ-card-image:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.function-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+/* Centred grid items are not stretched, so `height: 100%` would resolve against
+   an indefinite row and overflow the card. Pin the artwork to the box instead. */
+.function-visual > img,
+.function-visual > .art-fallback {
+  position: absolute;
+  inset: 0;
+}
+.function-pulse {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 68%);
+  border-radius: 50%;
+  animation: organ-pulse 2.2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes organ-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.62);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+.play-badge {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--wash-strong);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ng-orange-deep);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+}
+/* Same top and bottom gap as an artwork card, so the footer buttons line up. */
+.learning-cards ul {
+  list-style: none;
+  padding: 0;
+  margin: var(--card-gap-top) 0 var(--card-gap-bottom);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  font:
+    500 11px var(--font-serif),
+    serif;
+  color: var(--text-muted);
+}
+.learning-cards li:before {
+  content: "◆";
+  color: var(--accent);
+  margin-right: 7px;
+  font-size: 8px;
+  vertical-align: middle;
+}
+/* Sits directly under the header like every other card, rather than being
+   pushed down by an auto top margin. */
+.system-visual {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.compare-strip {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(760px, calc(100% - 28px));
+  padding: 13px 16px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr 1.5fr auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-2);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow), var(--glass-hi);
+}
+.compare-strip > div {
+  display: flex;
+  flex-direction: column;
+}
+.compare-strip .compare-organ {
+  position: relative;
+  padding-left: 45px;
+  min-height: 38px;
+  justify-content: center;
+}
+.compare-organ > img {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  transform: translateY(-50%);
+  mix-blend-mode: multiply;
+  background: var(--art-plate);
+}
+.compare-strip span {
+  color: var(--accent-cool);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.compare-strip strong {
+  font:
+    500 20px var(--font-serif),
+    serif;
+}
+.compare-strip small {
+  color: var(--text-muted);
+  font-size: 9px;
+}
+.compare-strip dl {
+  margin: 0;
+  display: flex;
+  gap: 16px;
+}
+.compare-strip dl div {
+  max-width: 130px;
+}
+.compare-strip dt {
+  color: var(--text-muted);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+.compare-strip dd {
+  margin: 3px 0 0;
+  font:
+    500 10px/1.2 var(--font-serif),
+    serif;
+}
+.compare-strip > button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(6, 9, 7, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.learning-modal {
+  width: min(460px, 100%);
+  max-height: min(92vh, 900px);
+  overflow: auto;
+  scrollbar-width: none;
+  position: relative;
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: var(--surface-0);
+  box-shadow: var(--shadow), var(--glass-hi);
+  text-align: center;
+  animation: modal-in 0.35s cubic-bezier(0.2, 0.85, 0.3, 1);
+}
+.learning-modal.wide {
+  width: min(540px, 100%);
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+.modal-close {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.modal-icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent), transparent 88%);
+  color: var(--accent);
+  font:
+    500 26px var(--font-serif),
+    serif;
+}
+.learning-modal h2 {
+  margin: 6px 0 12px;
+  font:
+    500 34px var(--font-serif),
+    serif;
+}
+.learning-modal > p,
+.quiz-options p {
+  color: var(--text-muted);
+  font:
+    500 15px/1.5 var(--font-serif),
+    serif;
+}
+.modal-demo {
+  width: 135px;
+  height: 135px;
+  margin: 18px auto 8px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle, var(--art-plate-hi), var(--art-plate));
+}
+.modal-demo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+.modal-demo.moving img {
+  animation: heartbeat 1.1s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.13);
+  }
+  28% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+  }
+}
+/* The full-figure view: square like the source art, contained so the body
+   diagram is never cropped. */
+.modal-figure {
+  margin: 18px 0 4px;
+  aspect-ratio: 1;
+  max-height: 46vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 20px;
+  background: radial-gradient(circle at 50% 42%, var(--art-plate-hi), var(--art-plate));
+}
+.modal-figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.modal-figure .art-fallback {
+  font-size: 64px;
+}
+.modal-facts {
+  margin: 14px 0 4px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: left;
+}
+.modal-facts dt {
+  color: var(--text-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.modal-facts dd {
+  margin: 4px 0 0;
+  font:
+    500 12px/1.3 var(--font-serif),
+    serif;
+}
+.learning-modal.wide .lesson-button {
+  margin-top: 16px;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+.quiz-options button {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--wash);
+  cursor: pointer;
+}
+.quiz-options button:hover {
+  border-color: color-mix(in srgb, var(--accent), transparent 55%);
+}
+.drawer-backdrop {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Page /a-propos
+   ------------------------------------------------------------------------ */
+.about-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 34px 26px 40px;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: var(--surface-1);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow), var(--glass-hi);
+}
+.about-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+.about-back:hover {
+  color: var(--accent);
+}
+.about-page h1 {
+  margin: 18px 0 0;
+  font:
+    500 clamp(30px, 4vw, 46px)/1.05 var(--font-serif),
+    serif;
+  letter-spacing: -0.02em;
+  background: linear-gradient(100deg, var(--sun), var(--accent) 45%, var(--accent-cool));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.about-lead {
+  margin: 16px 0 0;
+  color: var(--text-muted);
+  font:
+    500 16px/1.55 var(--font-serif),
+    serif;
+}
+.about-page section {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+.about-page h2 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--accent);
+}
+.about-page p {
+  margin: 0 0 10px;
+  font:
+    500 14px/1.6 var(--font-serif),
+    serif;
+  color: var(--text-muted);
+}
+.about-page p strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.about-contacts {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.about-contacts li {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: baseline;
+  gap: 10px;
+}
+.about-contacts span {
+  color: var(--text-faint);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.about-contacts a {
+  color: var(--text);
+  font-size: 13px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+.about-contacts a:hover {
+  color: var(--accent);
+  border-color: currentColor;
+}
+.about-disclaimer {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--sun), transparent 92%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sun), transparent 84%);
+}
+
+@media (max-width: 470px) {
+  .about-page {
+    padding: 24px 18px 30px;
+    border-radius: 20px;
+  }
+  .about-contacts li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Pied de page — marque Gremah
+   ------------------------------------------------------------------------ */
+.site-footer {
+  max-width: 1720px;
+  margin: 26px auto 0;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 23px;
+  background: var(--surface-1);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow), var(--glass-hi);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.site-footer .footer-brand strong {
+  font:
+    500 20px var(--font-serif),
+    serif;
+  display: block;
+}
+.site-footer .footer-brand small {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--text-muted);
+  font-size: 11px;
+  text-decoration: none;
+}
+.footer-links a span {
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 9px;
+}
+.footer-links a b {
+  font-weight: 500;
+  color: var(--text);
+}
+.footer-links a:hover {
+  border-color: color-mix(in srgb, var(--accent), transparent 55%);
+}
+.footer-links a:hover b {
+  color: var(--accent);
+}
+.site-footer .footer-brand small a {
+  color: var(--accent-cool);
+  text-decoration: none;
+}
+.site-footer .footer-brand small a:hover {
+  text-decoration: underline;
+}
+.footer-disclaimer {
+  flex: 1 0 100%;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--text-faint);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1350px) {
+  .app-shell {
+    padding: 16px;
+  }
+  .topbar {
+    grid-template-columns: 1fr auto auto auto;
+    gap: 12px;
+  }
+  .brand em {
+    display: none;
+  }
+  .search-box {
+    display: none;
+  }
+  .workspace {
+    grid-template-columns: 250px minmax(500px, 1fr) 300px;
+    height: min(700px, calc(100vh - 105px));
+  }
+  .learning-cards {
+    grid-template-columns: repeat(3, 1fr);
+    --art-max: 300px;
+  }
+}
+
+@media (max-width: 1040px) {
+  .topbar {
+    grid-template-columns: 1fr auto auto auto;
+  }
+  .main-nav button span {
+    display: none;
+  }
+  .main-nav button {
+    padding: 10px;
+  }
+  .workspace {
+    grid-template-columns: 210px minmax(450px, 1fr);
+    height: 690px;
+  }
+  .info-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 12px 22px;
+    max-height: none;
+  }
+  .info-panel .description,
+  .info-panel .rule,
+  .info-panel h2,
+  .key-facts,
+  .medical-note {
+    grid-column: 2;
+  }
+  .info-kicker,
+  .info-title-row {
+    grid-column: 1;
+  }
+  .info-panel {
+    height: 330px;
+  }
+  .workspace {
+    height: auto;
+  }
+  .organ-library,
+  .viewer-shell {
+    height: 650px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 10px;
+    overflow: hidden;
+  }
+  .topbar {
+    height: 58px;
+    grid-template-columns: 1fr auto auto auto;
+  }
+  .brand strong {
+    font-size: 29px;
+  }
+  .main-nav {
+    display: none;
+  }
+  .profile span {
+    width: 34px;
+    height: 34px;
+  }
+  .mobile-library-trigger {
+    display: flex;
+  }
+  .workspace {
+    display: block;
+    margin-top: 8px;
+  }
+  .viewer-shell {
+    height: 68vh;
+    min-height: 520px;
+    border-radius: 22px;
+  }
+  .organ-library {
+    position: fixed;
+    z-index: 42;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    height: min(76vh, 650px);
+    transform: translateY(110%);
+    border-radius: 26px;
+    background: var(--surface-0);
+  }
+  .organ-library.open {
+    transform: translateY(0);
+  }
+  .panel-heading .mobile-close {
+    display: grid;
+    margin-left: auto;
+    margin-right: 7px;
+  }
+  .drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border: 0;
+    background: rgba(6, 9, 7, 0.5);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+  }
+  .organ-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .organ-item {
+    min-height: 76px;
+  }
+  .info-panel {
+    height: auto;
+    margin-top: 10px;
+    display: block;
+    border-radius: 22px;
+  }
+  .learning-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+    --art-max: 320px;
+  }
+  .learning-cards article {
+    border-radius: 20px;
+  }
+  .curiosity-card {
+    display: none !important;
+  }
+  .viewer-tools {
+    top: auto;
+    bottom: 12px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+    width: auto;
+    height: 61px;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 4px;
+    border-radius: 15px;
+  }
+  .tool-button {
+    width: 51px;
+    height: 51px;
+  }
+  .tool-button:nth-last-child(1) {
+    border: 0;
+    border-radius: 12px;
+  }
+  .tool-button span {
+    display: none;
+  }
+  .auto-rotate {
+    bottom: 82px;
+    right: 10px;
+  }
+  .view-caption {
+    left: 12px;
+    bottom: 84px;
+  }
+  .tip-note {
+    width: 130px;
+    min-height: 113px;
+    padding: 11px;
+  }
+  .tip-note p {
+    font-size: 12px;
+  }
+  .callout-body {
+    width: 148px;
+    top: -26px;
+  }
+  .compare-strip {
+    grid-template-columns: 1fr auto 1fr auto;
+  }
+  .compare-strip dl {
+    display: none;
+  }
+  .site-footer {
+    margin-top: 12px;
+    padding: 16px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 470px) {
+  .brand strong {
+    font-size: 25px;
+  }
+  .viewer-shell {
+    min-height: 485px;
+    height: 66vh;
+  }
+  .organ-list {
+    grid-template-columns: 1fr;
+  }
+  .learning-cards {
+    grid-template-columns: 1fr;
+    --art-max: 360px;
+  }
+  .organ-library .view-all {
+    margin-bottom: 8px;
+  }
+  .tip-note {
+    display: none;
+  }
+  .specimen-stamp {
+    width: 68px;
+    height: 68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

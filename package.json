@@ -1,0 +1,45 @@
+{
+  "name": "gremah-anatomy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Atlas d'anatomie humaine 3D interactif pour les étudiants en médecine du Niger.",
+  "author": "Mahamadou Amadou Habou Gremah <mahamadou8877@gmail.com> (https://gremah.vercel.app)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mahamadou-dev/Gremah-anatomy.git"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "preview": "npx --yes serve out",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.28.0",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "^0.185.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3"
+  }
+}

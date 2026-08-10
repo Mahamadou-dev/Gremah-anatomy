@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Gremah Anatomy">
+  <title>Gremah Anatomy</title>
+  <defs>
+    <!-- Le disque solaire du drapeau nigérien, en dégradé satiné plutôt qu'en aplat. -->
+    <radialGradient id="sun" cx="38%" cy="30%" r="72%">
+      <stop offset="0" stop-color="#F4A31C"/>
+      <stop offset="55%" stop-color="#E05206"/>
+      <stop offset="100%" stop-color="#8A2F02"/>
+    </radialGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0DB02B"/>
+      <stop offset="100%" stop-color="#05451A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#0A0D0B"/>
+  <!-- Arc vert : le sol, et la moitié basse du drapeau. -->
+  <path d="M8 44a24 24 0 0 0 48 0" fill="none" stroke="url(#ground)" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="27" r="14" fill="url(#sun)"/>
+  <!-- Tracé ECG traversant le disque : anatomie, pas seulement drapeau. -->
+  <path d="M16 27h7l3-7 4 14 3.5-7H48" fill="none" stroke="#F7F4EE" stroke-width="2.6"
+        stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+</svg>

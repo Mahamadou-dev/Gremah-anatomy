@@ -1,0 +1,10 @@
+# Normalise les fins de ligne : Prettier écrit en LF et la CI vérifie le format.
+# Sans cela, un checkout Windows réintroduit des CRLF et `npm run format:check` échoue.
+* text=auto eol=lf
+
+# Assets binaires : jamais de conversion.
+*.glb binary
+*.png binary
+*.jpg binary
+*.webp binary
+*.wasm binary
