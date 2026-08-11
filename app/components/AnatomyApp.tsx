@@ -22,6 +22,8 @@ import {
   Stethoscope,
   X,
 } from "lucide-react";
+// Fonction pure de dérivation d'URL : aucun objet three ne traverse la frontière.
+import { lodUrl, PREVIEW_LEVEL } from "../engine/loaders/lod";
 import { OrganViewer } from "./OrganViewer";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
@@ -112,12 +114,15 @@ export function AnatomyApp() {
     setCompare(false);
   };
 
-  // Warms the model in the HTTP cache while the pointer is still travelling,
-  // so the switch usually renders without a visible loading pass.
+  // Réchauffe le cache HTTP pendant que le pointeur est encore en route, pour que
+  // le changement d'organe se fasse sans passe de chargement visible.
+  // On ne préfetch que le niveau d'aperçu (~150 Ko) : spéculer sur le niveau plein
+  // engagerait plus d'un mégaoctet du forfait de l'étudiant pour un survol.
   const prefetchOrgan = (id: OrganId) => {
     if (id === organId || prefetched.current.has(id)) return;
     prefetched.current.add(id);
-    void fetch(organById[id].model, { priority: "low" } as RequestInit).catch(() => {});
+    const url = lodUrl(organById[id].model, PREVIEW_LEVEL);
+    void fetch(url, { priority: "low" } as RequestInit).catch(() => {});
   };
 
   return (

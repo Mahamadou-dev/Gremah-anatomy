@@ -8,10 +8,12 @@ on:
 # Les garde-fous chiffrés vivent ici plutôt que dans les scripts : chaque sprint
 # resserre une valeur, et la voir bouger dans la diff est le but.
 env:
-  # Sprint 2 descendra ce budget à 8192 une fois Draco et KTX2 câblés.
-  MODELS_BUDGET_KB: 30720
-  # Taille maximale d'un seul .glb (CLAUDE.md §9). Appliqué à partir du Sprint 2.
-  MODEL_MAX_KB: 30720
+  # Trois niveaux de détail par organe (Sprint 2) : 8 Mo par niveau complet, donc
+  # ~14 Mo sur disque. Un étudiant ne télécharge jamais qu'un niveau par organe —
+  # la borne qui compte pour lui est vérifiée par `tests/lod.test.mts`.
+  MODELS_BUDGET_KB: 14336
+  # Taille maximale d'un seul .glb (CLAUDE.md §9).
+  MODEL_MAX_KB: 2048
 
 jobs:
   verify:

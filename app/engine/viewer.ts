@@ -17,6 +17,7 @@ import { DebugOverlay, debugRequested } from "./core/stats";
 import { InputController, type InputAction } from "./interaction/input-controller";
 import { HotspotLayer } from "./interaction/hotspots";
 import { AnatomyAssetManager, type LoadedOrgan } from "./loaders/assets";
+import { memoryBudgetBytes, selectLevel, PREVIEW_LEVEL, type LodLevel } from "./loaders/lod";
 
 /**
  * L'orchestrateur du moteur.
@@ -101,6 +102,7 @@ export class AnatomyViewer {
       override !== null,
       {
         reducedMotion: signals.reducedMotion,
+        memoryBudget: memoryBudgetBytes(signals.deviceMemory, signals.coarsePointer),
       },
     );
   }
@@ -112,7 +114,7 @@ export class AnatomyViewer {
     quality: QualitySettings,
     detected: QualityProfile,
     overridden: boolean,
-    options: { reducedMotion: boolean },
+    options: { reducedMotion: boolean; memoryBudget: number },
   ) {
     this.container = container;
     this.callbacks = callbacks;
@@ -161,7 +163,7 @@ export class AnatomyViewer {
       onAction: (action) => this.handleAction(action),
     });
 
-    this.assets = new AnatomyAssetManager(renderer);
+    this.assets = new AnatomyAssetManager(renderer, options.memoryBudget);
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(container);
@@ -214,7 +216,13 @@ export class AnatomyViewer {
   // ---------------------------------------------------------------- organes
 
   prefetch(url: string) {
-    this.assets.prefetch(url);
+    this.assets.prefetch(url, PREVIEW_LEVEL);
+  }
+
+  /** Niveau visé ici et maintenant : plancher du profil, affiné par la distance. */
+  private targetLevel(): LodLevel {
+    const distance = this.rig.camera.position.distanceTo(this.rig.controls.target);
+    return selectLevel(this.quality.lodBias, distance);
   }
 
   async setOrgan(modelUrl: string, hotspots: Hotspot[], accent: string) {
@@ -246,10 +254,19 @@ export class AnatomyViewer {
 
     this.rig.tween(this.rig.camera.position, { z: 9.2, duration: 0.42, ease: "power2.inOut" });
 
+    const target = this.targetLevel();
+    // Streaming progressif : le niveau le plus léger (~150 Ko) part d'abord et
+    // porte toute l'animation d'entrée. Sur une 3G nigérienne c'est la différence
+    // entre un organe à l'écran en une seconde et un canevas vide pendant dix.
+    const preview: LodLevel = target === PREVIEW_LEVEL ? target : PREVIEW_LEVEL;
+
     let organ: LoadedOrgan;
     try {
-      organ = await this.assets.load(modelUrl, (progress) => {
-        if (request === this.loadRequest) this.callbacks.onLoading(true, progress);
+      organ = await this.assets.load(modelUrl, {
+        level: preview,
+        onProgress: (progress) => {
+          if (request === this.loadRequest) this.callbacks.onLoading(true, progress);
+        },
       });
     } catch (error) {
       if (request === this.loadRequest) this.callbacks.onLoading(false, 0);
@@ -263,12 +280,12 @@ export class AnatomyViewer {
     this.graph.scene.add(organ.pivot);
     organ.pivot.updateWorldMatrix(true, true);
 
-    // Les points sont ancrés pendant que l'organe est encore invisible, puis
-    // l'intro se joue.
-    this.hotspots.attach(organ.pivot, hotspots, organ.meshes);
-    this.hotspots.setPixelSize(DOT_PIXELS, this.height, CAMERA_FOV);
     if (this.crossSection) this.applyClipping(true);
     this.graph.setAccent(accent);
+
+    // Les points ne sont ancrés que sur le niveau définitif : les accrocher au
+    // maillage d'aperçu les ferait sauter de quelques millimètres au raffinement.
+    if (preview === target) this.attachHotspots(organ, hotspots);
 
     organ.pivot.scale.setScalar(0.58);
     organ.pivot.position.z = -1.3;
@@ -284,6 +301,48 @@ export class AnatomyViewer {
       .to(organ.pivot.scale, { x: 1, y: 1, z: 1, duration: 0.9, ease: "back.out(1.25)" }, 0)
       .to(organ.pivot.position, { z: 0, duration: 0.85, ease: "power3.out" }, 0)
       .to(this.rig.camera.position, { z: 8.2, duration: 0.9, ease: "power2.out" }, 0.08);
+
+    if (preview !== target) void this.refine(modelUrl, hotspots, target, request);
+  }
+
+  private attachHotspots(organ: LoadedOrgan, hotspots: Hotspot[]) {
+    this.hotspots.attach(organ.pivot, hotspots, organ.meshes);
+    this.hotspots.setPixelSize(DOT_PIXELS, this.height, CAMERA_FOV);
+  }
+
+  /**
+   * Charge le niveau définitif en arrière-plan et le substitue à l'aperçu.
+   *
+   * La substitution est instantanée et non animée : les deux maillages partagent
+   * la même silhouette à quelques dixièmes de millimètre près, un fondu y serait
+   * plus visible que la bascule elle-même. La rotation en cours est reprise telle
+   * quelle, sans quoi l'organe se remettrait droit sous les doigts de l'étudiant.
+   */
+  private async refine(modelUrl: string, hotspots: Hotspot[], level: LodLevel, request: number) {
+    let detailed: LoadedOrgan;
+    try {
+      detailed = await this.assets.load(modelUrl, { level });
+    } catch {
+      // Le raffinement est un bonus : s'il échoue, l'aperçu reste à l'écran et
+      // l'étudiant garde un organe utilisable. Aucun message, aucune interruption.
+      return;
+    }
+    if (request !== this.loadRequest || this.disposed) return;
+
+    const preview = this.organ;
+    detailed.pivot.rotation.copy(preview?.pivot.rotation ?? detailed.pivot.rotation);
+    detailed.pivot.scale.copy(preview?.pivot.scale ?? detailed.pivot.scale);
+    detailed.pivot.position.copy(preview?.pivot.position ?? detailed.pivot.position);
+
+    this.hotspots.clear();
+    if (preview) this.assets.release(preview);
+    this.organ = detailed;
+    this.graph.scene.add(detailed.pivot);
+    detailed.pivot.updateWorldMatrix(true, true);
+    this.attachHotspots(detailed, hotspots);
+    if (this.crossSection) this.applyClipping(true);
+    this.overlay?.rebaseline();
+    this.loop.markDirty();
   }
 
   private materials(organ: LoadedOrgan) {

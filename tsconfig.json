@@ -11,6 +11,10 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    // Les tests tournent sous `node --experimental-strip-types`, qui exige des
+    // imports avec extension explicite. Sans emit, l'option est sans effet sur le
+    // build Next.
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [

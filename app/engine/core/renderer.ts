@@ -23,6 +23,12 @@ export interface AnatomyRenderer {
   /** Anisotropie réellement disponible, déjà bornée par le profil de qualité. */
   readonly maxAnisotropy: number;
   readonly info: RendererInfo;
+  /**
+   * Le renderer three sous-jacent. Réservé aux rares API de three qui exigent
+   * l'objet concret — `KTX2Loader.detectSupport()` notamment. Tout autre usage
+   * trahirait l'abstraction.
+   */
+  readonly raw: unknown;
   setSize(width: number, height: number, updateStyle?: boolean): void;
   setPixelRatio(value: number): void;
   render(scene: THREE.Scene, camera: THREE.Camera): void;
@@ -134,6 +140,7 @@ function wrap(
   return {
     backend,
     domElement: renderer.domElement,
+    raw: renderer,
     maxAnisotropy: anisotropy ?? quality.maxAnisotropy,
     get info() {
       return renderer.info;

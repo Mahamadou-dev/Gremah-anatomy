@@ -335,7 +335,7 @@ sont cochées et le site est en ligne.
 | ------ | ---------- | ----------------------- | ------------------------------------------------------------------------------------------------------------- |
 | 0      | ✅ terminé | `sprint-0/fondations`   | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.   |
 | 1      | ✅ terminé | `sprint-1/moteur-v2`    | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils commutables, CameraRig, overlay `?debug=1`, 18 tests. |
-| 2      | ⬜ à faire | `sprint-2/assets`       |                                                                                                               |
+| 2      | ✅ terminé | `sprint-2/assets`       | 28,6 Mo → 7,9 Mo par niveau (3 LOD), décodeurs câblés, budget mémoire en octets, streaming progressif.        |
 | 3      | ⬜ à faire | `sprint-3/materiaux`    |                                                                                                               |
 | 4      | ⬜ à faire | `sprint-4/interaction`  |                                                                                                               |
 | 5      | ⬜ à faire | `sprint-5/contenu`      |                                                                                                               |

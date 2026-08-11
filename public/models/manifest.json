@@ -1,0 +1,217 @@
+{
+  "organs": {
+    "brain": {
+      "hash": "2cd5e7178f1e5de7",
+      "source": "brain.glb",
+      "sourceBytes": 2570592,
+      "levels": [
+        {
+          "file": "brain.glb",
+          "bytes": 898184,
+          "triangles": 49098
+        },
+        {
+          "file": "brain-lod1.glb",
+          "bytes": 401964,
+          "triangles": 20770
+        },
+        {
+          "file": "brain-lod2.glb",
+          "bytes": 175684,
+          "triangles": 8308
+        }
+      ]
+    },
+    "eyeball": {
+      "hash": "584337a2efc7d3c0",
+      "source": "eyeball.glb",
+      "sourceBytes": 2203616,
+      "levels": [
+        {
+          "file": "eyeball.glb",
+          "bytes": 816460,
+          "triangles": 41632
+        },
+        {
+          "file": "eyeball-lod1.glb",
+          "bytes": 365280,
+          "triangles": 17612
+        },
+        {
+          "file": "eyeball-lod2.glb",
+          "bytes": 161984,
+          "triangles": 7044
+        }
+      ]
+    },
+    "heart": {
+      "hash": "ef48b43442dbbe28",
+      "source": "heart.glb",
+      "sourceBytes": 3321148,
+      "levels": [
+        {
+          "file": "heart.glb",
+          "bytes": 953516,
+          "triangles": 50254
+        },
+        {
+          "file": "heart-lod1.glb",
+          "bytes": 432984,
+          "triangles": 21262
+        },
+        {
+          "file": "heart-lod2.glb",
+          "bytes": 195856,
+          "triangles": 8502
+        }
+      ]
+    },
+    "intestine": {
+      "hash": "d4423ba0c8f08ac7",
+      "source": "intestine.glb",
+      "sourceBytes": 1980780,
+      "levels": [
+        {
+          "file": "intestine.glb",
+          "bytes": 723532,
+          "triangles": 40136
+        },
+        {
+          "file": "intestine-lod1.glb",
+          "bytes": 331832,
+          "triangles": 16978
+        },
+        {
+          "file": "intestine-lod2.glb",
+          "bytes": 152080,
+          "triangles": 6792
+        }
+      ]
+    },
+    "kidneys": {
+      "hash": "e3e0a58372d794d6",
+      "source": "kidneys.glb",
+      "sourceBytes": 2190764,
+      "levels": [
+        {
+          "file": "kidneys.glb",
+          "bytes": 785560,
+          "triangles": 42568
+        },
+        {
+          "file": "kidneys-lod1.glb",
+          "bytes": 352596,
+          "triangles": 18008
+        },
+        {
+          "file": "kidneys-lod2.glb",
+          "bytes": 161072,
+          "triangles": 7202
+        }
+      ]
+    },
+    "liver": {
+      "hash": "e4f11a9c0762eb9d",
+      "source": "liver.glb",
+      "sourceBytes": 2660384,
+      "levels": [
+        {
+          "file": "liver.glb",
+          "bytes": 1053140,
+          "triangles": 44898
+        },
+        {
+          "file": "liver-lod1.glb",
+          "bytes": 505728,
+          "triangles": 18980
+        },
+        {
+          "file": "liver-lod2.glb",
+          "bytes": 251512,
+          "triangles": 7582
+        }
+      ]
+    },
+    "lungs": {
+      "hash": "81617c9fc2f2b7bf",
+      "source": "lungs.glb",
+      "sourceBytes": 4455976,
+      "levels": [
+        {
+          "file": "lungs.glb",
+          "bytes": 875036,
+          "triangles": 45600
+        },
+        {
+          "file": "lungs-lod1.glb",
+          "bytes": 372600,
+          "triangles": 19292
+        },
+        {
+          "file": "lungs-lod2.glb",
+          "bytes": 161168,
+          "triangles": 7716
+        }
+      ]
+    },
+    "pancreas": {
+      "hash": "e5213bf8ed66e8ed",
+      "source": "pancreas.glb",
+      "sourceBytes": 4848556,
+      "levels": [
+        {
+          "file": "pancreas.glb",
+          "bytes": 919600,
+          "triangles": 45056
+        },
+        {
+          "file": "pancreas-lod1.glb",
+          "bytes": 392328,
+          "triangles": 19062
+        },
+        {
+          "file": "pancreas-lod2.glb",
+          "bytes": 162484,
+          "triangles": 7624
+        }
+      ]
+    },
+    "skin": {
+      "hash": "8183ffe3527b3f07",
+      "source": "skin.glb",
+      "sourceBytes": 5789160,
+      "levels": [
+        {
+          "file": "skin.glb",
+          "bytes": 1215168,
+          "triangles": 46323
+        },
+        {
+          "file": "skin-lod1.glb",
+          "bytes": 577012,
+          "triangles": 19587
+        },
+        {
+          "file": "skin-lod2.glb",
+          "bytes": 356464,
+          "triangles": 10795
+        }
+      ]
+    }
+  },
+  "generatedAt": "2026-08-11T05:01:40.210Z",
+  "levels": [
+    {
+      "index": 0,
+      "suffix": ""
+    },
+    {
+      "index": 1,
+      "suffix": "-lod1"
+    },
+    {
+      "index": 2,
+      "suffix": "-lod2"
+    }
+  ]
+}

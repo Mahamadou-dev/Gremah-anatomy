@@ -52,9 +52,26 @@ Les trois doivent passer. `npm run format` corrige le formatage.
 - Le profil `low` doit tenir 30 fps sur un Android d'entrée de gamme. C'est un
   critère d'acceptation, pas une aspiration.
 
-### Assets
+### Assets 3D
 
-- Tout `.glb` ajouté est compressé Draco + KTX2 et pèse **< 2 Mo**.
+`assets/models-src/` contient les modèles bruts — **jamais servis au navigateur**.
+`public/models/` est **généré** :
+
+```bash
+npm run models:inspect   # où partent les octets : géométrie ou textures ?
+npm run models:build     # régénère public/models/ (incrémental)
+npm run models:build -- --force
+```
+
+Chaque organe produit trois niveaux : `heart.glb`, `heart-lod1.glb`, `heart-lod2.glb`.
+Le moteur choisit le niveau selon le profil de qualité et la distance caméra, et
+affiche toujours `-lod2` en premier pendant que le niveau visé se charge.
+
+- Ajoute la source dans `assets/models-src/`, lance `npm run models:build`, commite
+  les deux. Le manifeste `public/models/manifest.json` rend le pipeline idempotent :
+  **ne le supprime pas** — sans lui, une relance re-décime des modèles déjà décimés.
+- Tout `.glb` livré pèse **< 2 Mo** et chaque niveau complet tient sous **8 Mo**
+  (vérifié par `tests/lod.test.mts` et par la CI).
 - Aucun fichier généré committé hors `public/`.
 
 ### Contenu anatomique

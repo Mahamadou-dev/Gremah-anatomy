@@ -1,49 +1,102 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { disposeObject } from "./dispose";
 import type { AnatomyRenderer } from "../core/renderer";
+import { estimateResidentBytes, lodUrl, type LodLevel } from "./lod";
 
 /** Edge length of the cube every organ is normalised into, so hotspot
  *  coordinates authored in `anatomy-data` mean the same thing for each model. */
 export const FIT_SIZE = 3.8;
 
-const CACHE_LIMIT = 3;
+/**
+ * Plafond de sécurité en nombre d'entrées, doublant le budget en octets.
+ * Le budget réel est `memoryBudgetBytes()` : cette limite n'existe que pour le cas
+ * dégénéré d'organes minuscules, où mille entrées tiendraient sous le budget tout
+ * en saturant les handles GPU.
+ */
+const CACHE_LIMIT = 8;
 
 export type LoadedOrgan = {
   url: string;
+  /** Niveau de détail réellement chargé. */
+  level: LodLevel;
   /** Hotspot space: the fitted model, centred on the origin, spanning FIT_SIZE. */
   pivot: THREE.Group;
   meshes: THREE.Mesh[];
   mixer: THREE.AnimationMixer | null;
+  /** Empreinte mémoire estimée, base de la politique d'éviction. */
+  bytes: number;
+};
+
+export type LoadOptions = {
+  level: LodLevel;
+  onProgress?: (progress: number) => void;
 };
 
 export class AnatomyAssetManager {
   private loader: GLTFLoader;
+  private draco: DRACOLoader | null = null;
+  private ktx2: KTX2Loader | null = null;
   private cache = new Map<string, LoadedOrgan>();
   private inflight = new Map<string, Promise<LoadedOrgan>>();
   private current: LoadedOrgan | null = null;
   private maxAnisotropy: number;
+  private budgetBytes: number;
 
-  constructor(renderer: AnatomyRenderer) {
+  constructor(renderer: AnatomyRenderer, budgetBytes: number) {
     // L'anisotropie est ce qui empêche le détail des textures de ramper aux angles
     // rasants — l'essentiel du scintillement sur un organe qui tourne. Le plafond
     // vient du profil de qualité : sur `low` elle est le premier poste sacrifié.
     this.maxAnisotropy = renderer.maxAnisotropy;
+    this.budgetBytes = budgetBytes;
     this.loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+
+    // Draco et KTX2 sont câblés même si le pipeline actuel produit du meshopt +
+    // WebP : les décodeurs sont déjà dans `public/`, ils décodent en worker, et
+    // un modèle tiers en Draco doit s'ouvrir sans changer une ligne de code.
+    // Si le WASM manque, `setDecoderPath` échoue au chargement du modèle concerné
+    // seulement — les autres organes continuent de s'afficher.
+    try {
+      this.draco = new DRACOLoader().setDecoderPath("/draco/");
+      this.loader.setDRACOLoader(this.draco);
+      this.ktx2 = new KTX2Loader().setTranscoderPath("/basis/");
+      // Le transcodeur doit connaître les formats compressés du GPU pour choisir
+      // sa cible (ASTC, ETC2, BC7…). Sans ça il déballerait tout en RGBA non
+      // compressé, ce qui coûterait plus cher que de ne pas utiliser KTX2.
+      if (renderer.backend === "webgl2")
+        this.ktx2.detectSupport(renderer.raw as THREE.WebGLRenderer);
+      this.loader.setKTX2Loader(this.ktx2);
+    } catch {
+      // Environnement sans Worker ni WASM : on garde le chemin meshopt, qui suffit
+      // aux assets du dépôt.
+    }
   }
 
   get hasAnimation() {
     return Boolean(this.current?.mixer);
   }
 
-  /** Warms the HTTP cache so switching organs feels instant. */
-  prefetch(url: string) {
+  /**
+   * Réchauffe le cache HTTP au survol. On ne préfetch que le niveau le plus léger :
+   * spéculer sur 1 Mo alors que l'étudiant paie son forfait au mégaoctet serait
+   * exactement le comportement que ce projet refuse.
+   */
+  prefetch(baseUrl: string, level: LodLevel) {
+    const url = lodUrl(baseUrl, level);
     if (this.cache.has(url) || this.inflight.has(url)) return;
     void fetch(url, { priority: "low" } as RequestInit).catch(() => {});
   }
 
-  async load(url: string, onProgress?: (progress: number) => void): Promise<LoadedOrgan> {
+  /** Vrai si ce niveau est déjà en mémoire — l'afficher ne coûtera rien. */
+  isResident(baseUrl: string, level: LodLevel) {
+    return this.cache.has(lodUrl(baseUrl, level));
+  }
+
+  async load(baseUrl: string, { level, onProgress }: LoadOptions): Promise<LoadedOrgan> {
+    const url = lodUrl(baseUrl, level);
     const cached = this.cache.get(url);
     if (cached) {
       this.cache.delete(url);
@@ -54,7 +107,7 @@ export class AnatomyAssetManager {
       return cached;
     }
 
-    const pending = this.inflight.get(url) ?? this.parse(url, onProgress);
+    const pending = this.inflight.get(url) ?? this.parse(url, level, onProgress);
     this.inflight.set(url, pending);
     try {
       const organ = await pending;
@@ -67,8 +120,14 @@ export class AnatomyAssetManager {
     }
   }
 
-  private async parse(url: string, onProgress?: (progress: number) => void): Promise<LoadedOrgan> {
+  private async parse(
+    url: string,
+    level: LodLevel,
+    onProgress?: (progress: number) => void,
+  ): Promise<LoadedOrgan> {
+    let downloadedBytes = 0;
     const gltf = await this.loader.loadAsync(url, (event) => {
+      downloadedBytes = Math.max(downloadedBytes, event.loaded);
       if (event.total > 0) onProgress?.(event.loaded / event.total);
     });
 
@@ -153,7 +212,7 @@ export class AnatomyAssetManager {
       gltf.animations.forEach((clip) => mixer?.clipAction(clip).play());
     }
 
-    return { url, pivot, meshes, mixer };
+    return { url, level, pivot, meshes, mixer, bytes: estimateResidentBytes(downloadedBytes) };
   }
 
   /** Undoes viewer tools (wireframe, clipping, fade) before a cached organ returns. */
@@ -178,13 +237,30 @@ export class AnatomyAssetManager {
     materials.forEach(fn);
   }
 
+  /** Octets estimés actuellement retenus par le cache. */
+  get residentBytes() {
+    let total = 0;
+    this.cache.forEach((organ) => (total += organ.bytes));
+    return total;
+  }
+
+  /**
+   * Éviction par budget mémoire, la plus ancienne entrée d'abord.
+   *
+   * L'organe courant n'est jamais évincé, même s'il dépasse à lui seul le budget :
+   * libérer ce qui est à l'écran ne libère rien d'utile et laisse un trou noir à
+   * la place du modèle.
+   */
   private evict() {
-    while (this.cache.size > CACHE_LIMIT) {
-      const oldest = this.cache.keys().next().value as string | undefined;
+    while (
+      this.cache.size > 1 &&
+      (this.residentBytes > this.budgetBytes || this.cache.size > CACHE_LIMIT)
+    ) {
+      const oldest = [...this.cache.keys()].find((key) => this.cache.get(key) !== this.current);
       if (!oldest) return;
       const organ = this.cache.get(oldest);
       this.cache.delete(oldest);
-      if (organ && organ !== this.current) this.destroy(organ);
+      if (organ) this.destroy(organ);
     }
   }
 
