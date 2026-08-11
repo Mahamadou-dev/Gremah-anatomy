@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 next-env.d.ts
 *.tsbuildinfo
+
+# Le gabarit, lui, doit etre versionne : il documente les cles attendues.
+!.env.example

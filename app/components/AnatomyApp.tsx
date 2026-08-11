@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 // Fonction pure de dérivation d'URL : aucun objet three ne traverse la frontière.
 import { lodUrl, PREVIEW_LEVEL } from "../engine/loaders/lod";
+import { AccountBadge } from "./AccountBadge";
 import { OrganViewer } from "./OrganViewer";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
@@ -159,6 +160,7 @@ export function AnatomyApp({ initialOrgan = "heart" }: { initialOrgan?: OrganId 
             aria-label="Rechercher un organe ou un système"
           />
         </label>
+        <AccountBadge />
         <ThemeToggle />
         <button
           className="mobile-library-trigger"

@@ -17,10 +17,49 @@ d'entrée de gamme, en connexion faible, et hors-ligne après la première visit
 | #   | Exigence                                          | Traduction technique                                                                                                                                                                      |
 | --- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | **3D extrêmement renforcée et moderne**           | WebGPU/TSL en cible, WebGL2 en repli. Matériaux PBR + SSS, post-processing, coupes anatomiques, animations physiologiques. La 3D est le produit, pas une décoration.                      |
-| 2   | **Frontend only**                                 | Zéro backend, zéro base de données, zéro route API. Build statique déployable sur Vercel/GitHub Pages/Netlify. Persistance = `localStorage` + IndexedDB.                                  |
+| 2   | **Frontend only, à une exception près**           | Le contenu, la 3D et la révision restent 100 % client (`localStorage` + IndexedDB). **Seuls les comptes** passent par 4 routes `app/api/` vers MongoDB Atlas — voir l'amendement §2 bis.  |
 | 3   | **Public cible : étudiants en médecine du Niger** | Interface **française d'abord** (FR par défaut, EN secondaire, vocabulaire **Hausa/Zarma** en bonus terminologique). Contenu aligné sur le cursus PCEM/DCEM. Mode data-light obligatoire. |
 | 4   | **Thème drapeau du Niger, huilé et moderne**      | Palette orange / blanc / vert + disque solaire, traitée en surfaces satinées, dégradés profonds, verre dépoli — jamais en aplats « drapeau ».                                             |
 | 5   | **Marque Gremah**                                 | Contacts (§7) présents dans le footer, la page À propos et les métadonnées.                                                                                                               |
+
+### §2 bis — Amendement : les comptes étudiants
+
+Décidé au Sprint 11, en connaissance de cause. L'accès à l'atlas passe par un
+compte (email + mot de passe) stocké dans **MongoDB Atlas**.
+
+**Pourquoi ce n'est pas faisable sans serveur du tout.** Le driver MongoDB parle
+un protocole binaire sur TCP : un navigateur ne sait ouvrir que HTTP et
+WebSocket. La façade HTTPS d'Atlas (Data API / App Services) a été retirée en
+septembre 2025. Et une clé d'API dans un bundle statique est publique, donc toute
+la base serait lisible et modifiable par n'importe quel visiteur.
+
+**Ce qui a été fait.** Quatre routes `app/api/` — `inscription`, `connexion`,
+`deconnexion`, `moi` — exécutées par Vercel à la demande. Pas de serveur à
+administrer, pas de service séparé. `output: "export"` a dû être retiré.
+
+**Ce qui n'a pas changé.** Toutes les pages restent prérendues en statique ;
+les modèles, images et contenus restent des fichiers ; la 3D, la progression et
+la révision ne touchent jamais le réseau. Seules l'inscription, la connexion et
+la lecture du profil sortent.
+
+**Ce qu'on a perdu.** Le déploiement sur un hôte purement statique (GitHub
+Pages, clé USB pour une salle de TP) ne porterait plus les comptes — le reste du
+site y fonctionnerait toujours. Vercel devient l'hôte de référence.
+
+**Règles qui en découlent, non négociables :**
+
+- `app/lib/server/` ne doit **jamais** être importé depuis un fichier
+  `"use client"` — un test l'interdit (`tests/comptes.test.mts`).
+- Aucun secret sous un préfixe `NEXT_PUBLIC_` : ce préfixe inline la valeur dans
+  le bundle du navigateur. Test également.
+- Les mots de passe sont hachés par `scrypt` (`node:crypto`), jamais stockés
+  ni journalisés en clair.
+- La validation vit dans `app/lib/compte.ts`, module pur partagé par le
+  formulaire et la route. Le serveur revalide **toujours** : la validation
+  client est un confort, elle ne prouve rien.
+- Le contenu anatomique reste consultable hors ligne une fois la session ouverte
+  (Sprint 9). Un compte ne doit jamais devenir une condition d'accès au contenu
+  déjà téléchargé.
 
 ---
 

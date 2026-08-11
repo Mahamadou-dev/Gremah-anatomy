@@ -3,6 +3,9 @@
    Séparée pour que `globals.css` reste la feuille de l'outil. Importée après
    Tailwind, avant les tokens : elle consomme les tokens, elle n'en définit pas. */
 @import "./landing.css";
+/* Les écrans de compte réutilisent les primitives de `landing.css` (champs,
+   boutons), d'où l'ordre. */
+@import "./auth.css";
 
 /* ============================================================================
    GREMAH ANATOMY — SYSTÈME DE THÈME

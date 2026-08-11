@@ -1,0 +1,275 @@
+/* ============================================================================
+   COMPTES — CONNEXION ET INSCRIPTION
+   Deux colonnes : le formulaire, et la raison de le remplir. Un formulaire nu
+   sur un site qu'on découvre ne donne aucun motif d'y laisser son email.
+   Réutilise `.field`, `.btn-primary` et `.contact-row` de `landing.css` : les
+   champs d'un site doivent se ressembler.
+   ========================================================================= */
+
+.auth-page {
+  --gutter: clamp(20px, 5vw, 72px);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px var(--gutter);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.auth-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(280px, 0.72fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(32px, 7vh, 80px) var(--gutter);
+}
+
+.auth-card h1 {
+  margin: 0;
+  font:
+    500 clamp(26px, 3.4vw, 40px)/1.12 var(--font-serif),
+    serif;
+  letter-spacing: -0.028em;
+  color: var(--text);
+}
+
+.auth-intro {
+  margin: 12px 0 32px;
+  max-width: 46ch;
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--text-muted);
+}
+
+.auth-form {
+  display: grid;
+  gap: 18px;
+  min-height: 320px;
+}
+
+/* Le bouton d'affichage du mot de passe est posé *dans* le champ, sans sortir
+   l'input de son label : le clic sur l'œil ne doit pas donner le focus au champ. */
+.field-with-button {
+  position: relative;
+  display: block;
+}
+
+.field-with-button input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.field-with-button button {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.field-with-button button:hover {
+  color: var(--accent);
+}
+
+.field-error,
+.field-hint {
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.field-error {
+  color: var(--accent);
+}
+
+.field-hint {
+  color: var(--text-faint);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--accent);
+}
+
+.auth-submit {
+  justify-content: center;
+  width: 100%;
+}
+
+/* Réservé en permanence : sans hauteur minimale, l'apparition d'un message
+   d'erreur pousse le bouton sous le doigt au moment précis où on le vise. */
+.auth-message {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--accent);
+}
+
+.auth-switch {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.auth-switch a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.auth-switch a:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* --- Panneau d'arguments -------------------------------------------------- */
+
+.auth-aside {
+  position: relative;
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid var(--line-soft);
+  border-radius: 24px;
+  background: var(--surface-1);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-soft), var(--glass-hi);
+  overflow: hidden;
+}
+
+/* Le disque solaire, en lumière rasante dans un coin. */
+.auth-aside-halo {
+  position: absolute;
+  top: -90px;
+  right: -70px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(244, 163, 28, 0.24),
+    rgba(224, 82, 6, 0.1) 48%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.auth-aside ul {
+  position: relative;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.auth-aside li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 14px;
+  line-height: 1.58;
+  color: var(--text);
+}
+
+.auth-aside li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--sun), var(--ng-orange) 70%);
+}
+
+.auth-privacy,
+.auth-disclaimer {
+  position: relative;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.58;
+  color: var(--text-faint);
+}
+
+.auth-privacy {
+  padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
+  margin-bottom: 12px;
+}
+
+/* --- Pastille de compte dans l'atlas -------------------------------------- */
+
+.account-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px 5px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: var(--wash);
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.account-badge b {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.account-badge button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-sunk);
+  color: var(--text-faint);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.account-badge button:hover {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+@media (max-width: 900px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  /* Sur téléphone, les arguments passent sous le formulaire : celui qui arrive
+     ici depuis le bouton « créer un compte » est déjà convaincu. */
+  .auth-aside {
+    order: 2;
+  }
+  .account-badge span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-badge button,
+  .field-with-button button {
+    transition: none;
+  }
+}

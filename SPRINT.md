@@ -354,32 +354,59 @@ qu'il a sous les yeux, et pouvoir écrire à l'auteur sans quitter la page.
 5. **Feuille dédiée** — `app/landing.css` : la vitrine ne pollue pas la feuille
    de l'outil.
 
-**Reste à trancher :** l'accès par compte (email + mot de passe). Voir la note
-ci-dessous — la brique demandée n'existe plus telle quelle.
+6. **Comptes étudiants sur MongoDB Atlas** — voir ci-dessous.
 
-### Note — compte utilisateur et MongoDB Atlas
+### Comptes : ce qui a été construit, et pourquoi comme ça
 
-Demandé : connexion par email + mot de passe, stockage dans MongoDB Atlas, sans
-backend dédié. **Ce chemin n'est plus praticable tel quel :**
+Demandé : inscription (prénom, nom, email, pays, région) et connexion, comptes
+dans MongoDB Atlas, sans backend dédié.
 
-- Le driver MongoDB parle un protocole TCP binaire : un navigateur ne peut pas
-  l'ouvrir. Il n'y a pas de version « front » du driver.
-- La **Data API** d'Atlas, qui exposait une façade HTTPS, a été retirée en
-  septembre 2025, en même temps qu'**Atlas App Services / Realm**. Les tutoriels
-  « MongoDB depuis le front » datent tous d'avant cette date.
-- Même si elle existait encore : une clé d'API dans un bundle statique est
-  publique. Toute la base serait lisible et modifiable par n'importe quel visiteur.
+**Le navigateur ne peut pas joindre Atlas lui-même.** Le driver MongoDB parle un
+protocole binaire sur TCP, et un navigateur ne sait ouvrir que HTTP et WebSocket ;
+il n'existe pas de version « front » du driver. La façade HTTPS d'Atlas — la
+**Data API**, et **App Services / Realm** — a été retirée en septembre 2025 (tous
+les tutoriels « MongoDB depuis le front » sont antérieurs). Et de toute façon, une
+clé d'API dans un bundle statique est publique : la base entière serait lisible et
+modifiable par n'importe quel visiteur.
 
-Trois issues réelles, par ordre de coût :
+**Ce qui a donc été fait :** quatre routes `app/api/`, exécutées par Vercel à la
+demande. Pas de serveur à administrer ni de service séparé — le plus petit
+intermédiaire qui existe.
 
-| Option                                                                       | Coût                                      | Ce qu'on perd                                                  |
-| ---------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
-| **A. Aucun compte** — progression en `localStorage` / IndexedDB, export JSON | zéro                                      | pas de synchronisation entre appareils                         |
-| **B. Fonctions serverless Vercel** (`app/api/…`) + Atlas                     | ~150 lignes, hachage argon2, cookie signé | `output: "export"` — le site n'est plus déployable sur clé USB |
-| **C. Auth tierce navigateur** (Supabase, Firebase, Clerk)                    | ~1 jour                                   | une dépendance de plus, et les données quittent MongoDB        |
+| Route              | Rôle                                                                       |
+| ------------------ | -------------------------------------------------------------------------- |
+| `/api/inscription` | valide, hache, insère ; l'index unique tranche les doublons                |
+| `/api/connexion`   | vérifie, ouvre la session ; empreinte leurre pour ne pas fuiter les emails |
+| `/api/deconnexion` | efface le cookie ; POST seulement                                          |
+| `/api/moi`         | profil de la session, seul endroit qui confronte le jeton à la base        |
 
-L'option A reste celle du cahier de charge (Sprint 8 : « aucun compte, aucun
-serveur »). B est la seule qui garde MongoDB Atlas.
+**Choix de sécurité :**
+
+- **`scrypt`** de `node:crypto` pour les mots de passe — coût mémoire, donc
+  coûteux à attaquer au GPU ; zéro dépendance, zéro binaire natif sur Vercel.
+  Les paramètres sont relus depuis l'empreinte, pour pouvoir les durcir plus tard
+  sans invalider les comptes existants.
+- **Sessions signées HMAC-SHA256**, sans table de sessions : rien à purger, et une
+  fonction sans état les vérifie seule. Écrites sur **WebCrypto** pour que le
+  middleware (runtime Edge) et les routes (Node) partagent le même code.
+- Cookie **`httpOnly` + `sameSite: lax`**, `secure` en production seulement.
+- Le middleware vérifie la **signature**, pas seulement la présence du cookie.
+- Un seul message pour « email inconnu » et « mot de passe faux », et une durée de
+  réponse identique dans les deux cas : sinon la page devient un outil
+  d'énumération des comptes.
+- Validation partagée (`app/lib/compte.ts`), **revalidée systématiquement** côté
+  serveur. Trois tests gardent la frontière : pas d'import de `lib/server/` depuis
+  un composant client, pas de secret sous `NEXT_PUBLIC_`, runtime Node sur les
+  quatre routes.
+
+**Le prix payé :** `output: "export"` a été retiré. Les pages restent toutes
+prérendues en statique et les assets restent des fichiers — mais un hôte purement
+statique (GitHub Pages, clé USB de salle de TP) ne porterait plus les comptes.
+Amendement consigné dans **CLAUDE.md §2 bis**.
+
+**Reste à faire :** limitation de débit sur `/api/connexion` (aujourd'hui rien ne
+freine un essai de mots de passe en boucle), réinitialisation de mot de passe,
+vérification d'adresse email, et suppression de compte.
 
 ---
 
@@ -398,7 +425,7 @@ serveur »). B est la seule qui garde MongoDB Atlas.
 | 8      | ⬜ à faire  | `sprint-8/revision`     |                                                                                                               |
 | 9      | ⬜ à faire  | `sprint-9/offline`      |                                                                                                               |
 | 10     | ⬜ à faire  | `sprint-10/lancement`   |                                                                                                               |
-| 11     | 🟨 en cours | `sprint-11/accueil`     | Vitrine 3D, `/atlas/`, contact sans backend, à propos enrichie. Reste : décision sur le compte utilisateur.   |
+| 11     | 🟨 en cours | `sprint-11/accueil`     | Vitrine 3D, `/atlas/`, contact, à propos, comptes Atlas (scrypt + HMAC). Reste : limitation de débit, reset.  |
 
 ---
 

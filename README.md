@@ -14,26 +14,35 @@ connexion permanente. Gremah Anatomy prend le problème dans l'autre sens : la
 contrainte de départ est un téléphone modeste sur un réseau intermittent, et la
 langue de travail est le français, celle du cursus.
 
-Aucun serveur, aucun compte, aucune donnée envoyée nulle part. La progression
-reste sur l'appareil de l'étudiant (`localStorage` + IndexedDB).
+La 3D, le contenu et la progression vivent entièrement dans le navigateur —
+la progression reste sur l'appareil de l'étudiant (`localStorage` + IndexedDB).
+Seul l'accès à l'atlas demande un compte : quatre routes `app/api/` déposent
+l'email, le nom, le pays et la région dans MongoDB Atlas, et rien d'autre.
+Pourquoi ce détour est inévitable : [CLAUDE.md §2 bis](CLAUDE.md).
 
 ## Démarrer
 
 ```bash
 npm install
-npm run dev      # serveur de développement
-npm run build    # export statique dans out/
-npm run preview  # sert out/ localement
+cp .env.example .env.local   # puis renseigner MONGODB_URI et AUTH_SECRET
+npm run dev                  # serveur de développement
+npm run build                # build de production
 npm run lint
+npm test
 ```
 
 Node `>= 22.13.0` requis.
+
+Sans `.env.local`, tout fonctionne **sauf** l'inscription et la connexion :
+l'accueil, l'à propos et les sources restent consultables. `AUTH_SECRET` se
+génère avec `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
 
 ## Stack
 
 | Couche    | Choix                                              |
 | --------- | -------------------------------------------------- |
-| Framework | Next.js 16, App Router, `output: "export"`         |
+| Framework | Next.js 16, App Router, pages prérendues statiques |
+| Comptes   | MongoDB Atlas + 4 routes `app/api/`, scrypt, HMAC  |
 | Langage   | TypeScript strict                                  |
 | 3D        | three.js — WebGPU/TSL visé, repli WebGL2           |
 | Animation | GSAP                                               |

@@ -104,8 +104,11 @@ export function Landing() {
 
         <div className="landing-nav-actions">
           <ThemeToggle />
-          <Link href="/atlas/" className="btn-primary btn-compact">
-            Ouvrir l&apos;atlas <ArrowRight size={15} aria-hidden="true" />
+          <Link href="/connexion/" className="btn-ghost btn-compact">
+            Se connecter
+          </Link>
+          <Link href="/inscription/" className="btn-primary btn-compact">
+            Créer un compte <ArrowRight size={15} aria-hidden="true" />
           </Link>
         </div>
       </header>
@@ -133,8 +136,11 @@ export function Landing() {
           </p>
 
           <div className="hero-cta" data-hero-step>
-            <Link href="/atlas/" className="btn-primary btn-large">
-              Explorer l&apos;atlas <ArrowRight size={17} aria-hidden="true" />
+            {/* Annoncer la création de compte plutôt que « explorer » : envoyer
+                quelqu'un vers l'atlas pour le faire rebondir sur un mur de
+                connexion est la meilleure façon de le perdre. */}
+            <Link href="/inscription/" className="btn-primary btn-large">
+              Créer mon compte gratuit <ArrowRight size={17} aria-hidden="true" />
             </Link>
             <a href="#pourquoi" className="btn-ghost btn-large">
               <BookOpen size={16} aria-hidden="true" /> Découvrir le projet
@@ -240,8 +246,8 @@ export function Landing() {
             clavier, lisez la fiche sourcée en français — puis coupez la connexion : tout reste
             consultable.
           </p>
-          <Link href="/atlas/" className="btn-primary">
-            Ouvrir l&apos;atlas <ArrowRight size={15} aria-hidden="true" />
+          <Link href="/inscription/" className="btn-primary">
+            Commencer <ArrowRight size={15} aria-hidden="true" />
           </Link>
         </div>
       </section>
