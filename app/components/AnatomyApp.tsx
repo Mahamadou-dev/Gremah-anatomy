@@ -5,16 +5,13 @@ import gsap from "gsap";
 import {
   ArrowRight,
   BookOpen,
-  Bookmark,
   BrainCircuit,
-  ChevronDown,
   CircleHelp,
   Compass,
   FileText,
   Heart,
   LibraryBig,
   Microscope,
-  NotebookPen,
   Play,
   Search,
   Share2,
@@ -27,7 +24,8 @@ import { lodUrl, PREVIEW_LEVEL } from "../engine/loaders/lod";
 import { OrganViewer } from "./OrganViewer";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
-import { organById, organs, type Organ, type OrganId } from "../lib/anatomy-data";
+import { organById, organs, type Organ, type OrganId } from "../content/organes";
+import { AVERTISSEMENT, SOURCE_BY_ID } from "../content/sources";
 
 type Modal = "lesson" | "quiz" | "animation" | "system" | null;
 
@@ -139,40 +137,34 @@ export function AnatomyApp() {
           </strong>
           <em>L&apos;anatomie en 3D, pour les étudiants du Niger</em>
         </button>
-        <nav className="main-nav" aria-label="Primary navigation">
-          <button className="active">
-            <Compass size={17} /> Explore
-          </button>
-          <button>
-            <BrainCircuit size={17} /> Systems
-          </button>
-          <button onClick={() => setModal("lesson")}>
-            <BookOpen size={17} /> Lessons
-          </button>
-          <button>
-            <LibraryBig size={17} /> Library
-          </button>
-          <button>
-            <NotebookPen size={17} /> Notes
-          </button>
+        {/* Navigation réduite à ce qui existe réellement. Cinq onglets dont quatre
+            morts, c'est plus déroutant qu'une barre courte : un étudiant qui clique
+            dans le vide cesse de faire confiance au reste de l'interface. */}
+        <nav className="main-nav" aria-label="Navigation principale">
+          <a className="active" href="#atlas">
+            <Compass size={17} /> Atlas
+          </a>
+          <a href="/sources/">
+            <BookOpen size={17} /> Sources
+          </a>
+          <a href="/a-propos/">
+            <Compass size={17} /> À propos
+          </a>
         </nav>
         <label className="search-box">
           <Search size={17} />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search organs, topics…"
+            placeholder="Rechercher un organe, un système…"
+            aria-label="Rechercher un organe ou un système"
           />
         </label>
         <ThemeToggle />
-        <button className="profile" aria-label="Open learner profile">
-          <span>MA</span>
-          <ChevronDown size={15} />
-        </button>
         <button
           className="mobile-library-trigger"
           onClick={() => setMobileLibrary(true)}
-          aria-label="Open organ library"
+          aria-label="Ouvrir la liste des organes"
         >
           <LibraryBig size={20} />
         </button>
@@ -181,16 +173,13 @@ export function AnatomyApp() {
       <div className="workspace">
         <aside className={`organ-library ${mobileLibrary ? "open" : ""}`}>
           <div className="panel-heading">
-            <span>Organ library</span>
+            <span>Organes</span>
             <button
-              aria-label="Close library"
+              aria-label="Fermer la liste"
               className="mobile-close"
               onClick={() => setMobileLibrary(false)}
             >
               <X size={17} />
-            </button>
-            <button aria-label="Saved organs">
-              <Bookmark size={17} />
             </button>
           </div>
           <div className="organ-list">
@@ -216,18 +205,21 @@ export function AnatomyApp() {
                 )}
               </button>
             ))}
+            {filteredOrgans.length === 0 && (
+              <p className="empty-search">Aucun organe ne correspond à « {query} ».</p>
+            )}
           </div>
-          <button className="view-all" onClick={() => setQuery("")}>
-            View all organs <ArrowRight size={14} />
-          </button>
-          <blockquote>
+          {query && (
+            <button className="view-all" onClick={() => setQuery("")}>
+              Voir tous les organes <ArrowRight size={14} />
+            </button>
+          )}
+          {/* Avertissement pédagogique exigé par CLAUDE.md §8 : il doit être visible
+              là où le contenu médical est consulté, pas relégué au pied de page. */}
+          <blockquote className="disclaimer">
             <Sparkles size={18} />
-            <p>
-              Learning is
-              <br />
-              an act of curiosity.
-            </p>
-            <em>Keep exploring!</em>
+            <p>{AVERTISSEMENT}</p>
+            <a href="/sources/">Voir les sources</a>
           </blockquote>
         </aside>
 
@@ -241,11 +233,24 @@ export function AnatomyApp() {
 
         <aside className="info-panel" ref={contentRef}>
           <div className="info-kicker" data-reveal>
-            <Heart size={13} fill="currentColor" /> The {organ.name}
+            <Heart size={13} fill="currentColor" /> {organ.system}
           </div>
           <div className="info-title-row" data-reveal>
             <div>
               <h1>{organ.name}</h1>
+              {/* Nomenclature : latin de la Terminologia Anatomica, puis anglais
+                  pour retrouver la littérature internationale. */}
+              <p className="nomenclature">
+                <i>{organ.latin}</i>
+                <span>·</span>
+                {organ.english}
+                {organ.vernaculaire?.hausa && (
+                  <>
+                    <span>·</span>
+                    <abbr title="Hausa">ha.</abbr> {organ.vernaculaire.hausa}
+                  </>
+                )}
+              </p>
               <em>{organ.poetic}</em>
             </div>
             <span className="specimen-stamp">
@@ -261,122 +266,170 @@ export function AnatomyApp() {
             {organ.description}
           </p>
           <div className="rule" />
-          <h2 data-reveal>Key facts</h2>
+          <h2 data-reveal>Repères anatomiques</h2>
           <dl className="key-facts">
             <div data-reveal>
               <dt>
-                <span>◇</span> Size
+                <span>◇</span> Dimensions
               </dt>
-              <dd>{organ.size}</dd>
+              <dd>{organ.taille}</dd>
             </div>
             <div data-reveal>
               <dt>
-                <span>♙</span> Weight
+                <span>♙</span> Poids
               </dt>
-              <dd>{organ.weight}</dd>
+              <dd>{organ.poids}</dd>
             </div>
             <div data-reveal>
               <dt>
-                <span>⌁</span> Daily
+                <span>⌖</span> Situation
               </dt>
-              <dd>{organ.dailyFact}</dd>
+              <dd>{organ.situation}</dd>
             </div>
             <div data-reveal>
               <dt>
-                <span>⌖</span> Location
+                <span>◈</span> Fonction
               </dt>
-              <dd>{organ.location}</dd>
+              <dd>{organ.fonction}</dd>
             </div>
             <div data-reveal>
               <dt>
-                <span>❋</span> Blood supply
+                <span>❋</span> Vascularisation
               </dt>
-              <dd>{organ.bloodSupply}</dd>
+              <dd>{organ.vascularisation}</dd>
             </div>
             <div data-reveal>
               <dt>
-                <span>◈</span> Function
+                <span>⌁</span> Innervation
               </dt>
-              <dd>{organ.function}</dd>
+              <dd>{organ.innervation}</dd>
+            </div>
+            <div data-reveal>
+              <dt>
+                <span>⌥</span> Drainage
+              </dt>
+              <dd>{organ.drainage}</dd>
             </div>
           </dl>
-          <div className="medical-note" data-reveal>
-            <Stethoscope size={16} />
-            <p>
-              <b>Medical importance</b>
-              {organ.medical}
-            </p>
-          </div>
+
+          <div className="rule" />
+          <h2 data-reveal>Histologie</h2>
+          <p className="description" data-reveal>
+            {organ.histologie}
+          </p>
+
+          <div className="rule" />
+          <h2 data-reveal>Physiologie</h2>
+          <ul className="physiologie" data-reveal>
+            {organ.physiologie.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
+          </ul>
+
+          <div className="rule" />
+          <h2 data-reveal>Rapports anatomiques</h2>
+          <p className="description" data-reveal>
+            {organ.rapports}
+          </p>
+
+          <div className="rule" />
+          <h2 data-reveal>Corrélations cliniques</h2>
+          {organ.clinique.map((fait) => (
+            <div className="medical-note" data-reveal key={fait.titre}>
+              <Stethoscope size={16} />
+              <p>
+                <b>{fait.titre}</b>
+                {fait.texte}
+                {/* La source accompagne l'affirmation, pas une bibliographie
+                    lointaine : c'est la règle du §8 rendue visible. */}
+                <cite>{SOURCE_BY_ID.get(fait.source)?.citation ?? fait.source}</cite>
+              </p>
+            </div>
+          ))}
+
+          {organ.ancrageNiger && (
+            <div className="niger-note" data-reveal>
+              <FileText size={16} />
+              <p>
+                <span className="niger-tag">Contexte nigérien</span>
+                <b>{organ.ancrageNiger.titre}</b>
+                {organ.ancrageNiger.texte}
+                <cite>
+                  {SOURCE_BY_ID.get(organ.ancrageNiger.source)?.citation ??
+                    organ.ancrageNiger.source}
+                </cite>
+              </p>
+            </div>
+          )}
+
           <div className="fun-note" data-reveal>
             <Sparkles size={15} />
             <p>
-              <b>Did you know</b>
-              {organ.funFact}
+              <b>Le saviez-vous</b>
+              {organ.leSaviezVous}
             </p>
           </div>
-          <button className="lesson-button" data-reveal onClick={() => setModal("lesson")}>
-            View lesson <ArrowRight size={16} />
-          </button>
+
           <div className="action-grid" data-reveal>
             <button onClick={() => setModal("animation")}>
-              <Play size={15} /> Animate
+              <Play size={15} /> Animer
             </button>
             <button onClick={() => setModal("quiz")}>
               <CircleHelp size={15} /> Quiz
             </button>
             <button onClick={() => setCompare(!compare)} className={compare ? "active" : ""}>
-              <Share2 size={15} /> Compare
+              <Share2 size={15} /> Comparer
             </button>
           </div>
         </aside>
       </div>
 
       {compare && (
-        <section className="compare-strip" aria-label="Organ comparison">
+        <section className="compare-strip" aria-label="Comparaison d'organes">
           <div className="compare-organ">
             <OrganArt organ={organ} asset="thumb" alt="" />
-            <span>Comparing</span>
+            <span>Organe étudié</span>
             <strong>{organ.name}</strong>
             <small>{organ.system}</small>
           </div>
-          <b>vs.</b>
+          <b>vs</b>
           <div className="compare-organ">
             <OrganArt organ={reference} asset="thumb" alt="" />
-            <span>Reference</span>
+            <span>Référence</span>
             <strong>{reference.name}</strong>
             <small>{reference.system}</small>
           </div>
           <dl>
             <div>
-              <dt>Primary role</dt>
-              <dd>{organ.function}</dd>
+              <dt>Rôle principal</dt>
+              <dd>{organ.fonction}</dd>
             </div>
             <div>
-              <dt>Scale</dt>
-              <dd>{organ.size}</dd>
+              <dt>Dimensions</dt>
+              <dd>{organ.taille}</dd>
             </div>
           </dl>
-          <button onClick={() => setCompare(false)} aria-label="Close comparison">
+          <button onClick={() => setCompare(false)} aria-label="Fermer la comparaison">
             <X size={16} />
           </button>
         </section>
       )}
 
-      <section className="learning-cards" aria-label={`${organ.name} learning resources`}>
+      <section className="learning-cards" aria-label={`Ressources sur : ${organ.name}`}>
         <article className="curiosity-card">
           <span>✿</span>
           <p>
-            Learning is
+            Apprendre,
             <br />
-            an act of curiosity.
+            c&apos;est d&apos;abord observer.
           </p>
-          <em>Keep exploring!</em>
+          <em>Faites tourner le modèle.</em>
         </article>
         <article>
           <header>
             <div>
-              <em>Microscopic view</em>
-              <h3>{organ.tissue}</h3>
+              <em>Vue microscopique</em>
+              <h3>Histologie</h3>
             </div>
             <Microscope size={17} />
           </header>
@@ -384,18 +437,20 @@ export function AnatomyApp() {
             <OrganArt
               organ={organ}
               asset="microscopic"
-              alt={`${organ.name} microscopic tissue view`}
+              alt={`Coupe histologique : ${organ.name}`}
             />
           </div>
           <button onClick={() => setModal("lesson")}>
-            Explore tissue <ArrowRight size={14} />
+            Explorer le tissu <ArrowRight size={14} />
           </button>
         </article>
         <article>
           <header>
             <div>
-              <em>Compare organs</em>
-              <h3>{organ.comparison}</h3>
+              <em>Comparer</em>
+              <h3>
+                {organ.name} et {reference.name}
+              </h3>
             </div>
             <Share2 size={17} />
           </header>
@@ -403,28 +458,28 @@ export function AnatomyApp() {
             <OrganArt
               organ={organ}
               asset="compare"
-              alt={`${organ.comparison} anatomical comparison`}
+              alt={`Comparaison anatomique : ${organ.name}`}
             />
           </div>
           <button onClick={() => setCompare(true)}>
-            Open comparison <ArrowRight size={14} />
+            Ouvrir la comparaison <ArrowRight size={14} />
           </button>
         </article>
         <article>
           <header>
             <div>
-              <em>Function animation</em>
-              <h3>{organ.function}</h3>
+              <em>Fonction</em>
+              <h3>{organ.fonction}</h3>
             </div>
             <Play size={17} />
           </header>
-          {/* The artwork itself is the control, so the play badge inside it is
-              decorative rather than a nested button. */}
+          {/* L'illustration est elle-même le contrôle : le badge de lecture qu'elle
+              contient est décoratif, et non un bouton imbriqué. */}
           <button
             type="button"
             className="function-visual organ-card-image"
             onClick={() => setModal("animation")}
-            aria-label={`Play the ${organ.name.toLowerCase()} function animation`}
+            aria-label={`Lancer l'animation de la fonction : ${organ.name}`}
           >
             <OrganArt organ={organ} asset="organ" alt="" />
             <i className="function-pulse" />
@@ -433,30 +488,30 @@ export function AnatomyApp() {
             </span>
           </button>
           <button onClick={() => setModal("animation")}>
-            Play animation <ArrowRight size={14} />
+            Lancer l&apos;animation <ArrowRight size={14} />
           </button>
         </article>
         <article>
           <header>
             <div>
-              <em>Clinical notes</em>
-              <h3>Common conditions</h3>
+              <em>Notes cliniques</em>
+              <h3>Pathologies fréquentes</h3>
             </div>
             <FileText size={17} />
           </header>
           <ul>
-            {organ.conditions.map((condition) => (
-              <li key={condition}>{condition}</li>
+            {organ.pathologies.map((pathologie) => (
+              <li key={pathologie}>{pathologie}</li>
             ))}
           </ul>
-          <button onClick={() => setModal("lesson")}>
-            See all <ArrowRight size={14} />
-          </button>
+          <a className="card-link" href="/sources/">
+            Voir les sources <ArrowRight size={14} />
+          </a>
         </article>
         <article className="system-card">
           <header>
             <div>
-              <em>Where it works</em>
+              <em>Situation</em>
               <h3>{organ.system}</h3>
             </div>
             <BrainCircuit size={17} />
@@ -465,12 +520,12 @@ export function AnatomyApp() {
             type="button"
             className="system-visual organ-card-image"
             onClick={() => setModal("system")}
-            aria-label={`See where the ${organ.name.toLowerCase()} sits in the body`}
+            aria-label={`Situer : ${organ.name} dans le corps`}
           >
             <OrganArt organ={organ} asset="location" alt="" />
           </button>
           <button onClick={() => setModal("system")}>
-            See the system <ArrowRight size={14} />
+            Situer dans le corps <ArrowRight size={14} />
           </button>
         </article>
       </section>
@@ -479,7 +534,7 @@ export function AnatomyApp() {
       {mobileLibrary && (
         <button
           className="drawer-backdrop"
-          aria-label="Close library"
+          aria-label="Fermer la liste"
           onClick={() => setMobileLibrary(false)}
         />
       )}
@@ -508,15 +563,12 @@ function LearningModal({
   const organName = organ.name;
   const title =
     type === "quiz"
-      ? `${organName} quick quiz`
+      ? `Quiz — ${organName}`
       : type === "animation"
-        ? `${organName} in motion`
-        : // Avoids gluing onto `system`, whose wording varies per organ
-          // ("Cardiovascular" vs "Nervous System"), and stays grammatical for the
-          // plural organs too.
-          type === "system"
-          ? `${organName} in the body`
-          : `Inside the ${organName.toLowerCase()}`;
+        ? `${organName} en mouvement`
+        : type === "system"
+          ? `${organName} : situation dans le corps`
+          : `À l'intérieur : ${organName}`;
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -526,67 +578,141 @@ function LearningModal({
         aria-labelledby="modal-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <button className="modal-close" onClick={onClose} aria-label="Close">
+        <button className="modal-close" onClick={onClose} aria-label="Fermer">
           <X size={18} />
         </button>
         <span className="modal-icon">{MODAL_ICON[type]}</span>
-        <em>Guided discovery</em>
+        <em>Étude guidée</em>
         <h2 id="modal-title">{title}</h2>
         {type === "quiz" ? (
-          <div className="quiz-options">
-            <p>Which statement best describes the {organName.toLowerCase()}?</p>
-            <button onClick={onClose}>It plays a specialized role in maintaining the body</button>
-            <button onClick={onClose}>It works completely independently</button>
-            <button onClick={onClose}>It is active only during sleep</button>
-          </div>
+          <StructureQuiz organ={organ} />
         ) : type === "system" ? (
           <>
-            <p>
-              {organ.location}. Trace how the {organName.toLowerCase()} connects to the rest of the
-              body.
-            </p>
-            {/* Shown whole rather than cropped into the circular demo — the
-                point of this view is the figure and its vessels. */}
+            <p>{organ.situation}.</p>
+            {/* Montrée entière plutôt que recadrée dans le médaillon : l'intérêt de
+                cette vue est justement la figure et ses rapports. */}
             <figure className="modal-figure">
               <OrganArt
                 organ={organ}
                 asset="location"
-                alt={`${organName} shown in place within the ${organ.system.toLowerCase()}`}
+                alt={`${organName} situé dans le corps — ${organ.system}`}
               />
             </figure>
             <dl className="modal-facts">
               <div>
-                <dt>System</dt>
+                <dt>Système</dt>
                 <dd>{organ.system}</dd>
               </div>
               <div>
-                <dt>Primary role</dt>
-                <dd>{organ.function}</dd>
+                <dt>Rapports</dt>
+                <dd>{organ.rapports}</dd>
               </div>
               <div>
-                <dt>Blood supply</dt>
-                <dd>{organ.bloodSupply}</dd>
+                <dt>Vascularisation</dt>
+                <dd>{organ.vascularisation}</dd>
               </div>
             </dl>
             <button className="lesson-button" onClick={onClose}>
-              Continue exploring <ArrowRight size={16} />
+              Continuer l&apos;exploration <ArrowRight size={16} />
             </button>
           </>
         ) : (
           <>
-            <p>
-              Follow the highlighted structures, rotate the specimen, and connect form with
-              function. This short study moment is designed to build a durable mental model.
-            </p>
+            <p>{organ.histologie}</p>
             <div className={`modal-demo ${type === "animation" ? "moving" : ""}`}>
-              <OrganArt organ={organ} asset="organ" alt={`${organName} illustration`} />
+              <OrganArt organ={organ} asset="organ" alt={`Illustration : ${organName}`} />
             </div>
             <button className="lesson-button" onClick={onClose}>
-              Continue exploring <ArrowRight size={16} />
+              Continuer l&apos;exploration <ArrowRight size={16} />
             </button>
           </>
         )}
       </section>
+    </div>
+  );
+}
+
+/**
+ * Quiz d'identification, construit à partir des points d'intérêt de l'organe.
+ *
+ * Les questions ne sont pas écrites à la main : elles sont dérivées du contenu
+ * déjà sourcé. Une question inventée serait une affirmation médicale sans source,
+ * et donc un bug bloquant au sens du §8.
+ */
+function StructureQuiz({ organ }: { organ: Organ }) {
+  const [index, setIndex] = useState(0);
+  const [answered, setAnswered] = useState<string | null>(null);
+
+  const questions = useMemo(
+    () =>
+      organ.hotspots.map((cible) => ({
+        enonce: cible.detail,
+        bonneReponse: cible.label,
+        // Les distracteurs viennent du même organe : ils sont plausibles, donc la
+        // question teste vraiment la connaissance et non le bon sens.
+        options: [...organ.hotspots]
+          .sort((a, b) => a.id.localeCompare(b.id))
+          .map((point) => point.label),
+      })),
+    [organ],
+  );
+
+  if (!questions.length) return <p>Aucun point d&apos;intérêt n&apos;est encore défini ici.</p>;
+  const question = questions[Math.min(index, questions.length - 1)];
+  const termine = index >= questions.length - 1 && answered !== null;
+
+  return (
+    <div className="quiz-options">
+      <p>
+        <b>
+          Question {Math.min(index + 1, questions.length)} / {questions.length}
+        </b>
+        <br />
+        Quelle structure correspond à : « {question.enonce} » ?
+      </p>
+      {question.options.map((option) => {
+        const juste = option === question.bonneReponse;
+        const etat = answered === null ? "" : juste ? "juste" : answered === option ? "faux" : "";
+        return (
+          <button
+            key={option}
+            className={etat}
+            disabled={answered !== null}
+            onClick={() => setAnswered(option)}
+          >
+            {option}
+          </button>
+        );
+      })}
+      {answered !== null && (
+        <p className="quiz-feedback">
+          {answered === question.bonneReponse
+            ? "Correct."
+            : `Non — la bonne réponse est « ${question.bonneReponse} ».`}
+        </p>
+      )}
+      {answered !== null && !termine && (
+        <button
+          className="lesson-button"
+          onClick={() => {
+            setIndex(index + 1);
+            setAnswered(null);
+          }}
+        >
+          Question suivante <ArrowRight size={16} />
+        </button>
+      )}
+      {termine && (
+        <button
+          className="lesson-button"
+          onClick={() => {
+            setIndex(0);
+            setAnswered(null);
+          }}
+        >
+          Recommencer <ArrowRight size={16} />
+        </button>
+      )}
     </div>
   );
 }

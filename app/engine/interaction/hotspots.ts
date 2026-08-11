@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import type { Hotspot } from "../../lib/anatomy-data";
+import type { Hotspot } from "../../content/organes";
 
 export type Marker = {
   hotspot: Hotspot;

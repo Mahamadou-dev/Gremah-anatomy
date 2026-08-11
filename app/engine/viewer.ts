@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import gsap from "gsap";
-import type { Hotspot } from "../lib/anatomy-data";
+import type { Hotspot } from "../content/organes";
 import {
   readSignals,
   resolveQuality,
@@ -27,7 +27,7 @@ import { PostStack, type PostStatus } from "./passes/composer";
  *
  * Il ne contient plus de scène, de boucle ni d'entrées : il les compose. Chaque
  * responsabilité vit dans `core/`, `interaction/` ou `loaders/`, et aucun de ces
- * modules ne connaît React �?" la frontière du §4 de CLAUDE.md passe ici et
+ * modules ne connaît React — la frontière du §4 de CLAUDE.md passe ici et
  * nulle part ailleurs.
  */
 
@@ -46,7 +46,7 @@ export type EngineStatus = {
   overridden: boolean;
   /** Mode de rendu des tissus courant. */
   mode: ViewMode;
-  /** �?tat de la pile de post-processing �?" jamais masqué en cas d'absence. */
+  /** État de la pile de post-processing — jamais masqué en cas d'absence. */
   post: PostStatus;
 };
 
@@ -74,7 +74,7 @@ export class AnatomyViewer {
 
   private organ: LoadedOrgan | null = null;
   private clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
-  /** N'écrit que la profondeur �?" résout un organe en fondu à une seule surface. */
+  /** N'écrit que la profondeur — résout un organe en fondu à une seule surface. */
   private depthMaterial = new THREE.MeshBasicMaterial({
     colorWrite: false,
     depthWrite: true,
@@ -221,7 +221,7 @@ export class AnatomyViewer {
   }
 
   /**
-   * Change de profil à chaud. Le pixel ratio �?" de loin le premier poste de coût �?"
+   * Change de profil à chaud. Le pixel ratio — de loin le premier poste de coût —
    * s'applique immédiatement ; l'anti-aliasing et la taille de la sonde
    * d'environnement sont figés à la création du contexte et ne prendront effet
    * qu'au prochain chargement de page. Le choix est persisté dans tous les cas.
@@ -242,8 +242,8 @@ export class AnatomyViewer {
    * Décidé une fois, jamais adapté en vol. Un contrôleur dynamique a vécu ici et
    * c'était un recul net : les intervalles de frame sont quantifiés par le vsync,
    * donc le moindre à-coup se lisait comme une charge GPU, faisait chuter le
-   * buffer, et �?" un 16,7 ms verrouillé au vsync n'atteignant jamais le seuil de
-   * remontée �?" ne remontait plus jamais. La scène rend en ~2 ms : il n'y a rien
+   * buffer, et — un 16,7 ms verrouillé au vsync n'atteignant jamais le seuil de
+   * remontée — ne remontait plus jamais. La scène rend en ~2 ms : il n'y a rien
    * à fuir.
    */
   private applyPixelRatio() {

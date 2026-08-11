@@ -12,7 +12,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import type { Hotspot, Organ } from "../lib/anatomy-data";
+import type { Hotspot, Organ } from "../content/organes";
 import type { AnatomyViewer, EngineStatus } from "../engine/viewer";
 import { QUALITY_PROFILES, type QualityProfile } from "../engine/core/capabilities";
 import { VIEW_MODES, type ViewMode } from "../engine/materials/params";
@@ -153,24 +153,24 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
   };
 
   const tools = [
-    { id: "rotate", label: "Rotate", icon: RotateCcw },
+    { id: "rotate", label: "Rotation", icon: RotateCcw },
     { id: "zoom", label: "Zoom", icon: Search },
-    { id: "isolate", label: "Isolate", icon: CircleDashed },
-    { id: "section", label: "Cross-section", icon: ScanLine },
-    { id: "layers", label: "Layers", icon: Layers3 },
-    { id: "compare", label: "Compare", icon: Box },
-    { id: "reset", label: "Reset", icon: RotateCcw },
+    { id: "isolate", label: "Isoler", icon: CircleDashed },
+    { id: "section", label: "Coupe", icon: ScanLine },
+    { id: "layers", label: "Maillage", icon: Layers3 },
+    { id: "compare", label: "Comparer", icon: Box },
+    { id: "reset", label: "Recentrer", icon: RotateCcw },
   ];
 
   return (
-    <section className="viewer-shell" aria-label={`${organ.name} interactive viewer`}>
+    <section className="viewer-shell" aria-label={`Visionneuse 3D : ${organ.name}`}>
       <div
         className="viewer-glow"
         style={{ "--organ-accent": organ.accent } as React.CSSProperties}
       />
       <div ref={mountRef} className="three-mount" />
 
-      <div className="viewer-tools" aria-label="3D viewer tools">
+      <div className="viewer-tools" aria-label="Outils de la visionneuse 3D">
         {tools.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -186,16 +186,16 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
         ))}
       </div>
 
-      <aside className="tip-note" aria-label="Viewer instructions">
+      <aside className="tip-note" aria-label="Aide à la manipulation">
         <span>
-          <Sparkles size={15} /> Tip
+          <Sparkles size={15} /> Astuce
         </span>
         <p>
-          Drag to rotate
+          Glisser pour tourner
           <br />
-          Scroll to zoom
+          Molette pour zoomer
           <br />
-          Click a dot to learn more
+          Cliquer un point pour la fiche
         </p>
       </aside>
 
@@ -209,21 +209,22 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
               className="callout-close"
               type="button"
               onClick={() => viewerRef.current?.clearSelection()}
-              aria-label="Close"
+              aria-label="Fermer"
             >
               <X size={13} />
             </button>
             <b>{selected.label}</b>
+            {selected.latin && <i className="callout-latin">{selected.latin}</i>}
             <small>{selected.detail}</small>
           </div>
         </div>
       )}
 
-      {/* Screen-reader equivalent of the dots, which live in the canvas. */}
+      {/* Équivalent lecteur d'écran des points, qui vivent dans le canevas. */}
       <ul className="hotspot-index">
         {organ.hotspots.map((hotspot) => (
           <li key={hotspot.id}>
-            {hotspot.label}: {hotspot.detail}
+            {hotspot.label} ({hotspot.latin}) : {hotspot.detail}
           </li>
         ))}
       </ul>
@@ -233,8 +234,8 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
           <div className="loader-orbit">
             <Maximize2 size={20} />
           </div>
-          <strong>Preparing the {organ.name.toLowerCase()}</strong>
-          <span>{Math.max(8, Math.round(progress * 100))}%</span>
+          <strong>Chargement — {organ.name.toLowerCase()}</strong>
+          <span>{Math.max(8, Math.round(progress * 100))} %</span>
         </div>
       )}
 
@@ -244,7 +245,7 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
         onClick={() => onAutoRotate(!autoRotate)}
         aria-pressed={autoRotate}
       >
-        <RotateCcw size={14} /> Auto rotate
+        <RotateCcw size={14} /> Rotation auto
         <span className={`switch ${autoRotate ? "on" : ""}`}>
           <i />
         </span>
@@ -305,8 +306,8 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
       )}
 
       <div className="view-caption">
-        <span>3D specimen · click a dot to explore</span>
-        <strong>{organ.scientificName}</strong>
+        <span>Spécimen 3D · cliquez un point pour explorer</span>
+        <strong>{organ.latin}</strong>
       </div>
     </section>
   );
