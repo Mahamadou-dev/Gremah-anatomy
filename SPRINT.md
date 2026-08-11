@@ -329,6 +329,60 @@ sont cochées et le site est en ligne.
 
 ---
 
+## Sprint 11 — Accueil, contact, et porte d'entrée
+
+**Pourquoi :** ajouté après coup, à la demande. Jusqu'ici `/` ouvrait directement
+sur l'atlas : efficace pour qui sait déjà ce qu'est le projet, muet pour tous les
+autres. Un enseignant à qui on envoie le lien doit comprendre en dix secondes ce
+qu'il a sous les yeux, et pouvoir écrire à l'auteur sans quitter la page.
+
+**Travaux**
+
+1. **Vitrine 3D** (`engine/scenes/hero.ts`) — scène distincte du viewer : quatre
+   organes en fondu croisé au-dessus du disque solaire, parallaxe au pointeur,
+   caméra qui recule au défilement. Régime d'animation continu **assumé et borné** :
+   suspension hors écran et onglet caché, profils de qualité respectés,
+   `prefers-reduced-motion` honoré. L'invariant de test l'autorise explicitement
+   pour `engine/scenes/` seulement — l'atlas reste en render-on-demand strict.
+2. **Routage** — l'atlas passe sous `/atlas/`, `/` devient la vitrine. Deep-link
+   `?organe=<id>` via `useSearchParams` sous frontière Suspense.
+3. **Contact sans backend** — `mailto:` pré-rempli par défaut, POST JSON vers
+   `NEXT_PUBLIC_CONTACT_ENDPOINT` si la variable est fournie au build, bouton
+   « copier » en dernier recours. Appât anti-robot, `aria-live` sur le statut.
+4. **À propos enrichie** — intentions, construction technique, exactitude du
+   contenu, contacts, JSON-LD `Person`, formulaire de contact.
+5. **Feuille dédiée** — `app/landing.css` : la vitrine ne pollue pas la feuille
+   de l'outil.
+
+**Reste à trancher :** l'accès par compte (email + mot de passe). Voir la note
+ci-dessous — la brique demandée n'existe plus telle quelle.
+
+### Note — compte utilisateur et MongoDB Atlas
+
+Demandé : connexion par email + mot de passe, stockage dans MongoDB Atlas, sans
+backend dédié. **Ce chemin n'est plus praticable tel quel :**
+
+- Le driver MongoDB parle un protocole TCP binaire : un navigateur ne peut pas
+  l'ouvrir. Il n'y a pas de version « front » du driver.
+- La **Data API** d'Atlas, qui exposait une façade HTTPS, a été retirée en
+  septembre 2025, en même temps qu'**Atlas App Services / Realm**. Les tutoriels
+  « MongoDB depuis le front » datent tous d'avant cette date.
+- Même si elle existait encore : une clé d'API dans un bundle statique est
+  publique. Toute la base serait lisible et modifiable par n'importe quel visiteur.
+
+Trois issues réelles, par ordre de coût :
+
+| Option                                                                       | Coût                                      | Ce qu'on perd                                                  |
+| ---------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| **A. Aucun compte** — progression en `localStorage` / IndexedDB, export JSON | zéro                                      | pas de synchronisation entre appareils                         |
+| **B. Fonctions serverless Vercel** (`app/api/…`) + Atlas                     | ~150 lignes, hachage argon2, cookie signé | `output: "export"` — le site n'est plus déployable sur clé USB |
+| **C. Auth tierce navigateur** (Supabase, Firebase, Clerk)                    | ~1 jour                                   | une dépendance de plus, et les données quittent MongoDB        |
+
+L'option A reste celle du cahier de charge (Sprint 8 : « aucun compte, aucun
+serveur »). B est la seule qui garde MongoDB Atlas.
+
+---
+
 ## Suivi
 
 | Sprint | État        | Branche                 | Notes                                                                                                         |
@@ -344,6 +398,7 @@ sont cochées et le site est en ligne.
 | 8      | ⬜ à faire  | `sprint-8/revision`     |                                                                                                               |
 | 9      | ⬜ à faire  | `sprint-9/offline`      |                                                                                                               |
 | 10     | ⬜ à faire  | `sprint-10/lancement`   |                                                                                                               |
+| 11     | 🟨 en cours | `sprint-11/accueil`     | Vitrine 3D, `/atlas/`, contact sans backend, à propos enrichie. Reste : décision sur le compte utilisateur.   |
 
 ---
 

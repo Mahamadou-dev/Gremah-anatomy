@@ -1,4 +1,8 @@
 @import "tailwindcss";
+/* La vitrine a ses propres règles, sans rapport avec le shell de l'atlas.
+   Séparée pour que `globals.css` reste la feuille de l'outil. Importée après
+   Tailwind, avant les tokens : elle consomme les tokens, elle n'en définit pas. */
+@import "./landing.css";
 
 /* ============================================================================
    GREMAH ANATOMY — SYSTÈME DE THÈME
@@ -188,6 +192,7 @@ a:focus-visible {
   background: transparent;
   cursor: pointer;
   text-align: left;
+  text-decoration: none;
 }
 
 .brand strong {

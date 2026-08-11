@@ -1,5 +1,5 @@
-import { AnatomyApp } from "./components/AnatomyApp";
+import { Landing } from "./components/Landing";
 
 export default function Home() {
-  return <AnatomyApp />;
+  return <Landing />;
 }

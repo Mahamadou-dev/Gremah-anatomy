@@ -55,14 +55,39 @@ test("FIT_SIZE vaut toujours 3.8", () => {
 test("le render-on-demand n'est piloté que par la boucle", () => {
   // Un requestAnimationFrame ailleurs, c'est une boucle continue qui ne dit pas
   // son nom — et la batterie d'un téléphone d'entrée de gamme qui se vide.
+  //
+  // `engine/scenes/` est la seule exception, et elle est explicite : ce sont des
+  // vitrines (l'accueil), pas des outils d'étude. Une vitrine anime en continu
+  // par définition. Le test suivant vérifie qu'elles paient au moins le prix
+  // d'entrée : suspension hors écran et onglet caché.
   const offenders = files.filter(
     ({ path, code }) =>
-      !path.endsWith("core/render-loop.ts") && code.includes("requestAnimationFrame"),
+      !path.endsWith("core/render-loop.ts") &&
+      !path.includes("engine/scenes/") &&
+      code.includes("requestAnimationFrame"),
   );
   assert.deepEqual(
     offenders.map((file) => file.path),
     [],
   );
+});
+
+test("les scènes vitrines suspendent aussi leur boucle", () => {
+  const scenes = files.filter((file) => file.path.includes("engine/scenes/"));
+  assert.ok(scenes.length > 0, "aucune scène trouvée sous app/engine/scenes/");
+  for (const scene of scenes) {
+    assert.match(
+      scene.code,
+      /new IntersectionObserver/,
+      `${scene.path} : pas d'IntersectionObserver`,
+    );
+    assert.match(scene.code, /visibilitychange/, `${scene.path} : pas de visibilitychange`);
+    assert.match(
+      scene.code,
+      /cancelAnimationFrame/,
+      `${scene.path} : la boucle ne s'arrête jamais`,
+    );
+  }
 });
 
 test("la boucle suspend le rendu hors écran et onglet caché", () => {

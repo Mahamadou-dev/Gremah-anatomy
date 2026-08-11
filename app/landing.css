@@ -1,0 +1,840 @@
+/* ============================================================================
+   ACCUEIL — LA VITRINE
+   L'atlas est un outil : dense, sobre, tout à portée. L'accueil est autre chose,
+   et c'est assumé — grandes respirations, une seule idée par écran, la 3D en
+   fond plutôt qu'en fenêtre. Les tokens restent ceux de `globals.css` : « huilé »
+   veut dire dégradés à trois arrêts, reflets étroits, verre dépoli et ombres
+   chaudes, jamais des bandes tricolores.
+   ========================================================================= */
+
+.landing {
+  --gutter: clamp(20px, 5vw, 72px);
+  --measure: 1180px;
+  position: relative;
+  min-height: 100dvh;
+}
+
+/* --- Primitives partagées (boutons, champs) ------------------------------- */
+
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  font:
+    500 14px var(--font-sans),
+    sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease,
+    filter 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.btn-primary {
+  border: 1px solid transparent;
+  /* Trois arrêts et un reflet interne : la pastille se lit comme une surface
+     satinée et non comme un aplat orange posé sur le fond. */
+  background: linear-gradient(
+    150deg,
+    var(--ng-orange-warm),
+    var(--ng-orange) 52%,
+    var(--ng-orange-deep)
+  );
+  color: #fffaf4;
+  box-shadow:
+    0 10px 26px rgba(224, 82, 6, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 16px 34px rgba(224, 82, 6, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-ghost {
+  border: 1px solid var(--line);
+  background: var(--wash);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-large {
+  padding: 14px 24px;
+  font-size: 15px;
+}
+
+.btn-compact {
+  padding: 9px 15px;
+  font-size: 13px;
+}
+
+.spin {
+  animation: landing-spin 0.9s linear infinite;
+}
+
+@keyframes landing-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Barre de navigation -------------------------------------------------- */
+
+.landing-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px var(--gutter);
+  /* Verre dépoli sur un fond qui s'éteint vers le bas : la barre reste lisible
+     au-dessus du héros comme au-dessus du texte. */
+  background: linear-gradient(to bottom, var(--surface-1), transparent);
+  backdrop-filter: blur(16px) saturate(1.1);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.landing-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font:
+    500 19px/1 var(--font-serif),
+    serif;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.landing-mark b {
+  background: linear-gradient(100deg, var(--sun), var(--accent) 50%, var(--accent-cool));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 500;
+}
+
+/* Le disque solaire du drapeau, traité en lumière : un dégradé radial avec un
+   point chaud décentré, pas une pastille orange. */
+.landing-mark-sun {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 34% 30%,
+    var(--sun),
+    var(--ng-orange) 62%,
+    var(--ng-orange-deep)
+  );
+  box-shadow: 0 0 14px rgba(244, 163, 28, 0.5);
+  flex: none;
+}
+
+.landing-nav-links {
+  display: flex;
+  gap: 4px;
+  margin-inline: auto;
+}
+
+.landing-nav-links a {
+  padding: 7px 13px;
+  border-radius: 999px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13.5px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.landing-nav-links a:hover {
+  color: var(--text);
+  background: var(--wash);
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- Héros ---------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  min-height: min(92svh, 880px);
+  display: grid;
+  align-items: center;
+  padding: clamp(40px, 8vh, 96px) var(--gutter) clamp(56px, 10vh, 120px);
+  overflow: clip;
+}
+
+/* Le canvas occupe tout le héros et le texte se pose dessus. Un cadre autour de
+   la 3D la réduirait à une illustration ; ici elle est l'espace lui-même. */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-canvas-host {
+  position: absolute;
+  inset: 0;
+}
+
+/* Voile de lisibilité : dense côté texte, transparent côté organe. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    var(--surface-0) 4%,
+    color-mix(in srgb, var(--surface-0) 72%, transparent) 34%,
+    transparent 62%
+  );
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 20px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--wash);
+  backdrop-filter: blur(10px);
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font:
+    500 clamp(38px, 6.4vw, 82px)/1.02 var(--font-serif),
+    serif;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+
+.hero-copy h1 em {
+  font-style: normal;
+  background: linear-gradient(100deg, var(--sun), var(--accent) 46%, var(--accent-cool));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-lead {
+  margin: 22px 0 0;
+  max-width: 52ch;
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.62;
+  color: var(--text-muted);
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 44px);
+  margin: 42px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-soft);
+}
+
+/* `column-reverse` : la valeur se lit avant son étiquette, mais l'ordre du DOM
+   reste dt puis dd — ce que la sémantique d'une liste de définitions exige. */
+.hero-stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 3px;
+}
+
+.hero-stats dt {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.hero-stats dd {
+  margin: 0;
+  font:
+    500 clamp(22px, 2.4vw, 30px)/1 var(--font-serif),
+    serif;
+  color: var(--text);
+}
+
+/* Sélecteur d'organe du héros : posé en bas à droite, hors du chemin du texte. */
+.hero-organ-switch {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(20px, 4vh, 40px);
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.hero-organ-chip {
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--wash);
+  backdrop-filter: blur(12px);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hero-organ-chip[aria-pressed="true"] {
+  color: var(--text);
+  border-color: var(--chip-accent, var(--accent));
+  box-shadow: 0 0 20px -6px var(--chip-accent, var(--accent));
+}
+
+/* Poster : écran d'attente, et repli complet si aucun contexte GPU n'existe. */
+.hero-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  gap: 18px;
+  opacity: 1;
+  transition: opacity 0.9s ease;
+}
+
+.hero-canvas[data-ready="true"] .hero-poster {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-canvas[data-failed="true"] .hero-poster {
+  opacity: 1;
+}
+
+.hero-poster-halo {
+  position: absolute;
+  width: min(52vw, 430px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(244, 163, 28, 0.26),
+    rgba(224, 82, 6, 0.12) 46%,
+    transparent 70%
+  );
+  animation: hero-breathe 5.5s ease-in-out infinite;
+}
+
+@keyframes hero-breathe {
+  50% {
+    transform: scale(1.06);
+    opacity: 0.78;
+  }
+}
+
+.hero-poster-label {
+  position: relative;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  z-index: 3;
+  translate: -50% 0;
+  width: 24px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: grid;
+  place-items: start center;
+  padding-top: 7px;
+}
+
+.hero-scroll span {
+  width: 3px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--accent);
+  animation: hero-scroll-hint 1.9s ease-in-out infinite;
+}
+
+@keyframes hero-scroll-hint {
+  50% {
+    transform: translateY(11px);
+    opacity: 0.25;
+  }
+}
+
+/* --- Sections ------------------------------------------------------------- */
+
+.landing-section {
+  position: relative;
+  padding: clamp(72px, 12vh, 148px) var(--gutter);
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+/* La variante « alt » traverse toute la largeur pour porter sa nappe de fond,
+   mais son contenu reste calé sur la même colonne que les autres sections. */
+.landing-section-alt {
+  max-width: none;
+}
+
+.landing-section-alt > * {
+  position: relative;
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.landing-section-alt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(224, 82, 6, 0.07), transparent 68%);
+  pointer-events: none;
+}
+
+.section-eyebrow {
+  margin: 0 0 12px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.section-head h2 {
+  margin: 0;
+  font:
+    500 clamp(26px, 3.4vw, 44px)/1.14 var(--font-serif),
+    serif;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.section-lead {
+  margin: 18px 0 0;
+  max-width: 62ch;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--text-muted);
+}
+
+/* --- Piliers -------------------------------------------------------------- */
+
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 16px;
+  margin-top: 52px;
+}
+
+.pillar {
+  padding: 26px 24px 28px;
+  border: 1px solid var(--line-soft);
+  border-radius: 20px;
+  background: var(--surface-1);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--glass-hi);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.pillar:hover {
+  transform: translateY(-3px);
+  border-color: var(--line);
+  box-shadow: var(--shadow-soft), var(--glass-hi);
+}
+
+.pillar-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  border-radius: 13px;
+  background: linear-gradient(150deg, rgba(244, 163, 28, 0.2), rgba(224, 82, 6, 0.08));
+  color: var(--accent);
+}
+
+.pillar h3 {
+  margin: 0 0 9px;
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pillar p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.62;
+  color: var(--text-muted);
+}
+
+/* --- Bande d'organes ------------------------------------------------------ */
+
+.organ-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 12px;
+  margin-top: 48px;
+}
+
+.organ-tile {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 20px 12px 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  background: var(--surface-1);
+  text-decoration: none;
+  text-align: center;
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.organ-tile:hover {
+  transform: translateY(-4px);
+  border-color: var(--tile-accent, var(--accent));
+  box-shadow: 0 18px 34px -18px var(--tile-accent, var(--accent));
+}
+
+.organ-tile img {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  margin-bottom: 6px;
+  /* Les planches sont peintes sur papier clair : sans plaque, le mode multiply
+     les fait virer au noir dans le thème sombre. */
+  background: var(--art-plate);
+  border-radius: 14px;
+  mix-blend-mode: multiply;
+}
+
+.organ-tile-glyph {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--tile-accent, var(--accent)) 16%, transparent);
+  font-size: 30px;
+}
+
+.organ-tile strong {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.organ-tile small {
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.atlas-callout {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 40px;
+  padding: 24px 26px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(
+    130deg,
+    color-mix(in srgb, var(--accent) 10%, transparent),
+    var(--surface-1) 55%
+  );
+  backdrop-filter: blur(14px);
+  color: var(--accent);
+}
+
+.atlas-callout p {
+  flex: 1 1 320px;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* --- Contact -------------------------------------------------------------- */
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(320px, 1.15fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+
+.contact-intro h2 {
+  margin: 0;
+  font:
+    500 clamp(26px, 3.2vw, 40px)/1.14 var(--font-serif),
+    serif;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.contact-note {
+  margin-top: 24px;
+  padding: 14px 16px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  background: var(--surface-sunk);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-faint);
+}
+
+.contact-card {
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--line-soft);
+  border-radius: 24px;
+  background: var(--surface-1);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-soft), var(--glass-hi);
+}
+
+.contact-form {
+  display: grid;
+  gap: 16px;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field > span {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: var(--surface-sunk);
+  color: var(--text);
+  font:
+    400 14px var(--font-sans),
+    sans-serif;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.55;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-faint);
+}
+
+/* Appât anti-robot : sorti du cadre plutôt que `display: none` — un robot un peu
+   sérieux ignore justement les champs masqués de cette façon-là. */
+.contact-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.contact-status {
+  margin: 0;
+  min-height: 1em;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.contact-status[data-tone="sent"] {
+  color: var(--accent-cool);
+}
+
+.contact-status[data-tone="error"] {
+  color: var(--accent);
+}
+
+.about-cta {
+  margin-top: 32px;
+}
+
+/* --- Révélation au défilement --------------------------------------------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal][data-revealed="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Adaptations ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+  .landing-nav-links {
+    display: none;
+  }
+  /* Sur téléphone le texte passe devant l'organe : le voile devient vertical,
+     sinon la moitié basse du titre se lirait sur un fond qui bouge. */
+  .hero::after {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--surface-0) 55%, transparent),
+      var(--surface-0) 72%
+    );
+  }
+  .hero {
+    align-items: end;
+    min-height: min(96svh, 780px);
+  }
+  .hero-organ-switch {
+    left: var(--gutter);
+    right: var(--gutter);
+    justify-content: center;
+    bottom: 8px;
+  }
+  .hero-scroll {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .contact-row {
+    grid-template-columns: 1fr;
+  }
+  .hero-stats {
+    gap: 18px 26px;
+  }
+  .contact-actions .btn-ghost,
+  .contact-actions .btn-primary {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* La règle globale de `globals.css` neutralise les animations ; les
+     transitions, elles, ne sont pas couvertes — et une révélation figée à
+     `opacity: 0` laisserait une page vide. */
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .btn-primary,
+  .btn-ghost,
+  .pillar,
+  .organ-tile {
+    transition: none;
+  }
+  .pillar:hover,
+  .organ-tile:hover,
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    transform: none;
+  }
+}

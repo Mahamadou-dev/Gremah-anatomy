@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import {
   ArrowRight,
@@ -72,8 +73,8 @@ function OrganArt({
   );
 }
 
-export function AnatomyApp() {
-  const [organId, setOrganId] = useState<OrganId>("heart");
+export function AnatomyApp({ initialOrgan = "heart" }: { initialOrgan?: OrganId }) {
+  const [organId, setOrganId] = useState<OrganId>(initialOrgan);
   const [autoRotate, setAutoRotate] = useState(true);
   const [compare, setCompare] = useState(false);
   const [modal, setModal] = useState<Modal>(null);
@@ -126,17 +127,15 @@ export function AnatomyApp() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <button
-          className="brand"
-          type="button"
-          onClick={() => selectOrgan("heart")}
-          aria-label="Gremah Anatomy — accueil"
-        >
+        {/* La marque ramène à l'accueil et non à l'organe par défaut : dans une
+            barre de navigation, un logo qui ne sort pas de la page en cours est
+            un piège que tout le monde tombe dedans une fois. */}
+        <Link href="/" className="brand" aria-label="Gremah Anatomy — accueil">
           <strong>
             Gremah Anatomy<sup>☀</sup>
           </strong>
           <em>L&apos;anatomie en 3D, pour les étudiants du Niger</em>
-        </button>
+        </Link>
         {/* Navigation réduite à ce qui existe réellement. Cinq onglets dont quatre
             morts, c'est plus déroutant qu'une barre courte : un étudiant qui clique
             dans le vide cesse de faire confiance au reste de l'interface. */}
