@@ -827,6 +827,43 @@ a:focus-visible {
   color: var(--ink-950);
 }
 
+/* Modes de rendu : tissu / rayon X / fantôme. Placés en haut à droite, loin des
+   outils de manipulation — c'est un changement de lecture, pas un geste de caméra. */
+.mode-switch {
+  position: absolute;
+  top: 17px;
+  right: 17px;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft), var(--glass-hi);
+}
+.mode-switch button {
+  padding: 6px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.mode-switch button:hover {
+  color: var(--text);
+}
+.mode-switch button.on {
+  background: linear-gradient(120deg, var(--accent), var(--sun));
+  color: var(--ink-950);
+}
+
 /* Overlay d'instrumentation (`?debug=1`). Hors flux de rendu, hors React. */
 .engine-debug {
   position: absolute;

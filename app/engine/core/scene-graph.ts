@@ -18,6 +18,7 @@ export class SceneGraph {
   readonly plinth: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshStandardMaterial>;
   readonly contactShadow: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
 
+  private sunHalo: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
   private accentLight: THREE.PointLight;
   private particles: THREE.Points | null = null;
   private environmentMap: THREE.Texture;
@@ -67,6 +68,26 @@ export class SceneGraph {
     this.contactShadow.renderOrder = 1;
     this.scene.add(this.contactShadow);
 
+    // Le disque solaire du drapeau, traité en lumière et non en aplat : un anneau
+    // chaud posé au ras du socle. C'est la seule citation littérale du drapeau
+    // dans la 3D, et elle passe par un dégradé — jamais par une bande de couleur.
+    this.sunHalo = new THREE.Mesh(
+      new THREE.RingGeometry(2.3, 3.3, quality.profile === "low" ? 32 : 64),
+      new THREE.MeshBasicMaterial({
+        map: sunHaloTexture(),
+        transparent: true,
+        depthWrite: false,
+        opacity: 0.5,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        toneMapped: false,
+      }),
+    );
+    this.sunHalo.rotation.x = -Math.PI / 2;
+    this.sunHalo.position.y = PLINTH_TOP - 0.16;
+    this.sunHalo.renderOrder = 0;
+    this.scene.add(this.sunHalo);
+
     if (quality.particleCount > 0) this.particles = this.buildParticles(quality.particleCount);
   }
 
@@ -92,6 +113,9 @@ export class SceneGraph {
   }
 
   dispose() {
+    this.sunHalo.geometry.dispose();
+    this.sunHalo.material.map?.dispose();
+    this.sunHalo.material.dispose();
     this.plinth.geometry.dispose();
     this.plinth.material.dispose();
     this.contactShadow.geometry.dispose();
@@ -130,6 +154,28 @@ function gradientProbe(height: number) {
   source.colorSpace = THREE.SRGBColorSpace;
   source.needsUpdate = true;
   return source;
+}
+
+/**
+ * Le halo solaire : orange chaud au contact du socle, éteint vers l'extérieur.
+ * Trois arrêts et non deux — la charte « huilée » proscrit les dégradés plats,
+ * et deux arrêts produisent justement une transition mécanique.
+ */
+function sunHaloTexture() {
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const c = size / 2;
+  const gradient = ctx.createRadialGradient(c, c, size * 0.34, c, c, size * 0.5);
+  gradient.addColorStop(0, "rgba(244, 163, 28, 0.55)");
+  gradient.addColorStop(0.45, "rgba(224, 82, 6, 0.22)");
+  gradient.addColorStop(1, "rgba(224, 82, 6, 0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
 }
 
 function contactShadowTexture() {

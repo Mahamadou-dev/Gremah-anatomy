@@ -18,13 +18,16 @@ import { InputController, type InputAction } from "./interaction/input-controlle
 import { HotspotLayer } from "./interaction/hotspots";
 import { AnatomyAssetManager, type LoadedOrgan } from "./loaders/assets";
 import { memoryBudgetBytes, selectLevel, PREVIEW_LEVEL, type LodLevel } from "./loaders/lod";
+import { MaterialLibrary } from "./materials/library";
+import type { ViewMode } from "./materials/params";
+import { PostStack, type PostStatus } from "./passes/composer";
 
 /**
  * L'orchestrateur du moteur.
  *
  * Il ne contient plus de scène, de boucle ni d'entrées : il les compose. Chaque
  * responsabilité vit dans `core/`, `interaction/` ou `loaders/`, et aucun de ces
- * modules ne connaît React — la frontière du §4 de CLAUDE.md passe ici et
+ * modules ne connaît React �?" la frontière du §4 de CLAUDE.md passe ici et
  * nulle part ailleurs.
  */
 
@@ -41,6 +44,10 @@ export type EngineStatus = {
   detected: QualityProfile;
   /** Vrai si l'utilisateur a forcé le profil plutôt que de suivre la détection. */
   overridden: boolean;
+  /** Mode de rendu des tissus courant. */
+  mode: ViewMode;
+  /** �?tat de la pile de post-processing �?" jamais masqué en cas d'absence. */
+  post: PostStatus;
 };
 
 const DOT_PIXELS = 34;
@@ -55,6 +62,9 @@ export class AnatomyViewer {
   private overlay: DebugOverlay | null = null;
   private assets: AnatomyAssetManager;
   private hotspots = new HotspotLayer();
+  private materialLibrary: MaterialLibrary;
+  private post: PostStack;
+  private mode: ViewMode = "tissu";
 
   private container: HTMLElement;
   private callbacks: ViewerCallbacks;
@@ -64,7 +74,7 @@ export class AnatomyViewer {
 
   private organ: LoadedOrgan | null = null;
   private clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
-  /** N'écrit que la profondeur — résout un organe en fondu à une seule surface. */
+  /** N'écrit que la profondeur �?" résout un organe en fondu à une seule surface. */
   private depthMaterial = new THREE.MeshBasicMaterial({
     colorWrite: false,
     depthWrite: true,
@@ -164,13 +174,21 @@ export class AnatomyViewer {
     });
 
     this.assets = new AnatomyAssetManager(renderer, options.memoryBudget);
+    this.materialLibrary = new MaterialLibrary(renderer.backend, quality.profile);
+    this.post = new PostStack(renderer, this.graph.scene, this.rig.camera, quality, {
+      width: Math.max(container.clientWidth, 1),
+      height: Math.max(container.clientHeight, 1),
+    });
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(container);
     this.resize();
 
-    if (debugRequested())
+    if (debugRequested()) {
       this.overlay = new DebugOverlay(container, renderer, this.loop, this.quality);
+      const post = this.post.status;
+      this.overlay.setPasses(post.available ? post.passes.join(" › ") : `off (${post.reason})`);
+    }
 
     callbacks.onReady?.(this.status);
   }
@@ -181,11 +199,29 @@ export class AnatomyViewer {
       quality: this.quality.profile,
       detected: this.detected,
       overridden: this.overridden,
+      mode: this.mode,
+      post: this.post.status,
     };
   }
 
   /**
-   * Change de profil à chaud. Le pixel ratio — de loin le premier poste de coût —
+   * Bascule tissu / rayon-X / fantôme.
+   *
+   * La bascule ne recharge rien : les matériaux d'origine sont conservés et
+   * restaurés, ce qui rend l'aller-retour instantané même sur un téléphone.
+   */
+  setViewMode(mode: ViewMode) {
+    if (!this.organ) return this.mode;
+    this.mode = this.materialLibrary.setMode(this.organ.meshes, mode);
+    // Un changement de matériau invalide les plans de coupe posés sur l'ancien.
+    if (this.crossSection) this.applyClipping(true);
+    this.loop.markDirty();
+    this.callbacks.onReady?.(this.status);
+    return this.mode;
+  }
+
+  /**
+   * Change de profil à chaud. Le pixel ratio �?" de loin le premier poste de coût �?"
    * s'applique immédiatement ; l'anti-aliasing et la taille de la sonde
    * d'environnement sont figés à la création du contexte et ne prendront effet
    * qu'au prochain chargement de page. Le choix est persisté dans tous les cas.
@@ -195,6 +231,7 @@ export class AnatomyViewer {
     writeQualityOverride(profile);
     this.quality = qualitySettings(profile ?? this.detected);
     this.applyPixelRatio();
+    this.materialLibrary.setProfile(this.quality.profile);
     this.overlay?.setQuality(this.quality);
     this.loop.markDirty();
     this.callbacks.onReady?.(this.status);
@@ -205,8 +242,8 @@ export class AnatomyViewer {
    * Décidé une fois, jamais adapté en vol. Un contrôleur dynamique a vécu ici et
    * c'était un recul net : les intervalles de frame sont quantifiés par le vsync,
    * donc le moindre à-coup se lisait comme une charge GPU, faisait chuter le
-   * buffer, et — un 16,7 ms verrouillé au vsync n'atteignant jamais le seuil de
-   * remontée — ne remontait plus jamais. La scène rend en ~2 ms : il n'y a rien
+   * buffer, et �?" un 16,7 ms verrouillé au vsync n'atteignant jamais le seuil de
+   * remontée �?" ne remontait plus jamais. La scène rend en ~2 ms : il n'y a rien
    * à fuir.
    */
   private applyPixelRatio() {
@@ -280,6 +317,7 @@ export class AnatomyViewer {
     this.graph.scene.add(organ.pivot);
     organ.pivot.updateWorldMatrix(true, true);
 
+    this.dressOrgan(organ);
     if (this.crossSection) this.applyClipping(true);
     this.graph.setAccent(accent);
 
@@ -303,6 +341,13 @@ export class AnatomyViewer {
       .to(this.rig.camera.position, { z: 8.2, duration: 0.9, ease: "power2.out" }, 0.08);
 
     if (preview !== target) void this.refine(modelUrl, hotspots, target, request);
+  }
+
+  /** Applique les matériaux signature et repose le mode de vue courant. */
+  private dressOrgan(organ: LoadedOrgan) {
+    this.materialLibrary.reset();
+    this.materialLibrary.enhance(organ.meshes);
+    if (this.mode !== "tissu") this.materialLibrary.setMode(organ.meshes, this.mode);
   }
 
   private attachHotspots(organ: LoadedOrgan, hotspots: Hotspot[]) {
@@ -339,6 +384,7 @@ export class AnatomyViewer {
     this.organ = detailed;
     this.graph.scene.add(detailed.pivot);
     detailed.pivot.updateWorldMatrix(true, true);
+    this.dressOrgan(detailed);
     this.attachHotspots(detailed, hotspots);
     if (this.crossSection) this.applyClipping(true);
     this.overlay?.rebaseline();
@@ -442,7 +488,9 @@ export class AnatomyViewer {
     // Les points sont encore en train de s'atténuer : il faudra une frame de plus.
     if (!settled) this.loop.markDirty();
     this.positionCallout();
-    this.renderer.render(this.graph.scene, this.rig.camera);
+    // La pile de post-processing rend elle-même quand elle est active ; sinon on
+    // retombe sur le rendu direct. Jamais les deux, jamais aucun.
+    if (!this.post.render(1 / 60)) this.renderer.render(this.graph.scene, this.rig.camera);
   }
 
   private resize() {
@@ -450,6 +498,7 @@ export class AnatomyViewer {
     this.height = Math.max(this.container.clientHeight, 1);
     this.rig.resize(this.width / this.height);
     this.renderer.setSize(this.width, this.height, false);
+    this.post.setSize(this.width, this.height);
     this.hotspots.setPixelSize(DOT_PIXELS, this.height, CAMERA_FOV);
     this.loop.markDirty();
   }
@@ -636,6 +685,8 @@ export class AnatomyViewer {
     this.overlay?.dispose();
     this.resizeObserver.disconnect();
     this.hotspots.dispose();
+    this.post.dispose();
+    this.materialLibrary.dispose();
     this.depthMaterial.dispose();
     this.assets.dispose();
     this.graph.dispose();

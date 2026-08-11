@@ -15,6 +15,7 @@ import {
 import type { Hotspot, Organ } from "../lib/anatomy-data";
 import type { AnatomyViewer, EngineStatus } from "../engine/viewer";
 import { QUALITY_PROFILES, type QualityProfile } from "../engine/core/capabilities";
+import { VIEW_MODES, type ViewMode } from "../engine/materials/params";
 
 type Props = {
   organ: Organ;
@@ -29,6 +30,16 @@ const QUALITY_LABEL: Record<QualityProfile, string> = {
   low: "Éco",
   medium: "Standard",
   high: "Élevé",
+};
+const MODE_LABEL: Record<ViewMode, string> = {
+  tissu: "Tissu",
+  "rayon-x": "Rayon X",
+  fantome: "Fantôme",
+};
+const MODE_HINT: Record<ViewMode, string> = {
+  tissu: "Rendu réaliste des tissus, avec translucidité de surface",
+  "rayon-x": "Vue radiographique : les couches profondes deviennent lisibles",
+  fantome: "Couche de contexte estompée, pour situer sans masquer",
 };
 
 export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompare }: Props) {
@@ -137,6 +148,10 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
     if (status) setEngine(status);
   };
 
+  const setMode = (mode: ViewMode) => {
+    viewerRef.current?.setViewMode(mode);
+  };
+
   const tools = [
     { id: "rotate", label: "Rotate", icon: RotateCcw },
     { id: "zoom", label: "Zoom", icon: Search },
@@ -234,6 +249,23 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
           <i />
         </span>
       </button>
+
+      {engine && (
+        <div className="mode-switch" role="group" aria-label="Mode de rendu">
+          {VIEW_MODES.map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setMode(mode)}
+              aria-pressed={engine.mode === mode}
+              className={engine.mode === mode ? "on" : ""}
+              title={MODE_HINT[mode]}
+            >
+              {MODE_LABEL[mode]}
+            </button>
+          ))}
+        </div>
+      )}
 
       {engine && (
         <div className="engine-badge">

@@ -23,6 +23,7 @@ export class DebugOverlay {
   private loop: RenderLoop;
   private quality: QualitySettings;
   private timer: number;
+  private passes = "—";
   /** Relevé pris au démarrage : sert de référence pour repérer une fuite GPU. */
   private baseline: { geometries: number; textures: number };
 
@@ -50,6 +51,11 @@ export class DebugOverlay {
     this.quality = quality;
   }
 
+  /** Ce qui traverse réellement la pile, ou pourquoi elle est absente. */
+  setPasses(description: string) {
+    this.passes = description;
+  }
+
   /** Rebase le relevé mémoire après un changement d'organe volontaire. */
   rebaseline() {
     this.baseline = { ...this.renderer.info.memory };
@@ -65,6 +71,7 @@ export class DebugOverlay {
     this.element.innerHTML = [
       row("backend", this.renderer.backend),
       row("profil", this.quality.profile),
+      row("passes", this.passes),
       row("fps", fps.toFixed(0)),
       row("cpu", `${cpuMs.toFixed(2)} ms / ${this.quality.frameBudgetMs} ms`, overBudget),
       row("draw calls", String(render.calls)),
