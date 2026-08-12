@@ -8,19 +8,37 @@
 
 ## 1. Le projet en une phrase
 
-**Gremah Anatomy** est un atlas d'anatomie humaine 3D interactif, **100 % frontend**,
-conçu pour les **étudiants en médecine du Niger** : utilisable sur un smartphone
-d'entrée de gamme, en connexion faible, et hors-ligne après la première visite.
+**Gremah Anatomy** est un atlas d'anatomie humaine 3D interactif et bilingue
+(FR/EN), **conçu et développé au Niger pour le monde entier** : une référence
+internationale qui se trouve être nigérienne, et non un outil local.
+
+### Le positionnement, en une distinction
+
+Le Niger est l'**origine et l'identité** du projet, pas son plafond. La nuance
+gouverne chaque décision :
+
+| Ce que le Niger apporte                                              | Ce qu'il ne limite pas                                            |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| L'exigence d'un smartphone d'entrée de gamme sur réseau intermittent | L'ambition visuelle : la 3D doit tenir la comparaison mondiale    |
+| Le français comme langue de travail — mais l'anglais à parité        | L'audience : un étudiant à Lagos, Lyon ou Manille est un usager   |
+| La palette du drapeau, traitée en surfaces satinées                  | Le contenu : anatomie universelle, pas une anatomie « régionale » |
+| L'ancrage clinique local, en **complément** et jamais en substitut   | La rigueur : nomenclature internationale, sources de référence    |
+
+La contrainte nigérienne est un **avantage d'ingénierie** : un atlas qui tient
+30 fps sur un Android à 150 000 FCFA est fluide partout ailleurs. C'est ce qui
+rend le projet meilleur que ses concurrents, pas ce qui le rend plus petit.
 
 ### Non-négociables
 
-| #   | Exigence                                          | Traduction technique                                                                                                                                                                      |
-| --- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **3D extrêmement renforcée et moderne**           | WebGPU/TSL en cible, WebGL2 en repli. Matériaux PBR + SSS, post-processing, coupes anatomiques, animations physiologiques. La 3D est le produit, pas une décoration.                      |
-| 2   | **Frontend only, à une exception près**           | Le contenu, la 3D et la révision restent 100 % client (`localStorage` + IndexedDB). **Seuls les comptes** passent par 4 routes `app/api/` vers MongoDB Atlas — voir l'amendement §2 bis.  |
-| 3   | **Public cible : étudiants en médecine du Niger** | Interface **française d'abord** (FR par défaut, EN secondaire, vocabulaire **Hausa/Zarma** en bonus terminologique). Contenu aligné sur le cursus PCEM/DCEM. Mode data-light obligatoire. |
-| 4   | **Thème drapeau du Niger, huilé et moderne**      | Palette orange / blanc / vert + disque solaire, traitée en surfaces satinées, dégradés profonds, verre dépoli — jamais en aplats « drapeau ».                                             |
-| 5   | **Marque Gremah**                                 | Contacts (§7) présents dans le footer, la page À propos et les métadonnées.                                                                                                               |
+| #   | Exigence                                     | Traduction technique                                                                                                                                                                                                      |
+| --- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **3D extrêmement renforcée et moderne**      | WebGPU/TSL en cible, WebGL2 en repli. Matériaux PBR + SSS, post-processing, coupes anatomiques, animations physiologiques. La 3D est le produit, pas une décoration.                                                      |
+| 2   | **Frontend only, à une exception près**      | Le contenu, la 3D et la révision restent 100 % client (`localStorage` + IndexedDB). **Seuls les comptes** passent par 4 routes `app/api/` vers MongoDB Atlas — voir l'amendement §2 bis.                                  |
+| 3   | **Bilingue FR/EN à parité**                  | Aucune des deux langues n'est un sous-produit de l'autre : même contenu, même soin, même complétude. Le glossaire **haoussa / zarma** est un apport culturel en plus, jamais un substitut.                                |
+| 4   | **Origine nigérienne, exigence mondiale**    | La cible technique reste l'Android d'entrée de gamme sur réseau intermittent — c'est ce qui rend l'atlas fluide partout. L'ambition visuelle et scientifique, elle, se compare à l'international.                         |
+| 5   | **Thème drapeau du Niger, huilé et moderne** | Palette orange / blanc / vert + disque solaire, traitée en surfaces satinées, dégradés profonds, verre dépoli — jamais en aplats « drapeau ». **Le mode clair est un thème à part entière, pas une inversion du sombre.** |
+| 6   | **Couverture anatomique de référence**       | Un atlas de référence ne se juge pas sur son moteur mais sur ce qu'il couvre. Objectif : **tous les grands systèmes**, structures nommées en FR / latin TA / EN, sourcées.                                                |
+| 7   | **Marque Gremah**                            | Contacts (§7) présents dans le footer, la page À propos et les métadonnées.                                                                                                                                               |
 
 ### §2 bis — Amendement : les comptes étudiants
 
@@ -238,10 +256,19 @@ WhatsApp en lien `https://wa.me/21655299368`.
 
 ## 8. Contenu anatomique — règles
 
-- **FR = langue source.** L'anglais est une traduction, jamais l'inverse.
-- **Nomenclature Terminologia Anatomica** pour les termes latins.
+- **FR et EN à parité.** Le français reste la langue de rédaction — c'est celle de
+  l'auteur et du cursus d'origine — mais l'anglais n'est pas un sous-produit :
+  même complétude, même relecture. Un champ traduit à moitié est un champ absent.
+  Un test de contenu vérifie qu'aucune structure publiée n'a de trou de traduction.
+- **Nomenclature Terminologia Anatomica** pour les termes latins. C'est ce qui rend
+  l'atlas lisible par un étudiant de n'importe quel pays.
 - **Chaque affirmation clinique porte une source** (champ `source` dans le contenu).
   Pas de fait médical inventé. En cas de doute, on omet.
+- **L'ancrage clinique nigérien est un enrichissement, jamais un filtre.** Le
+  paludisme ou la drépanocytose figurent parce qu'ils sont cliniquement majeurs —
+  au Niger comme ailleurs. L'anatomie décrite, elle, est universelle.
+- **Glossaire haoussa / zarma** : un apport culturel réel et différenciant, posé
+  à côté du contenu international, jamais à sa place.
 - **Bandeau de non-responsabilité** : outil pédagogique, ne remplace ni un cours
   ni un avis médical.
 - Toute erreur médicale est un **bug bloquant**, au même titre qu'un crash.
@@ -257,6 +284,17 @@ WhatsApp en lien `https://wa.me/21655299368`.
   cette règle (voir le commentaire sur le pixel ratio dans `viewer.ts`) — l'imiter.
 - **Pas de fichier généré committé** hors `public/`.
 - **Assets 3D** : tout `.glb` ajouté doit être Draco + KTX2, **< 2 Mo** par organe.
+- **Provenance des modèles.** Aucun modèle anatomique n'est inventé : ils viennent
+  de sources ouvertes vérifiables — **BodyParts3D** (Database Center for Life
+  Science, CC BY-SA 2.1 JP) et sa réorganisation **Z-Anatomy** (CC BY-SA 4.0).
+  Trois conséquences non négociables :
+  1. La licence est **share-alike** : les `.glb` dérivés restent CC BY-SA, même si
+     le code du dépôt est MIT. Les deux licences doivent être distinguées dans le
+     `README` et sur la page crédits.
+  2. **L'attribution est obligatoire** et visible, pas enterrée dans un fichier.
+  3. Chaque modèle porte sa provenance dans `public/models/manifest.json` :
+     source, identifiant d'origine, licence. Un modèle sans provenance ne se
+     déploie pas — un test le vérifie.
 
 ---
 
@@ -269,10 +307,30 @@ de proposer un plan : un travail hors sprint courant doit être justifié ou rep
 
 ## 11. Définition de « terminé » pour le projet
 
-- [ ] 20+ organes/structures, contenu FR sourcé
+**Couverture et contenu**
+
+- [ ] **60+ structures** couvrant les onze grands systèmes, pas neuf organes isolés
+- [ ] Contenu **complet en FR et en EN**, sans trou de traduction (vérifié par test)
+- [ ] Chaque affirmation clinique sourcée ; provenance et licence de chaque modèle
+- [ ] Glossaire haoussa / zarma en place
+
+**Expérience**
+
+- [ ] Une page d'accueil dont la 3D soutient la comparaison avec les meilleures
+      vitrines du web — c'est la première preuve de sérieux que voit un visiteur
+- [ ] Modes clair **et** sombre traités chacun comme un thème à part entière
+- [ ] Un parcours d'apprentissage réellement interactif : on manipule, on teste,
+      on se corrige — pas une fiche qu'on fait défiler
+
+**Technique**
+
 - [ ] 60 fps en `high` sur desktop, 30 fps en `low` sur Android d'entrée de gamme
-- [ ] Lighthouse ≥ 95 en Performance et Accessibilité
+- [ ] Lighthouse ≥ 95 en Performance et Accessibilité, WCAG AA
 - [ ] Fonctionnel hors ligne après première visite
 - [ ] Chargement initial < 5 s en 3G simulée
-- [ ] Zéro appel réseau vers un backend
+- [ ] Aucun appel réseau hors des quatre routes de compte (§2 bis)
+
+**Marque**
+
 - [ ] Marque et contacts Gremah présents et corrects
+- [ ] Origine nigérienne assumée et visible, sans jamais restreindre l'audience

@@ -1,18 +1,22 @@
 # Gremah Anatomy
 
-**Atlas d'anatomie humaine 3D interactif, pour les étudiants en médecine du Niger.**
+**Atlas d'anatomie humaine 3D interactif — conçu au Niger, pour le monde entier.**
 
-En français. 100 % frontend. Utilisable sur un smartphone d'entrée de gamme, en
+Bilingue français / anglais. Utilisable sur un smartphone d'entrée de gamme, en
 connexion faible, et hors ligne après la première visite.
 
 ---
 
 ## Pourquoi
 
-Les atlas d'anatomie de référence sont chers, en anglais, et supposent une
-connexion permanente. Gremah Anatomy prend le problème dans l'autre sens : la
-contrainte de départ est un téléphone modeste sur un réseau intermittent, et la
-langue de travail est le français, celle du cursus.
+Les atlas d'anatomie de référence sont chers, fermés, et supposent une connexion
+permanente et une machine correcte. Gremah Anatomy prend le problème dans l'autre
+sens : la contrainte de départ est un téléphone modeste sur un réseau
+intermittent — et ce qui tient dans ces conditions est fluide partout ailleurs.
+
+Le Niger est l'origine du projet, pas son plafond. La discipline d'ingénierie qui
+en découle est ce qui rend l'atlas meilleur, et l'anatomie qu'il décrit est
+universelle.
 
 La 3D, le contenu et la progression vivent entièrement dans le navigateur —
 la progression reste sur l'appareil de l'étudiant (`localStorage` + IndexedDB).
