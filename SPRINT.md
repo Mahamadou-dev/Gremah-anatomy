@@ -424,9 +424,9 @@ email, et suppression de compte (droit à l'effacement).
 | 0      | ✅ terminé  | `sprint-0/fondations`   | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.   |
 | 1      | ✅ terminé  | `sprint-1/moteur-v2`    | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils commutables, CameraRig, overlay `?debug=1`, 18 tests. |
 | 2      | ✅ terminé  | `sprint-2/assets`       | 28,6 Mo → 7,9 Mo par niveau (3 LOD), décodeurs câblés, budget mémoire en octets, streaming progressif.        |
-| 3      | 🟨 en cours | `sprint-3/materiaux`    | Tissus translucides, rayon X, fantôme, bloom + grain/vignette, halo solaire. Reste : SSAO, DOF, pile WebGPU.  |
+| 3      | 🟨 en cours | fusionné dans `main`    | Tissus translucides, rayon X, fantôme, bloom + grain/vignette, halo solaire. Reste : SSAO, DOF, pile WebGPU.  |
 | 4      | ⬜ à faire  | `sprint-4/interaction`  |                                                                                                               |
-| 5      | ⬜ à faire  | `sprint-5/contenu`      |                                                                                                               |
+| 5      | 🟨 en cours | fusionné dans `main`    | FR langue source, 28 champs/organe, 16 sources, ancrage Niger, vernaculaire. Reste : 20+ structures, i18n EN. |
 | 6      | ⬜ à faire  | `sprint-6/physiologie`  |                                                                                                               |
 | 7      | ⬜ à faire  | `sprint-7/corps-entier` |                                                                                                               |
 | 8      | ⬜ à faire  | `sprint-8/revision`     |                                                                                                               |
