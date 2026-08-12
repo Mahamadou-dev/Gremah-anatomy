@@ -23,7 +23,8 @@ export function AccountBadge() {
 
   useEffect(() => {
     const abandon = new AbortController();
-    fetch("/api/moi", { signal: abandon.signal })
+    // Barre finale : `trailingSlash: true` vaut aussi pour les routes d'API.
+    fetch("/api/moi/", { signal: abandon.signal })
       .then((reponse) => (reponse.ok ? reponse.json() : null))
       .then((corps: { profil?: ProfilPublic } | null) => setProfil(corps?.profil ?? null))
       .catch(() => {
@@ -36,7 +37,7 @@ export function AccountBadge() {
   async function seDeconnecter() {
     setSortie(true);
     try {
-      await fetch("/api/deconnexion", { method: "POST" });
+      await fetch("/api/deconnexion/", { method: "POST" });
     } finally {
       // `refresh` avant `push` : sans ça le middleware relit la page depuis le
       // cache du routeur, avec un cookie qui n'existe plus.

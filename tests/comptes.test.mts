@@ -128,6 +128,20 @@ test("aucun secret n'est exposé sous un préfixe NEXT_PUBLIC_", () => {
   );
 });
 
+test("les appels d'API portent la barre finale", () => {
+  // `trailingSlash: true` s'applique aussi aux routes d'API : un fetch vers
+  // `/api/connexion` prend un 308 avant d'arriver. Invisible en développement,
+  // mais c'est un aller-retour de plus sur chaque connexion — sur une 3G
+  // nigérienne, la seule latence qu'on peut supprimer gratuitement.
+  const fautifs: string[] = [];
+  for (const { chemin, code } of fichiers("app")) {
+    for (const appel of code.matchAll(/fetch\(\s*"(\/api\/[^"]*)"/g)) {
+      if (!appel[1].endsWith("/")) fautifs.push(`${chemin} → ${appel[1]}`);
+    }
+  }
+  assert.deepEqual(fautifs, []);
+});
+
 test("les routes de compte tournent sur le runtime Node", () => {
   // Le driver Mongo a besoin de sockets TCP et scrypt de `node:crypto` :
   // ni l'un ni l'autre n'existe sur le runtime Edge.

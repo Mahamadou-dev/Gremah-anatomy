@@ -74,7 +74,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
     setEnvoi(true);
     setMessage("");
     try {
-      const reponse = await fetch(inscription ? "/api/inscription" : "/api/connexion", {
+      // Barre finale obligatoire : `trailingSlash: true` s'applique aussi aux
+      // routes d'API, et sans elle chaque appel paie un 308 avant d'arriver.
+      const reponse = await fetch(inscription ? "/api/inscription/" : "/api/connexion/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(saisie),
