@@ -54,8 +54,50 @@ function client(): Promise<MongoClient> {
     // Les instances Vercel sont recyclées : une connexion oisive gardée trop
     // longtemps occupe un slot pour un processus qui ne reviendra pas.
     maxIdleTimeMS: 60_000,
-  }).connect();
+  })
+    .connect()
+    .catch((erreur: unknown) => {
+      // Sans cette remise à zéro, une promesse rejetée resterait en cache pour
+      // toute la vie de l'instance : une fois la liste d'accès Atlas corrigée,
+      // les requêtes continueraient d'échouer jusqu'au recyclage de la fonction.
+      // C'est exactement le genre de panne qui « se répare toute seule au bout
+      // d'un moment » et qu'on ne comprend jamais.
+      delete cache._mongo;
+      throw enrichir(erreur);
+    });
   return cache._mongo;
+}
+
+/**
+ * Traduit les échecs de connexion opaques en cause probable.
+ *
+ * Atlas refuse une adresse absente de sa liste d'accès en coupant la poignée de
+ * main TLS, pas en répondant « accès refusé » : le driver ne voit qu'une alerte
+ * SSL 80, illisible pour qui ne connaît pas ce comportement. Comme le message
+ * finit dans les journaux Vercel à trois heures du matin, il vaut mieux qu'il
+ * nomme la manipulation à faire.
+ */
+function enrichir(erreur: unknown): unknown {
+  const texte = erreur instanceof Error ? erreur.message : String(erreur);
+  if (/tlsv1 alert internal error|SSL alert number 80|ERR_SSL_TLSV1_ALERT/i.test(texte)) {
+    return new Error(
+      "Connexion à MongoDB Atlas refusée au niveau TLS. Cause quasi certaine : " +
+        "l'adresse IP de l'appelant n'est pas dans la liste d'accès du cluster. " +
+        "Atlas → Network Access → Add IP Address → Allow Access from Anywhere " +
+        "(0.0.0.0/0), indispensable pour des fonctions serverless dont l'IP change " +
+        `à chaque exécution. Détail d'origine : ${texte}`,
+      { cause: erreur },
+    );
+  }
+  if (/Authentication failed|bad auth/i.test(texte)) {
+    return new Error(
+      "Identifiants MongoDB refusés. Vérifiez l'utilisateur et le mot de passe de " +
+        "MONGODB_URI — si le mot de passe contient @ : / ou #, il doit être encodé " +
+        `en URL (@ devient %40). Détail d'origine : ${texte}`,
+      { cause: erreur },
+    );
+  }
+  return erreur;
 }
 
 export async function base(): Promise<Db> {
