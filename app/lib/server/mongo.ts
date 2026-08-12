@@ -46,6 +46,14 @@ function client(): Promise<MongoClient> {
     // d'erreur en cinq secondes à une page qui tourne trente secondes.
     serverSelectionTimeoutMS: 5000,
     retryWrites: true,
+    // Un cluster M0 gratuit plafonne à 100 connexions simultanées, et chaque
+    // instance de fonction serverless ouvre son propre pool. Sans plafond par
+    // instance, une pointe de trafic — ou plusieurs sites sur le même cluster —
+    // épuise le quota et fait échouer les connexions de tout le monde.
+    maxPoolSize: 5,
+    // Les instances Vercel sont recyclées : une connexion oisive gardée trop
+    // longtemps occupe un slot pour un processus qui ne reviendra pas.
+    maxIdleTimeMS: 60_000,
   }).connect();
   return cache._mongo;
 }
