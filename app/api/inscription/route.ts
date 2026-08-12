@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { estValide, normaliserEmail, validerInscription, type Inscription } from "../../lib/compte";
 import { comptes, profilPublic, type DocumentCompte } from "../../lib/server/mongo";
 import { hacher } from "../../lib/server/mots-de-passe";
+import { messageBlocage } from "../../lib/limite-debit";
+import {
+  adresseAppelant,
+  enregistrerCreation,
+  verifierCreation,
+} from "../../lib/server/limite-debit";
 import { COOKIE_SESSION, creerJeton, optionsCookie } from "../../lib/server/session";
 
 // Le driver Mongo et `node:crypto` exigent le runtime Node : le runtime Edge
@@ -23,6 +29,23 @@ export async function POST(request: Request) {
   const erreurs = validerInscription(saisie);
   if (!estValide(erreurs)) {
     return NextResponse.json({ message: "Formulaire incomplet.", erreurs }, { status: 422 });
+  }
+
+  const ip = adresseAppelant(request);
+  try {
+    const debit = await verifierCreation(ip);
+    if (!debit.autorise) {
+      return NextResponse.json(
+        { message: messageBlocage(debit.secondesAvantReessai) },
+        { status: 429, headers: { "Retry-After": String(debit.secondesAvantReessai) } },
+      );
+    }
+  } catch (erreur) {
+    console.error("inscription/limite", erreur);
+    return NextResponse.json(
+      { message: "Le service est momentanément indisponible. Réessayez dans un instant." },
+      { status: 503 },
+    );
   }
 
   const email = normaliserEmail(saisie.email!);
@@ -58,6 +81,13 @@ export async function POST(request: Request) {
       { status: 503 },
     );
   }
+
+  // Compté après l'écriture seulement : un email déjà pris ou une panne ne doit
+  // pas entamer le quota de quelqu'un qui n'a créé aucun compte.
+  await enregistrerCreation(ip).catch(() => {
+    // Le compte est créé, c'est ce qui compte. Perdre une unité de compteur est
+    // sans conséquence ; refuser l'inscription pour ça en aurait une.
+  });
 
   // Inscription réussie = session ouverte. Redemander de se connecter juste
   // après avoir créé le compte est une friction que rien ne justifie.

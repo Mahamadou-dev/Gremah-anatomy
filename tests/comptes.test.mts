@@ -13,6 +13,14 @@ import {
   REGIONS_NIGER,
   type Inscription,
 } from "../app/lib/compte.ts";
+import {
+  evaluer,
+  evaluerCreation,
+  messageBlocage,
+  PLAFOND_CREATIONS,
+  PLAFOND_EMAIL,
+  PLAFOND_IP,
+} from "../app/lib/limite-debit.ts";
 
 const racine = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 
@@ -73,6 +81,67 @@ test("les listes pays/régions couvrent le public visé", () => {
   for (const region of ["Niamey", "Zinder", "Maradi", "Agadez"]) {
     assert.ok(REGIONS_NIGER.includes(region as (typeof REGIONS_NIGER)[number]));
   }
+});
+
+/* --- Limitation de débit ---------------------------------------------------- */
+
+test("en dessous des plafonds, la tentative passe", () => {
+  assert.deepEqual(evaluer(0, 0, null), { autorise: true });
+  assert.deepEqual(evaluer(PLAFOND_EMAIL - 1, PLAFOND_IP - 1, 10), { autorise: true });
+});
+
+test("le plafond par email bloque le compte visé", () => {
+  const verdict = evaluer(PLAFOND_EMAIL, 0, 60);
+  assert.equal(verdict.autorise, false);
+  if (verdict.autorise) return;
+  assert.equal(verdict.motif, "email");
+  // Fenêtre de 15 min, tentative la plus ancienne vieille de 60 s.
+  assert.equal(verdict.secondesAvantReessai, 15 * 60 - 60);
+});
+
+test("le plafond par IP bloque le balayage massif", () => {
+  const verdict = evaluer(0, PLAFOND_IP, 0);
+  assert.equal(verdict.autorise, false);
+  if (!verdict.autorise) assert.equal(verdict.motif, "ip");
+});
+
+test("le délai annoncé ne descend jamais à zéro", () => {
+  // Une tentative plus vieille que la fenêtre donnerait un délai négatif, donc
+  // un « réessayez dans 0 minute » qui invite à marteler le formulaire.
+  const verdict = evaluer(PLAFOND_EMAIL, 0, 99_999);
+  assert.equal(verdict.autorise, false);
+  if (!verdict.autorise) assert.ok(verdict.secondesAvantReessai >= 1);
+});
+
+test("le plafond par IP reste large devant celui par email", () => {
+  // Au Niger, un cybercafé ou un opérateur mobile place des dizaines
+  // d'étudiants derrière une seule adresse : un plafond IP serré bloquerait
+  // une classe entière pour l'étourderie d'un seul.
+  assert.ok(PLAFOND_IP >= PLAFOND_EMAIL * 4);
+});
+
+test("les créations de comptes ont leur propre plafond", () => {
+  assert.deepEqual(evaluerCreation(PLAFOND_CREATIONS - 1, 30), { autorise: true });
+  const verdict = evaluerCreation(PLAFOND_CREATIONS, 30);
+  assert.equal(verdict.autorise, false);
+});
+
+test("le message de blocage arrondit à la minute supérieure", () => {
+  assert.equal(messageBlocage(1), "Trop de tentatives. Réessayez dans 1 minute.");
+  assert.equal(messageBlocage(61), "Trop de tentatives. Réessayez dans 2 minutes.");
+  // Aucun compteur ni plafond ne doit filtrer jusqu'à l'utilisateur : ce serait
+  // dire à un attaquant exactement combien d'essais il lui reste.
+  assert.doesNotMatch(messageBlocage(300), /\d+\s*(tentatives?\s*sur|\/)/);
+});
+
+test("la connexion contrôle le débit avant de hacher", () => {
+  const route = fichiers("app/api").find((f) => f.chemin.endsWith("connexion/route.ts"))!;
+  const positionLimite = route.code.indexOf("verifierDebit");
+  const positionHachage = route.code.indexOf("await verifier(saisie.motDePasse");
+  assert.ok(positionLimite > 0, "la route n'appelle pas la limitation de débit");
+  // scrypt coûte ~100 ms et 32 Mo : le faire avant le contrôle offrirait à
+  // l'attaquant exactement le calcul qu'il cherche à nous faire répéter.
+  assert.ok(positionLimite < positionHachage, "le hachage précède le contrôle de débit");
 });
 
 /* --- Invariants de sécurité ------------------------------------------------

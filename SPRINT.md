@@ -398,15 +398,22 @@ intermédiaire qui existe.
   serveur. Trois tests gardent la frontière : pas d'import de `lib/server/` depuis
   un composant client, pas de secret sous `NEXT_PUBLIC_`, runtime Node sur les
   quatre routes.
+- **Limitation de débit** en fenêtre glissante de 15 min, stockée dans Mongo avec
+  un index TTL — pas en mémoire : chaque instance serverless a la sienne, et il
+  suffirait d'envoyer les requêtes en parallèle pour passer entre les gouttes.
+  8 échecs par email, 40 par IP, 10 créations de compte par IP. Contrôlée **avant**
+  `scrypt`, sinon on offre à l'attaquant le calcul qu'il cherche à faire répéter.
+  Réponse 429 + `Retry-After`, sans jamais révéler le compteur atteint.
+  Le plafond par IP est large à dessein : au Niger, un cybercafé ou un opérateur
+  mobile place des dizaines d'étudiants derrière une seule adresse.
 
 **Le prix payé :** `output: "export"` a été retiré. Les pages restent toutes
 prérendues en statique et les assets restent des fichiers — mais un hôte purement
 statique (GitHub Pages, clé USB de salle de TP) ne porterait plus les comptes.
 Amendement consigné dans **CLAUDE.md §2 bis**.
 
-**Reste à faire :** limitation de débit sur `/api/connexion` (aujourd'hui rien ne
-freine un essai de mots de passe en boucle), réinitialisation de mot de passe,
-vérification d'adresse email, et suppression de compte.
+**Reste à faire :** réinitialisation de mot de passe, vérification d'adresse
+email, et suppression de compte (droit à l'effacement).
 
 ---
 
@@ -425,7 +432,7 @@ vérification d'adresse email, et suppression de compte.
 | 8      | ⬜ à faire  | `sprint-8/revision`     |                                                                                                               |
 | 9      | ⬜ à faire  | `sprint-9/offline`      |                                                                                                               |
 | 10     | ⬜ à faire  | `sprint-10/lancement`   |                                                                                                               |
-| 11     | 🟨 en cours | `sprint-11/accueil`     | Vitrine 3D, `/atlas/`, contact, à propos, comptes Atlas (scrypt + HMAC). Reste : limitation de débit, reset.  |
+| 11     | ✅ terminé  | fusionné dans `main`    | Vitrine 3D, `/atlas/`, contact, à propos, comptes Atlas (scrypt + HMAC), limitation de débit. 61 tests.       |
 
 ---
 
