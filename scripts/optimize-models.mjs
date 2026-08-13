@@ -54,6 +54,24 @@ const LEVELS = [
   { suffix: "-lod2", ratio: 0.022, error: 0.015, texture: 256 },
 ];
 
+/**
+ * Dérogations par structure. Le budget est **par structure** depuis le Sprint 12
+ * (< 2 Mo, tous niveaux confondus — CLAUDE.md §9) : une nappe étendue comme la
+ * peau dépasse là où un organe compact passe largement. Plutôt que d'abaisser
+ * les réglages pour tout le monde, on corrige le cas qui dépasse.
+ *
+ * Multiplicateurs appliqués aux `LEVELS`. Une entrée ici doit toujours répondre
+ * à un dépassement mesuré, jamais à une intuition.
+ */
+const OVERRIDES = {
+  // 2,05 Mo au réglage commun. La peau est une surface presque plane : elle
+  // supporte une décimation plus franche sans perte visible de silhouette.
+  skin: { ratio: 0.6, texture: 0.5 },
+};
+
+/** Rebâtir une seule structure : `--only=skin`. Le reste du manifeste est conservé. */
+const ONLY = process.argv.find((arg) => arg.startsWith("--only="))?.slice("--only=".length);
+
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({
   "meshopt.decoder": MeshoptDecoder,
   "meshopt.encoder": MeshoptEncoder,
@@ -75,6 +93,11 @@ let rebuilt = 0;
 
 for (const file of sources) {
   const name = basename(file, ".glb");
+  if (ONLY && name !== ONLY) {
+    const conserve = manifest.organs[name];
+    if (conserve) outputBytes += conserve.levels.reduce((sum, level) => sum + level.bytes, 0);
+    continue;
+  }
   const path = join(SRC, file);
   const bytes = readFileSync(path);
   const hash = createHash("sha256").update(bytes).digest("hex").slice(0, 16);
@@ -88,8 +111,16 @@ for (const file of sources) {
     continue;
   }
 
+  const override = OVERRIDES[name];
   const levels = [];
-  for (const level of LEVELS) {
+  for (const base of LEVELS) {
+    const level = override
+      ? {
+          ...base,
+          ratio: base.ratio * override.ratio,
+          texture: Math.round(base.texture * override.texture),
+        }
+      : base;
     // Chaque niveau repart de la source : décimer un niveau déjà décimé accumule
     // l'erreur et finit par percer les surfaces fines (paroi vasculaire, cornée).
     const document = await io.readBinary(bytes);
@@ -149,8 +180,27 @@ console.log(
     `livré ${mb(outputBytes)} Mo (tous niveaux confondus).`,
 );
 
+// Le budget par structure est vérifié ici en plus de la CI : découvrir un
+// dépassement au moment du commit coûte un aller-retour de plus qu'ici, où la
+// dérogation qui le corrige est à trois lignes.
+const MAX_STRUCTURE_BYTES = 2 * 1024 * 1024;
+const depassements = Object.entries(manifest.organs)
+  .map(([name, entry]) => [name, entry.levels.reduce((sum, level) => sum + level.bytes, 0)])
+  .filter(([, bytes]) => bytes > MAX_STRUCTURE_BYTES);
+if (depassements.length > 0) {
+  console.error(
+    `\n✗ budget dépassé (max 2 Mo par structure, CLAUDE.md §9) :\n` +
+      depassements.map(([name, bytes]) => `  ${name} = ${mb(bytes)} Mo`).join("\n") +
+      `\n  → ajouter une entrée dans OVERRIDES, puis « npm run models:build -- --only=<nom> ».`,
+  );
+  process.exitCode = 1;
+}
+
 function readManifest() {
-  if (!FORCE && existsSync(MANIFEST)) {
+  // `--only` restreint le travail à une structure : repartir d'un manifeste vide
+  // effacerait les huit autres entrées alors que leurs fichiers sont intacts.
+  // C'est arrivé une fois — d'où la garde explicite plutôt qu'un simple `!FORCE`.
+  if ((!FORCE || ONLY) && existsSync(MANIFEST)) {
     try {
       return JSON.parse(readFileSync(MANIFEST, "utf8"));
     } catch {

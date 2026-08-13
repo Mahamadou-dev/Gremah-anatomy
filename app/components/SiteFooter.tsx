@@ -7,7 +7,8 @@ export function SiteFooter() {
       <div className="footer-brand">
         <strong>{BRAND.name}</strong>
         <small>
-          par {BRAND.author} · <Link href="/a-propos/">À propos</Link>
+          par {BRAND.author} · <Link href="/a-propos/">À propos</Link> ·{" "}
+          <Link href="/sources/">Sources</Link> · <Link href="/credits/">Crédits</Link>
         </small>
       </div>
 

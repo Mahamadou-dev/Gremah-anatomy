@@ -22,6 +22,8 @@
     "typecheck": "tsc --noEmit",
     "models:inspect": "node scripts/inspect-models.mjs",
     "models:build": "node scripts/optimize-models.mjs",
+    "models:check": "node scripts/check-modeles.mjs",
+    "anatomie:import": "node --experimental-strip-types scripts/import-anatomie.mjs",
     "test": "node --experimental-strip-types --test \"tests/**/*.test.mts\"",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

@@ -71,6 +71,11 @@ export default function AProposPage() {
             détail : le plus léger s&apos;affiche d&apos;abord, le raffinement arrive en
             arrière-plan.
           </p>
+          <p>
+            Aucun de ces modèles n&apos;est inventé : leur géométrie vient de jeux de données
+            anatomiques ouverts, sous licence CC BY-SA. La provenance de chacun — et ce qu&apos;il
+            reste à tracer — est détaillée sur la <Link href="/credits/">page des crédits</Link>.
+          </p>
         </section>
 
         <section>

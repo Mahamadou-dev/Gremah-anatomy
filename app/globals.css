@@ -1063,6 +1063,105 @@ a:focus-visible {
   color: var(--text-muted);
 }
 
+/* ----------------------------------------------------------- page /credits */
+.licence-split {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 18px 0;
+}
+.licence-split > div {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--glass);
+}
+.licence-split dt {
+  color: var(--accent);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.licence-split dd {
+  margin: 7px 0 0;
+  font-size: 13px;
+  line-height: 1.62;
+}
+.credit-sources {
+  display: grid;
+  gap: 15px;
+  padding: 0;
+  list-style: none;
+}
+.credit-sources li {
+  display: grid;
+  gap: 3px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.credit-sources span,
+.credit-sources small {
+  color: var(--text-muted);
+}
+.credit-sources small {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.58;
+}
+/* La table déborde sur un téléphone : elle défile seule, la page jamais. */
+.credit-table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.credit-table th,
+.credit-table td {
+  padding: 8px 12px 8px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+.credit-table th {
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* Une provenance non établie se voit dans le tableau, pas seulement dans un
+   encart plus bas : c'est la ligne concernée qui doit porter la réserve. */
+.credit-table tr[data-a-tracer] td {
+  color: var(--text-muted);
+}
+.credit-table tr[data-a-tracer] td:first-child {
+  border-left: 2px solid var(--ng-green);
+  padding-left: 9px;
+}
+.credit-table code {
+  color: var(--accent);
+}
+.credit-couverture {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+.credit-couverture li {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.credit-couverture span {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 /* Modes de rendu : tissu / rayon X / fantôme. Placés en haut à droite, loin des
    outils de manipulation — c'est un changement de lecture, pas un geste de caméra. */
 .mode-switch {
