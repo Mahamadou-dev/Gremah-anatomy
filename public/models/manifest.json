@@ -183,23 +183,23 @@
       "levels": [
         {
           "file": "skin.glb",
-          "bytes": 1215168,
-          "triangles": 46323
+          "bytes": 922040,
+          "triangles": 40599
         },
         {
           "file": "skin-lod1.glb",
-          "bytes": 577012,
-          "triangles": 19587
+          "bytes": 436752,
+          "triangles": 15209
         },
         {
           "file": "skin-lod2.glb",
-          "bytes": 356464,
-          "triangles": 10795
+          "bytes": 337624,
+          "triangles": 10811
         }
       ]
     }
   },
-  "generatedAt": "2026-08-11T05:01:40.210Z",
+  "generatedAt": "2026-08-13T05:31:20.139Z",
   "levels": [
     {
       "index": 0,

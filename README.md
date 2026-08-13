@@ -81,6 +81,35 @@ ouvrage de référence, ni l'avis d'un professionnel de santé.
 - Site : [gremah.vercel.app](https://gremah.vercel.app)
 - WhatsApp : [+216 55 299 368](https://wa.me/21655299368)
 
-## Licence
+## Licences — deux, à ne pas confondre
 
-[MIT](LICENSE)
+| Ce qui est couvert          | Licence        | Ce que ça implique                                                                                |
+| --------------------------- | -------------- | ------------------------------------------------------------------------------------------------- |
+| **Le code** de ce dépôt     | [MIT](LICENSE) | Réutilisation libre, y compris commerciale, avec mention du droit d'auteur.                       |
+| **Les modèles 3D** (`.glb`) | **CC BY-SA**   | Attribution obligatoire et _partage dans les mêmes conditions_ : tout dérivé reste sous CC BY-SA. |
+
+Les modèles proviennent de jeux de données ouverts — **BodyParts3D** (Database
+Center for Life Science, CC BY-SA 2.1 JP) et sa réorganisation **Z-Anatomy**
+(Gauthier Kervyn, Lluís Vinent, CC BY-SA 4.0). Le partage à l'identique n'est pas
+une contrainte subie : un atlas issu d'un bien commun a vocation à en rester un.
+
+La provenance de chaque modèle — source, identifiant d'origine, licence, date
+d'import — vit dans [`assets/models-src/provenance.json`](assets/models-src/provenance.json),
+s'affiche sur la page **/credits**, et est vérifiée par `tests/provenance.test.mts` :
+un modèle sans provenance ne se déploie pas.
+
+> **Dette en cours.** Les neuf premiers modèles sont hérités du dépôt dont
+> celui-ci est issu, sans fichier de licence joint : leur chaîne de droits n'est
+> pas établie. Ils sont marqués `verifie: false` et signalés comme tels sur la
+> page crédits, en attendant leur remplacement par des imports Z-Anatomy tracés.
+
+### Ajouter une structure
+
+```bash
+# 1. la déclarer dans app/content/taxonomie.ts (elle démarre en « planifiee »)
+npm run anatomie:import -- --liste                      # ce qui reste à importer
+# 2. exporter l'objet depuis Z-Anatomy en .glb (Blender ▸ glTF 2.0, objet sélectionné)
+npm run anatomie:import -- --dossier=… --structure=aorte
+npm run models:build -- --only=aorte                    # 3 niveaux de LOD, < 2 Mo
+# 3. passer la structure en « livree » et rédiger sa fiche dans app/content/organes.ts
+```

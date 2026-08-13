@@ -4,6 +4,11 @@ Construction d'un atlas d'anatomie 3D **de référence internationale, conçu au
 Niger**. Chaque sprint livre quelque chose de démontrable. Voir
 [CLAUDE.md](CLAUDE.md) pour le cahier de charge.
 
+Ce fichier est **la seule feuille de route** du projet : le détail de chaque
+sprint, son argumentaire, et l'état réel vérifié dans le code (section
+[Suivi](#suivi)). Un second fichier de suivi a existé un temps ; deux tableaux de
+bord divergent toujours, et celui qu'on ne tient plus ment.
+
 **Durée indicative** : 1 à 2 semaines par sprint.
 **Règle d'or** : aucun sprint ne se termine avec une régression de performance sur
 le profil `low`. La cible n'est pas un écran de démo — c'est un Android à
@@ -61,6 +66,66 @@ produit livré :
 | 16  | Rayonnement              | SEO bilingue, crédits/licences, partage, communauté   | 13, 14    |
 | 17  | Qualité scientifique     | Relecture par des enseignants, corrections, v1.0      | tous      |
 
+### Phase III — la durée
+
+Cinq sprints nés d'un audit du dépôt : ce sont les travaux sans lesquels
+l'application est « fonctionnelle » mais pas **terminée**, au sens où on la
+confie à des inconnus, sur la durée.
+
+| #   | Sprint                        | Livrable phare                                      | Dépend de |
+| --- | ----------------------------- | --------------------------------------------------- | --------- |
+| 18  | Cycle de vie du compte & RGPD | Récupération, suppression, export, pages légales    | 11        |
+| 19  | Tests de bout en bout         | Playwright, captures 3D de référence, budgets en CI | 11, 14    |
+| 20  | Exploitation & supervision    | Journaux, alertes, sauvegardes testées, coûts       | 18        |
+| 21  | Portabilité hors serveur      | Build « atlas seul », clé USB de salle de TP        | 9         |
+| 22  | Pérennité & passation         | Architecture documentée, ADR, gouvernance, reprise  | tous      |
+
+---
+
+## Rituel de clôture de sprint
+
+Chaque sprint se termine par la même séquence, dans cet ordre. Elle n'est pas de
+l'administratif : un sprint « fini » dont la branche traîne et dont la CI ne
+vérifie pas l'acquis est un sprint qui se défera au suivant. Les sections de
+sprint ci-dessous renvoient toutes ici, et n'ajoutent que **ce qui leur est
+propre** — la vérification que ce sprint-là lègue à la CI.
+
+**1. Nettoyage du dépôt**
+
+- Aucun fichier généré committé hors `public/` (CLAUDE.md §9) : vérifier
+  `git status --ignored` et compléter `.gitignore` plutôt que de supprimer à la main.
+- Supprimer le code mort du sprint : stubs remplacés, drapeaux d'expérimentation,
+  scripts d'exploration ponctuels, dépendances devenues inutiles (`npm prune`,
+  puis relire `package.json`).
+- `npm run format` avant la dernière revue, jamais après.
+- Historique lisible : commits en Conventional Commits, écrasement des commits de
+  correction (« wip », « fix lint ») dans celui qu'ils corrigent.
+- Supprimer les branches de sprint fusionnées, en local **et** sur `origin`.
+
+**2. CI/CD propre**
+
+- La CI passe sur la branche : `format:check`, `lint`, `typecheck`, `test`,
+  `models:check`, `build`. Un échec ne se contourne pas par `--no-verify`.
+- Le sprint **ajoute son garde-fou** : ce qu'il vient de livrer doit être ce qui
+  casse le build s'il régresse. Un acquis non vérifié automatiquement est un
+  acquis qu'on repaiera.
+- Aucun seuil chiffré ne reste dans un commentaire ou dans une tête : il vit dans
+  `.github/workflows/ci.yml` ou dans un script appelé par elle, où la diff le montre.
+- Le déploiement d'aperçu Vercel est ouvert et vérifié à la main sur les deux
+  thèmes, en mobile, avant la fusion.
+
+**3. Fusion sur `main`**
+
+- Pull request depuis `sprint-N/<sujet>`, avec en corps : ce qui est livré, ce qui
+  reste, et la justification écrite de toute nouvelle dépendance (CLAUDE.md §3).
+- `main` reste protégé : fusion seulement si le job `verify` est vert. Jamais de
+  commit direct sur `main` sans demande explicite (CLAUDE.md §9).
+- Fusion en `--no-ff` : la forme du sprint doit rester lisible dans l'historique.
+- Après fusion : vérifier le déploiement de production, puis mettre à jour le
+  **Suivi** en fin de fichier — un sprint partiel s'écrit 🟨 avec son reste listé.
+  Se mentir dans ce tableau coûte plus cher que le retard qu'on masque.
+- Étiqueter (`v0.N`) les sprints qui changent ce qu'un utilisateur voit.
+
 ---
 
 ## Sprint 0 — Fondations : nettoyer, renommer, habiller
@@ -86,6 +151,10 @@ Cloudflare qui s'appelle encore `site-creator-vinext-starter`.
 
 **Terminé quand :** `npm run build` produit un export statique déployable, aucune
 trace de Cloudflare/Drizzle, la marque et les contacts s'affichent, le thème bascule.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : la CI elle-même : `format:check`, `lint`, `typecheck`, `build`, et l'absence de toute trace du starter Cloudflare.
 
 ---
 
@@ -116,6 +185,10 @@ boucle. Impossible d'y greffer du post-processing sans le fracturer d'abord.
 **Terminé quand :** parité visuelle WebGPU/WebGL2, les 3 profils sont mesurables et
 commutables à chaud, aucun module de `engine/` n'importe React.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : les invariants du moteur — frontière React, `FIT_SIZE = 3.8`, render-on-demand, double chemin de rendu — en tests qui cassent le build.
+
 ---
 
 ## Sprint 2 — Pipeline d'assets : 29 Mo → moins de 8 Mo
@@ -141,6 +214,10 @@ Draco et Basis sont déjà dans `public/` mais ne sont branchés nulle part.
 
 **Terminé quand :** total < 8 Mo, premier rendu utile < 1,5 s en 3G simulée,
 qualité visuelle indiscernable en `high`.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le budget des modèles (`npm run models:check`) et la borne de premier rendu, mesurée et non supposée.
 
 ---
 
@@ -173,6 +250,10 @@ qualité visuelle indiscernable en `high`.
 **Terminé quand :** capture avant/après convaincante, budget frame ≤ 8 ms en `medium`,
 `low` ne perd aucun fps face au Sprint 2.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : une capture de référence par matériau : un shader qui change doit se voir dans la diff, pas dans un retour d'utilisateur.
+
 ---
 
 ## Sprint 4 — Interaction anatomique sérieuse
@@ -199,6 +280,10 @@ qualité visuelle indiscernable en `high`.
 
 **Terminé quand :** on peut couper un cœur, voir l'intérieur plein, mesurer une paroi,
 annoter, et partager l'URL qui restitue exactement la vue.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test par outil d'interaction (coupe avec capping, mesure, navigation clavier des hotspots) — l'accessibilité §5.6 se vérifie ou se perd.
 
 ---
 
@@ -229,6 +314,10 @@ un cursus de médecine. Sans ce sprint, le reste est une démo technique.
 **Terminé quand :** 20+ structures complètes en FR, aucune affirmation clinique
 sans source, bascule FR/EN fonctionnelle, glossaire local en place.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le test de sources : une affirmation clinique sans clé de source casse le build, au même titre qu'une erreur médicale (CLAUDE.md §8).
+
 ---
 
 ## Sprint 6 — Physiologie animée
@@ -255,6 +344,10 @@ qu'un livre ne peut pas faire — c'est la justification même de la 3D.
 
 **Terminé quand :** 5 processus physiologiques scrubables, 60 fps en `high`,
 aucune fuite mémoire après 10 minutes de lecture continue.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le banc mémoire : dix minutes d'animation continue sans que `renderer.info.memory` dérive.
 
 ---
 
@@ -283,6 +376,10 @@ justement ce que les examens interrogent.
 **Terminé quand :** on parcourt le corps entier sans rechargement de page, chaque
 système s'isole, la vue coupes reste synchronisée avec la 3D.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un smoke sur chaque route `/systemes/[slug]`, pour qu'un système ajouté sans page se voie tout de suite.
+
 ---
 
 ## Sprint 8 — Révision, quiz et mode examen
@@ -308,6 +405,10 @@ d'un partiel. C'est le sprint qui crée la rétention.
 **Terminé quand :** un étudiant peut réviser 30 minutes en boucle fermée
 (apprendre → tester → revoir ses erreurs), progression conservée après rechargement.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test du moteur de répétition espacée sur données figées : une régression de SRS est invisible à l'œil et coûteuse à l'étudiant.
+
 ---
 
 ## Sprint 9 — Offline & terrain nigérien
@@ -332,6 +433,10 @@ Une app qui exige le réseau est une app inutilisable ici.
 
 **Terminé quand :** mode avion après première visite → l'app fonctionne entièrement ;
 un pack système se télécharge et se supprime proprement.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test hors ligne réel — service worker installé, réseau coupé, l'atlas répond — et la garantie du §2 bis : un compte n'est jamais une condition d'accès à ce qui est déjà téléchargé.
 
 ---
 
@@ -361,6 +466,10 @@ entièrement ici.
 
 **Terminé quand :** toutes les cases de « Définition de terminé » (CLAUDE.md §11)
 sont cochées et le site est en ligne.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : les budgets Lighthouse et axe-core en seuils bloquants : le §11 exige ≥ 95, sans mesure automatique c'est un vœu.
 
 ---
 
@@ -450,6 +559,10 @@ Amendement consigné dans **CLAUDE.md §2 bis**.
 **Reste à faire :** réinitialisation de mot de passe, vérification d'adresse
 email, et suppression de compte (droit à l'effacement).
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : les trois tests de frontière serveur (pas de `lib/server/` côté client, aucun secret `NEXT_PUBLIC_`) et un smoke du parcours d'inscription.
+
 ---
 
 ## Phase II — la référence internationale
@@ -509,6 +622,10 @@ un bien commun d'origine nigérienne, c'est cohérent, et c'est un argument.
 licence, aucun `.glb` > 2 Mo, et l'ajout d'une nouvelle structure ne demande plus
 qu'une ligne de configuration et une fiche de contenu.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le test de provenance (un modèle sans licence ne se déploie pas) et le budget **par structure** — le plafond global a été retiré ici précisément parce qu'il aurait cassé vers la dixième structure.
+
 ---
 
 ## Sprint 13 — Bilinguisme FR/EN à parité
@@ -537,6 +654,10 @@ Une référence internationale se lit intégralement dans les deux langues.
 
 **Terminé quand :** un anglophone parcourt l'intégralité du site sans rencontrer
 un seul mot de français, et réciproquement ; la bascule conserve le contexte.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le test de complétude bilingue : un champ FR rempli et son EN vide casse le build.
 
 ---
 
@@ -575,6 +696,10 @@ Un thème clair se conçoit, il ne se dérive pas.
 côte à côte sans qu'aucun paraisse dérivé de l'autre, 60 fps en `high`, et la
 version `low` reste présentable.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : les captures de référence des deux thèmes, côte à côte, et le budget d'image de la scène signature.
+
 ---
 
 ## Sprint 15 — L'atlas devient un parcours d'apprentissage
@@ -603,6 +728,10 @@ exactement ce que la 3D était censée dépasser.
 **Terminé quand :** un étudiant apprend une région en 20 minutes sans jamais
 quitter la 3D, et sa progression le ramène exactement où il s'était arrêté.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un parcours guidé joué de bout en bout en CI, reprise comprise.
+
 ---
 
 ## Sprint 16 — Rayonnement
@@ -630,6 +759,10 @@ quitter la 3D, et sa progression le ramène exactement où il s'était arrêté.
 **Terminé quand :** chaque structure a son URL indexée dans les deux langues, et
 signaler une erreur prend moins de trente secondes.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : la validation du `sitemap.xml`, des `hreflang` et des données structurées `MedicalEntity`.
+
 ---
 
 ## Sprint 17 — Qualité scientifique et v1.0
@@ -653,30 +786,256 @@ erreur d'anatomie sur une plateforme internationale coûte plus cher qu'un bug.
 **Terminé quand :** toutes les cases de « Définition de terminé » (CLAUDE.md §11)
 sont cochées et au moins un enseignant extérieur a validé chaque système.
 
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le contrôle de traçabilité : une fiche sans relecteur ni date se signale d'elle-même au lieu de passer pour sûre.
+
+---
+
+## Phase III — finir vraiment
+
+Ces cinq sprints sont sortis d'un audit du dépôt, pas du plan initial. Ils
+couvrent ce qui sépare une application « fonctionnelle » d'une application
+**terminée** — celle qu'on confie à des inconnus, et qui tient dans la durée.
+
+---
+
+## Sprint 18 — Cycle de vie du compte & données personnelles
+
+**Pourquoi :** le Sprint 11 a livré l'inscription et la connexion, et s'est arrêté
+là. Le dépôt stocke aujourd'hui prénom, nom, email, pays et région d'étudiants
+réels, sans qu'aucun d'eux ne puisse récupérer son compte, corriger une faute de
+frappe dans son adresse, ou partir. Ce n'est pas une lacune de confort : dès qu'un
+seul étudiant s'inscrit, l'obligation court.
+
+**Travaux**
+
+1. **Réinitialisation de mot de passe** — jeton à usage unique, à durée courte,
+   haché en base comme un mot de passe. Le message « si ce compte existe » doit
+   être identique dans les deux cas, sinon la page redevient un outil d'énumération.
+2. **Vérification d'adresse** — sans elle, on ne peut pas envoyer de
+   réinitialisation avec confiance, et n'importe qui peut occuper l'adresse d'un autre.
+3. **Envoi d'emails** — le seul service externe que le projet aura à assumer.
+   Choisir en connaissance de cause (Resend, Postmark, SMTP), documenter le coût,
+   et **ne jamais bloquer l'accès au contenu si l'envoi échoue**.
+4. **Suppression de compte** — effacement réel, y compris les compteurs de
+   limitation de débit. Confirmation explicite, pas de rétention silencieuse.
+5. **Export de ses données** — un JSON, dans la même page. C'est peu de code et
+   ça règle la question du droit d'accès.
+6. **Modification du profil** — nom, pays, région, mot de passe.
+7. **Pages légales** — politique de confidentialité (ce qu'on stocke, pourquoi,
+   combien de temps, chez qui : MongoDB Atlas, Vercel), mentions légales, CGU.
+   En français **et** en anglais dès leur écriture, parce que l'audience l'est.
+8. **Cookies** — l'app n'utilise qu'un cookie de session strictement nécessaire.
+   Le dire clairement vaut mieux qu'une bannière qui laisse croire au pire.
+
+**Terminé quand :** un étudiant peut créer, vérifier, récupérer, modifier,
+exporter et supprimer son compte sans écrire à l'auteur, et chaque donnée stockée
+est justifiée par écrit sur une page publique.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test du parcours de récupération et de suppression, y compris l'effacement des compteurs de limitation de débit.
+
+---
+
+## Sprint 19 — Tests de bout en bout et non-régression visuelle
+
+**Pourquoi :** les tests unitaires passent, et aucun ne lance l'application. La 3D
+— le produit — n'est vérifiée par rien. Un écran noir sur WebGL2, une régression
+de thème, un parcours d'inscription cassé : tout cela sort en production sans
+qu'aucun garde-fou ne bronche. CLAUDE.md §3 prévoit Playwright ; il n'est pas installé.
+
+**Travaux**
+
+1. **Playwright installé et câblé en CI** — smoke sur chaque route, dans les deux
+   thèmes, en desktop et en mobile émulé.
+2. **Captures WebGL de référence** — un rendu qui change doit se voir dans la
+   diff. Tolérance de pixels assumée, pas d'égalité stricte qui rendrait le test
+   inutilisable.
+3. **Parcours complets** — inscription → connexion → atlas → déconnexion, et le
+   parcours de récupération du Sprint 18.
+4. **Test du chemin de repli** — forcer WebGL2 alors que WebGPU est disponible, et
+   vérifier la parité visuelle raisonnable exigée par la charte §5.1.
+5. **Budget de performance en CI** — Lighthouse sur `/` et `/atlas`, seuils qui
+   cassent le build.
+6. **Test d'accessibilité automatisé** (axe-core) — il ne remplace pas l'audit
+   manuel du Sprint 10, il empêche les régressions entre deux audits.
+7. **Banc mémoire** — charger et décharger 20 structures, vérifier que
+   `renderer.info.memory` revient à son niveau initial (charte §5.4).
+
+**Terminé quand :** casser la 3D, le thème clair ou l'inscription fait échouer la
+CI avant la revue, pas après le déploiement.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : toute la chaîne Playwright — c'est le sprint dont le livrable **est** la CI.
+
+---
+
+## Sprint 20 — Exploitation, supervision et coûts
+
+**Pourquoi :** le projet a maintenant une base de données et des routes serveur.
+Si Atlas sature son palier gratuit, si une route se met à échouer, si un étudiant
+ne peut plus se connecter un dimanche soir — personne ne l'apprend.
+
+**Travaux**
+
+1. **Journalisation structurée** des 4 routes : latence, code de sortie, motif de
+   refus. Jamais d'email en clair, jamais de mot de passe, même haché.
+2. **Suivi des erreurs** (Sentry ou équivalent), avec échantillonnage et purge des
+   données personnelles avant envoi.
+3. **Surveillance de disponibilité** — un ping sur `/api/moi` et sur `/atlas`,
+   alerte par email. Simple, pas un tableau de bord de plus.
+4. **Sauvegarde MongoDB** — restauration **testée**, pas seulement configurée.
+   Une sauvegarde jamais restaurée n'est pas une sauvegarde.
+5. **Suivi des coûts** — Vercel, Atlas, envoi d'emails, domaine : un tableau avec
+   le palier gratuit, le seuil de bascule et ce qu'on fait en cas de dépassement.
+   Un atlas gratuit pour des étudiants doit savoir ce qu'il coûte à son auteur.
+6. **Mises à jour de dépendances** — Dependabot ou équivalent, avec la CI du
+   Sprint 19 comme filet. three.js évolue vite ; ne pas suivre coûte plus cher.
+7. **Plan de reprise** — que faire si Atlas est indisponible ? Réponse attendue :
+   le contenu et la 3D restent accessibles, seule la connexion tombe. À vérifier,
+   pas à supposer.
+
+**Terminé quand :** une panne de connexion se signale d'elle-même en moins de dix
+minutes, et une restauration de base a été faite au moins une fois pour de vrai.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : une restauration de sauvegarde rejouée, et le suivi des coûts mis à jour dans la même PR que ce qui les fait bouger.
+
+---
+
+## Sprint 21 — Portabilité : récupérer la clé USB de salle de TP
+
+**Pourquoi :** le §2 bis a coûté quelque chose de précis, et le dit franchement :
+un hôte purement statique « ne porterait plus les comptes ». Au Niger, une salle
+de TP sans réseau fiable est un cas d'usage réel, pas une hypothèse. Ce sprint
+récupère ce qui a été perdu, sans revenir sur la décision des comptes.
+
+**Travaux**
+
+1. **Build « atlas seul »** — une variante d'export statique complet, sans les
+   quatre routes de compte : tout le contenu, toute la 3D, toute la révision.
+   Un drapeau de build, pas un fork du code.
+2. **Mode enseignant** — l'atlas s'ouvre sans compte quand le build le déclare.
+   Le compte redevient ce qu'il aurait toujours dû être : une commodité de
+   synchronisation, jamais une barrière au savoir.
+3. **Distribution hors ligne** — archive téléchargeable, procédure pour la copier
+   sur une clé et la servir en local. Testée sur une machine sans réseau.
+4. **Test CI de la variante** — sinon elle pourrira en silence au premier sprint
+   qui touche à l'authentification.
+5. **Documentation à destination des facultés** — une page, pas un manuel.
+
+**Terminé quand :** une clé USB branchée sur un poste hors réseau ouvre l'atlas
+complet, et la CI garantit que ça le reste.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le build « atlas seul » vérifié en CI, sinon il pourrira au premier sprint qui touche à l'authentification.
+
+---
+
+## Sprint 22 — Pérennité et passation
+
+**Pourquoi :** Gremah Anatomy est aujourd'hui le projet d'une seule personne, et
+tout ce qui compte — les décisions, les pièges, les raisons — vit dans sa tête et
+dans deux fichiers Markdown. Un bien commun qui dépend d'un individu n'en est pas
+encore un.
+
+**Travaux**
+
+1. **Documentation d'architecture** — un schéma du moteur, un du flux de données,
+   un de l'authentification. Trois images valent les 700 lignes de ce fichier pour
+   qui arrive.
+2. **Journal de décisions** (ADR courts) — pourquoi WebGPU **et** WebGL2, pourquoi
+   `scrypt` et pas argon2, pourquoi le pixel ratio est figé au démarrage. Ces
+   raisons existent déjà en commentaires ; les rassembler évite qu'on les défasse.
+3. **Guide du contributeur, version contenu** — comment un enseignant propose une
+   correction sans savoir se servir de git.
+4. **Gouvernance du contenu** — qui valide une fiche, en combien de temps, et ce
+   qui se passe si personne ne répond.
+5. **Continuité** — accès de secours au domaine, à Vercel, à Atlas et au dépôt.
+   Sujet inconfortable, et c'est précisément pour ça qu'on l'écrit.
+6. **Feuille de route publique** — ce fichier, épuré et publié.
+
+**Terminé quand :** une personne compétente peut reprendre le projet à partir du
+dépôt seul, sans poser une question.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : rien de neuf : ce sprint vérifie que tout ce qui précède se comprend depuis le dépôt seul.
+
+---
+
+## Ce qui bloque, en une lecture
+
+| Blocage                                            | Sprint | Nature                                            |
+| -------------------------------------------------- | ------ | ------------------------------------------------- |
+| 69 structures sur 78 n'ont pas de modèle           | 12     | 🔒 Manuel — export Blender depuis Z-Anatomy       |
+| Les 9 modèles actuels n'ont pas de licence établie | 12     | ⚠️ Juridique — l'atlas n'est pas rediffusable     |
+| `tsl-materials.ts` est encore un stub de 8 lignes  | 1, 3   | La promesse « moderne » du §1 n'est pas tenue     |
+| Aucun test ne lance l'application                  | 19     | La 3D n'est vérifiée par rien                     |
+| Aucune récupération de mot de passe                | 18     | Obligation dès le premier inscrit                 |
+| Ni PWA ni service worker                           | 9      | « Hors ligne » du §11 n'est pas commencé          |
+| Lighthouse et WCAG AA jamais mesurés               | 10, 19 | Deux cases du §11 sont des vœux, pas des constats |
+
+---
+
+## Ordre recommandé
+
+L'ordre des numéros n'est pas l'ordre d'exécution. Voici celui qui débloque le plus tôt :
+
+1. **Sprint 12, fin** — importer par vagues de dix structures. Rien d'autre n'a de
+   sens à neuf organes : traduire, communiquer ou bâtir un parcours d'apprentissage
+   sur une boîte vide, c'est soigner l'emballage.
+2. **Sprint 18** — dès qu'un étudiant s'inscrit, l'horloge tourne. C'est court et
+   ça lève un risque réel.
+3. **Sprint 19** — chaque sprint suivant devient plus sûr, donc plus rapide.
+   Investir tôt, pas juste avant la v1.0.
+4. **Sprint 13** — le bilinguisme, une fois qu'il y a du contenu à traduire.
+5. **Sprints 4, 3 (reste), 6** — la profondeur 3D, dans cet ordre : l'interaction
+   sert à quelque chose avant que les shaders soient parfaits.
+6. **Sprints 9, 14, 15** — offline, accueil, apprentissage.
+7. **Sprints 16, 20, 21, 10, 17, 22** — rayonnement, exploitation, v1.0, passation.
+
 ---
 
 ## Suivi
 
-| Sprint | État        | Branche                  | Notes                                                                                                         |
-| ------ | ----------- | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| 0      | ✅ terminé  | `sprint-0/fondations`    | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.   |
-| 1      | ✅ terminé  | `sprint-1/moteur-v2`     | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils commutables, CameraRig, overlay `?debug=1`, 18 tests. |
-| 2      | ✅ terminé  | `sprint-2/assets`        | 28,6 Mo → 7,9 Mo par niveau (3 LOD), décodeurs câblés, budget mémoire en octets, streaming progressif.        |
-| 3      | 🟨 en cours | fusionné dans `main`     | Tissus translucides, rayon X, fantôme, bloom + grain/vignette, halo solaire. Reste : SSAO, DOF, pile WebGPU.  |
-| 4      | ⬜ à faire  | `sprint-4/interaction`   |                                                                                                               |
-| 5      | 🟨 en cours | fusionné dans `main`     | FR langue source, 28 champs/organe, 16 sources, ancrage Niger, vernaculaire. Reste : 20+ structures, i18n EN. |
-| 6      | ⬜ à faire  | `sprint-6/physiologie`   |                                                                                                               |
-| 7      | ⬜ à faire  | `sprint-7/corps-entier`  |                                                                                                               |
-| 8      | ⬜ à faire  | `sprint-8/revision`      |                                                                                                               |
-| 9      | ⬜ à faire  | `sprint-9/offline`       |                                                                                                               |
-| 10     | ⬜ à faire  | `sprint-10/lancement`    |                                                                                                               |
-| 11     | ✅ terminé  | fusionné dans `main`     | Vitrine 3D, `/atlas/`, contact, à propos, comptes Atlas (scrypt + HMAC), limitation de débit. 61 tests.       |
-| 12     | ⬜ à faire  | `sprint-12/bibliotheque` | **Prioritaire.** Pipeline Z-Anatomy, 60+ structures, manifeste de provenance, crédits.                        |
-| 13     | ⬜ à faire  | `sprint-13/bilingue`     | Schéma `{fr, en}`, routes par langue, test de complétude, glossaire haoussa/zarma.                            |
-| 14     | ⬜ à faire  | `sprint-14/accueil-v2`   | Direction artistique écrite d'abord, scène signature, thème clair conçu et non dérivé.                        |
-| 15     | ⬜ à faire  | `sprint-15/apprendre`    | Parcours guidés, vérification sur le modèle, carnet, comparaison.                                             |
-| 16     | ⬜ à faire  | `sprint-16/rayonnement`  | SEO bilingue par structure, crédits/licences, signalement d'erreur en un clic.                                |
-| 17     | ⬜ à faire  | `sprint-17/v1`           | Relecture par des enseignants, traçabilité, audit, v1.0.                                                      |
+> **Règle de tenue.** Une case n'est cochée que si la fonctionnalité existe dans
+> le dépôt et passe `npm run lint && npm run typecheck && npm test && npm run build`.
+> Un travail « presque fini » reste 🟨, avec son reste listé. Se mentir ici coûte
+> plus cher que le retard qu'on cherche à masquer.
+>
+> **Dernière vérification :** 13 août 2026, travaux du Sprint 12 en cours.
+
+| Sprint | État        | Branche                  | Notes                                                                                                                                                                                                                             |
+| ------ | ----------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0      | ✅ terminé  | `sprint-0/fondations`    | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.                                                                                                                       |
+| 1      | ✅ terminé  | `sprint-1/moteur-v2`     | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils commutables, CameraRig, overlay `?debug=1`, 18 tests.                                                                                                                     |
+| 2      | ✅ terminé  | `sprint-2/assets`        | 28,6 Mo → 7,9 Mo par niveau (3 LOD), décodeurs câblés, budget mémoire en octets, streaming progressif.                                                                                                                            |
+| 3      | 🟨 en cours | fusionné dans `main`     | Tissus translucides, rayon X, fantôme, bloom + grain/vignette, halo solaire. Reste : SSAO, DOF, pile WebGPU.                                                                                                                      |
+| 4      | ⬜ à faire  | `sprint-4/interaction`   |                                                                                                                                                                                                                                   |
+| 5      | 🟨 en cours | fusionné dans `main`     | FR langue source, 28 champs/organe, 16 sources, ancrage Niger, vernaculaire. Reste : 20+ structures, i18n EN.                                                                                                                     |
+| 6      | ⬜ à faire  | `sprint-6/physiologie`   |                                                                                                                                                                                                                                   |
+| 7      | ⬜ à faire  | `sprint-7/corps-entier`  |                                                                                                                                                                                                                                   |
+| 8      | ⬜ à faire  | `sprint-8/revision`      |                                                                                                                                                                                                                                   |
+| 9      | ⬜ à faire  | `sprint-9/offline`       |                                                                                                                                                                                                                                   |
+| 10     | 🟨 en cours | fusionné dans `main`     | Vercel, Open Graph, JSON-LD, `prefers-reduced-motion`. Reste : onboarding, audit WCAG AA, Lighthouse ≥ 95, sitemap.                                                                                                               |
+| 11     | 🟨 en cours | fusionné dans `main`     | Vitrine 3D, `/atlas/`, contact, à propos, comptes Atlas (scrypt + HMAC), limitation de débit. 61 tests.                                                                                                                           |
+| 12     | 🟨 en cours | `sprint-12/bibliotheque` | Taxonomie 78 structures / 12 systèmes, provenance + test bloquant, budget par structure, `anatomie:import`, page /credits. Reste : **importer les modèles** (9 livrés sur 78) et solder la dette de provenance des neuf premiers. |
+| 13     | ⬜ à faire  | `sprint-13/bilingue`     | Schéma `{fr, en}`, routes par langue, test de complétude, glossaire haoussa/zarma.                                                                                                                                                |
+| 14     | ⬜ à faire  | `sprint-14/accueil-v2`   | Direction artistique écrite d'abord, scène signature, thème clair conçu et non dérivé.                                                                                                                                            |
+| 15     | ⬜ à faire  | `sprint-15/apprendre`    | Parcours guidés, vérification sur le modèle, carnet, comparaison.                                                                                                                                                                 |
+| 16     | ⬜ à faire  | `sprint-16/rayonnement`  | SEO bilingue par structure, crédits/licences, signalement d'erreur en un clic.                                                                                                                                                    |
+| 17     | ⬜ à faire  | `sprint-17/v1`           | Relecture par des enseignants, traçabilité, audit, v1.0.                                                                                                                                                                          |
+| 18     | ⬜ à faire  | `sprint-18/compte`       | Récupération, vérification d'adresse, suppression, export, pages légales. Le reste du Sprint 11 est ici, parce que c'est une obligation et non de la finition.                                                                    |
+| 19     | ⬜ à faire  | `sprint-19/e2e`          | Playwright, captures 3D de référence, Lighthouse et axe-core en CI, banc mémoire.                                                                                                                                                 |
+| 20     | ⬜ à faire  | `sprint-20/exploitation` | Journaux, suivi d'erreurs, disponibilité, sauvegarde restaurée pour de vrai, coûts.                                                                                                                                               |
+| 21     | ⬜ à faire  | `sprint-21/portabilite`  | Build « atlas seul », mode enseignant, distribution hors ligne testée sans réseau.                                                                                                                                                |
+| 22     | ⬜ à faire  | `sprint-22/passation`    | Schémas d'architecture, ADR, gouvernance du contenu, continuité d'accès.                                                                                                                                                          |
 
 ---
 

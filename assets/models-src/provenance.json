@@ -1,0 +1,66 @@
+{
+  "$commentaire": [
+    "Provenance des modèles 3D — CLAUDE.md §9.",
+    "",
+    "Un modèle sans entrée ici ne se déploie pas : tests/provenance.test.mts le refuse.",
+    "Le champ `verifie` dit si la chaîne source → licence → auteur a été établie,",
+    "et non si le modèle est joli. Un modèle `verifie: false` est publié en l'état",
+    "mais affiché comme tel sur /credits — on ne revendique pas une licence qu'on",
+    "n'a pas tracée, et on ne cache pas une dette en la laissant hors du fichier.",
+    "",
+    "`scripts/import-anatomie.mjs` écrit ici automatiquement pour tout modèle",
+    "importé depuis Z-Anatomy."
+  ],
+  "licences": {
+    "CC-BY-SA-4.0": {
+      "nom": "Creative Commons Attribution — Partage dans les mêmes conditions 4.0",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.fr",
+      "partageIdentique": true
+    },
+    "CC-BY-SA-2.1-JP": {
+      "nom": "Creative Commons Attribution — Partage dans les mêmes conditions 2.1 Japon",
+      "url": "https://creativecommons.org/licenses/by-sa/2.1/jp/deed.fr",
+      "partageIdentique": true
+    },
+    "indeterminee": {
+      "nom": "Licence non établie — provenance à tracer avant toute rediffusion",
+      "url": null,
+      "partageIdentique": false
+    }
+  },
+  "sources": {
+    "z-anatomy": {
+      "nom": "Z-Anatomy",
+      "auteurs": "Gauthier Kervyn, Lluís Vinent",
+      "url": "https://www.z-anatomy.com/",
+      "licence": "CC-BY-SA-4.0",
+      "derive": "bodyparts3d",
+      "note": "Réorganisation de BodyParts3D : objets renommés selon la Terminologia Anatomica, remaillés, hiérarchisés par système."
+    },
+    "bodyparts3d": {
+      "nom": "BodyParts3D",
+      "auteurs": "Database Center for Life Science (DBCLS), Japon",
+      "url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/desc.html",
+      "licence": "CC-BY-SA-2.1-JP",
+      "note": "Jeu de données source : milliers de structures anatomiques segmentées."
+    },
+    "heritee-du-fork": {
+      "nom": "Héritée du dépôt d'origine",
+      "auteurs": "inconnus",
+      "url": null,
+      "licence": "indeterminee",
+      "note": "Les neuf premiers modèles proviennent du starter dont ce dépôt est issu, sans fichier de licence joint. Leur chaîne de droits n'est pas établie. Ils sont à remplacer par des imports Z-Anatomy tracés (Sprint 12) — c'est la seule voie qui rend l'atlas rediffusable."
+    }
+  },
+  "modeles": {
+    "brain": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "eyeball": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "heart": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "intestine": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "kidneys": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "liver": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "lungs": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "pancreas": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
+    "skin": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false }
+  }
+}
