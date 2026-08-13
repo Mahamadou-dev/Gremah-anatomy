@@ -300,8 +300,15 @@ WhatsApp en lien `https://wa.me/21655299368`.
 
 ## 10. Feuille de route
 
-Les 10 sprints sont détaillés dans **[SPRINT.md](SPRINT.md)**. Consulte-le avant
-de proposer un plan : un travail hors sprint courant doit être justifié ou reporté.
+Les sprints sont détaillés dans **[SPRINT.md](SPRINT.md)**. Consulte-le avant de
+proposer un plan : un travail hors sprint courant doit être justifié ou reporté.
+
+Deux règles y sont structurantes. **La numérotation est l'ordre d'exécution** :
+un sprint ne s'ouvre que lorsque le précédent est clos, et le reste d'un sprint
+partiel est reversé dans un sprint de la file plutôt que laissé en suspens — on
+ne revient jamais en arrière. Et chaque sprint se termine par le **rituel de
+clôture** : dépôt nettoyé, CI verte, fusion sur `main` par pull request, Suivi
+mis à jour, en léguant à la CI le garde-fou de ce qu'il vient de livrer.
 
 ---
 

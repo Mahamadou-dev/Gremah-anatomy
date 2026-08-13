@@ -16,69 +16,62 @@ le profil `low`. La cible n'est pas un écran de démo — c'est un Android à
 
 ---
 
-## Deux phases
+## Deux temps, une seule file
 
-La **phase I** (sprints 0 à 11) a construit le socle : un moteur double chemin,
-un pipeline d'assets, des matériaux, du contenu sourcé, une porte d'entrée. Elle
-visait un public local.
+Le projet a d'abord visé un public local, puis s'est repositionné : ce n'est pas
+un outil nigérien, c'est une **référence internationale d'origine nigérienne**.
+Trois écarts constatés sur le produit livré ont motivé ce virage — neuf organes
+là où un atlas de référence en couvre des dizaines, un anglais réduit à un champ
+par organe, une fiche qui se lit au lieu de se manipuler.
 
-La **phase II** (sprints 12 à 17) est née d'un repositionnement assumé : le
-projet n'est pas un outil nigérien, c'est une **référence internationale
-d'origine nigérienne**. Trois écarts la justifient, tous constatés sur le
-produit livré :
+Ce qui suit n'est plus découpé en phases mais en **une file unique**, dans
+l'ordre. La séparation « socle / référence / durée » avait fini par produire trois
+listes concurrentes, donc trois arbitrages à refaire à chaque reprise du travail.
 
-| Constat                                                       | Ce que la phase II en fait                              |
-| ------------------------------------------------------------- | ------------------------------------------------------- |
-| 9 organes — un atlas de référence en couvre des dizaines      | Sprint 12 : bibliothèque anatomique, 60+ structures     |
-| Le contenu EN se réduit à un champ `english` par organe       | Sprint 13 : bilinguisme réel, FR et EN à parité         |
-| L'accueil et le thème clair ne soutiennent pas la comparaison | Sprint 14 : refonte de l'accueil et du système de thème |
-| La fiche se lit, elle ne se manipule pas                      | Sprint 15 : l'atlas devient un parcours d'apprentissage |
+**La numérotation est l'ordre d'exécution.** Un sprint ne s'ouvre que lorsque le
+précédent est clos. Les sprints 0 à 12 sont derrière — livrés ou partiels — et
+gardent leurs numéros parce que l'historique git, les branches et les commits y
+renvoient. Le **reste** des sprints partiels a été réparti dans la file plutôt
+que laissé en suspens : c'est ce qui garantit qu'aucun sprint à venir n'oblige à
+revenir en arrière.
 
 ---
 
 ## Vue d'ensemble
 
-### Phase I — le socle
+### Derrière — sprints 0 à 12
 
-| #   | Sprint                  | Livrable phare                                  | Dépend de |
-| --- | ----------------------- | ----------------------------------------------- | --------- |
-| 0   | Nettoyage & identité    | Dépôt propre, marque Gremah, thème Niger        | —         |
-| 1   | Moteur v2               | WebGPU + TSL, repli WebGL2, profils de qualité  | 0         |
-| 2   | Pipeline d'assets       | Draco + KTX2, LOD, 29 Mo → < 8 Mo               | 0         |
-| 3   | Matériaux signature     | SSS, rayon-X, écorché, post-processing          | 1, 2      |
-| 4   | Interaction anatomique  | Coupes avec capping, mesure, hotspots v2        | 1, 3      |
-| 5   | Contenu sourcé          | Schéma profond, ancrage clinique, références    | 0         |
-| 6   | Physiologie animée      | Cœur battant, flux sanguin, respiration         | 3, 5      |
-| 7   | Corps entier & systèmes | Scène corps complet, navigation par système     | 2, 4      |
-| 8   | Révision & examens      | Quiz 3D, flashcards SRS, mode examen            | 5         |
-| 9   | Offline & terrain       | PWA, mode data-light, robustesse réseau faible  | 2, 8      |
-| 10  | Finition & lancement    | Onboarding cinématique, a11y, perf, déploiement | tous      |
-| 11  | Accueil & comptes       | Vitrine, `/atlas`, comptes MongoDB Atlas        | 0         |
+| #   | Sprint                  | État | Ce que son reste est devenu                          |
+| --- | ----------------------- | ---- | ---------------------------------------------------- |
+| 0   | Fondations & identité   | ✅   | —                                                    |
+| 1   | Moteur v2               | 🟨   | Pile TSL et compute → **Sprint 17**                  |
+| 2   | Pipeline d'assets       | ✅   | —                                                    |
+| 3   | Matériaux & post-prod   | 🟨   | SSAO, DOF, contour → **Sprint 17**                   |
+| 5   | Contenu sourcé          | 🟨   | Structures → **Sprint 12** ; anglais → **Sprint 15** |
+| 10  | Finition & lancement    | 🟨   | Onboarding, WCAG, Lighthouse → **Sprint 27**         |
+| 11  | Accueil & comptes       | 🟨   | Cycle de vie du compte → **Sprint 13**               |
+| 12  | Bibliothèque anatomique | 🟨   | **En cours** — 9 modèles sur 78                      |
 
-### Phase II — la référence internationale
+### Devant — sprints 13 à 28, dans l'ordre
 
-| #   | Sprint                   | Livrable phare                                        | Dépend de |
-| --- | ------------------------ | ----------------------------------------------------- | --------- |
-| 12  | Bibliothèque anatomique  | Pipeline Z-Anatomy → **60+ structures** sourcées      | 2         |
-| 13  | Bilinguisme FR/EN        | Parité réelle, routes `/fr` `/en`, glossaire local    | 5, 12     |
-| 14  | Refonte accueil & thème  | 3D signature, thème clair repensé, direction visuelle | 3, 11     |
-| 15  | Apprentissage interactif | L'atlas se manipule au lieu de se lire                | 4, 12     |
-| 16  | Rayonnement              | SEO bilingue, crédits/licences, partage, communauté   | 13, 14    |
-| 17  | Qualité scientifique     | Relecture par des enseignants, corrections, v1.0      | tous      |
-
-### Phase III — la durée
-
-Cinq sprints nés d'un audit du dépôt : ce sont les travaux sans lesquels
-l'application est « fonctionnelle » mais pas **terminée**, au sens où on la
-confie à des inconnus, sur la durée.
-
-| #   | Sprint                        | Livrable phare                                      | Dépend de |
-| --- | ----------------------------- | --------------------------------------------------- | --------- |
-| 18  | Cycle de vie du compte & RGPD | Récupération, suppression, export, pages légales    | 11        |
-| 19  | Tests de bout en bout         | Playwright, captures 3D de référence, budgets en CI | 11, 14    |
-| 20  | Exploitation & supervision    | Journaux, alertes, sauvegardes testées, coûts       | 18        |
-| 21  | Portabilité hors serveur      | Build « atlas seul », clé USB de salle de TP        | 9         |
-| 22  | Pérennité & passation         | Architecture documentée, ADR, gouvernance, reprise  | tous      |
+| #   | Sprint                     | Livrable phare                                      | Pourquoi à ce rang                                            |
+| --- | -------------------------- | --------------------------------------------------- | ------------------------------------------------------------- |
+| 13  | Compte & données perso     | Récupération, suppression, export, pages légales    | Dès le premier inscrit, l'obligation court                    |
+| 14  | Tests de bout en bout      | Playwright, captures 3D, Lighthouse et axe en CI    | Tout ce qui suit devient plus sûr, donc plus rapide           |
+| 15  | Bilinguisme FR/EN          | Schéma `{fr, en}`, routes par langue, glossaire     | Après, chaque écran naît bilingue au lieu d'être retraduit    |
+| 16  | Interaction anatomique     | Coupes avec capping, écorché, mesure, hotspots v2   | L'outil sert l'étudiant avant que les shaders soient parfaits |
+| 17  | Solde du moteur            | TSL réel, compute, SSAO, DOF, contour               | Le contour suppose une sélection fine ; le compute sert le 18 |
+| 18  | Physiologie animée         | Cœur battant, flux sanguin, respiration             | Dépend du compute du 17 et des modèles du 12                  |
+| 19  | Corps entier & systèmes    | Scène corps complet, navigation par système         | Demande la taxonomie peuplée et l'isolation du 16             |
+| 20  | Révision & examens         | Quiz 3D, flashcards SRS, mode examen                | Un quiz 3D suppose de pouvoir cliquer une structure (16)      |
+| 21  | Offline & terrain          | PWA, packs par système, mode data-light             | On ne met hors ligne que ce qui est stabilisé                 |
+| 22  | Accueil & thème v2         | Scène signature, thème clair conçu et non dérivé    | La vitrine montre le produit fini, pas l'inverse              |
+| 23  | Apprentissage interactif   | Parcours guidés, vérification sur le modèle, carnet | Assemble le contenu, l'interaction et la révision             |
+| 24  | Rayonnement                | SEO bilingue par structure, partage, signalement    | On ne référence que ce qui mérite d'être trouvé               |
+| 25  | Exploitation & supervision | Journaux, alertes, sauvegardes testées, coûts       | Le trafic arrive avec le 24 : c'est là qu'il faut voir        |
+| 26  | Portabilité hors serveur   | Build « atlas seul », clé USB de salle de TP        | Fige une version complète pour les salles sans réseau         |
+| 27  | Audit final & v1.0         | Relecture enseignante, WCAG AA, Lighthouse, v1.0    | Un audit ne vaut que sur le produit complet                   |
+| 28  | Pérennité & passation      | Schémas, ADR, gouvernance, continuité d'accès       | Se transmet ce qui est terminé                                |
 
 ---
 
@@ -125,6 +118,15 @@ propre** — la vérification que ce sprint-là lègue à la CI.
   **Suivi** en fin de fichier — un sprint partiel s'écrit 🟨 avec son reste listé.
   Se mentir dans ce tableau coûte plus cher que le retard qu'on masque.
 - Étiqueter (`v0.N`) les sprints qui changent ce qu'un utilisateur voit.
+
+---
+
+## Ce qui est derrière — sprints 0 à 12
+
+Ces sections sont conservées telles quelles : elles disent ce qui a été livré,
+et pourquoi. Cinq d'entre elles restent partielles ; leur reste a été **repris
+dans la file qui suit** plutôt que laissé à traiter « un jour », pour qu'aucun
+sprint à venir n'oblige à revenir en arrière.
 
 ---
 
@@ -256,37 +258,6 @@ Garde-fou légué par ce sprint : une capture de référence par matériau : un 
 
 ---
 
-## Sprint 4 — Interaction anatomique sérieuse
-
-**Pourquoi :** un atlas ne se contente pas de tourner : on doit y **entrer**.
-
-**Travaux**
-
-1. **Coupes avec capping** — jusqu'à 3 plans (sagittal, coronal, transverse),
-   poignées manipulables, et surtout **surface de coupe pleine** via stencil : une
-   coupe creuse est un bug anatomique, pas un choix esthétique. Presets par organe.
-2. **Explosion & écorché** — séparation animée des sous-parties le long des normales ;
-   pelage couche par couche (peau → fascia → muscle → os → viscères) piloté par un slider.
-3. **Hotspots v2** — refonte de `hotspots.ts` : clustering au dézoom, occlusion
-   (un point derrière l'organe s'estompe), **navigation clavier complète**, ancrage
-   des libellés sans chevauchement, deep-link `?organe=coeur&point=aorte`.
-4. **Sélection par maillage** — cliquer la structure elle-même, pas seulement le point :
-   raycast → nom de sous-maillage → fiche. Survol = contour, clic = focus caméra.
-5. **Outils d'étude** — règle 3D (distances en mm, échelle réelle), rapporteur,
-   annotations personnelles ancrées en 3D et persistées, capture d'écran annotée
-   partageable (Canvas → PNG, tout local).
-6. **Comparaison côte à côte** — deux organes, deux viewports, caméras synchronisables
-   (remplace l'actuel `compare` en images fixes).
-
-**Terminé quand :** on peut couper un cœur, voir l'intérieur plein, mesurer une paroi,
-annoter, et partager l'URL qui restitue exactement la vue.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : un test par outil d'interaction (coupe avec capping, mesure, navigation clavier des hotspots) — l'accessibilité §5.6 se vérifie ou se perd.
-
----
-
 ## Sprint 5 — Contenu : 20+ structures, en français, sourcé
 
 **Pourquoi :** 9 organes avec 15 champs en anglais non sourcés ne soutiennent pas
@@ -317,126 +288,6 @@ sans source, bascule FR/EN fonctionnelle, glossaire local en place.
 **Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
 dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
 Garde-fou légué par ce sprint : le test de sources : une affirmation clinique sans clé de source casse le build, au même titre qu'une erreur médicale (CLAUDE.md §8).
-
----
-
-## Sprint 6 — Physiologie animée
-
-**Pourquoi :** l'anatomie statique s'apprend dans un livre. Le mouvement est ce
-qu'un livre ne peut pas faire — c'est la justification même de la 3D.
-
-**Travaux**
-
-1. **Cœur battant** — animation squelettique du cycle cardiaque, vitesse réglable,
-   pause à n'importe quelle phase, corrélation avec un tracé ECG synchronisé.
-2. **Flux sanguin** — particules GPU (compute WebGPU, repli instancing + shader
-   WebGL2) le long de courbes vasculaires ; rouge/bleu selon oxygénation ; le
-   passage pulmonaire fait basculer la couleur. Débit lié au cycle cardiaque.
-3. **Respiration** — diaphragme et cage thoracique animés, expansion alvéolaire,
-   échange gazeux visualisé.
-4. **Autres boucles** — péristaltisme intestinal, filtration rénale (néphron en
-   coupe), accommodation du cristallin, influx nerveux le long d'un axone.
-5. **Chronologie interactive** — barre de scrubbing pour chaque processus :
-   avancer, reculer, boucler un segment. C'est l'outil de révision, pas une vidéo.
-6. **Discipline de performance** — chaque animation déclare son coût et sa durée
-   d'activité ; le render-on-demand reste maître. `low` : animations simplifiées
-   ou statiques, jamais un blocage.
-
-**Terminé quand :** 5 processus physiologiques scrubables, 60 fps en `high`,
-aucune fuite mémoire après 10 minutes de lecture continue.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : le banc mémoire : dix minutes d'animation continue sans que `renderer.info.memory` dérive.
-
----
-
-## Sprint 7 — Corps entier & navigation par système
-
-**Pourquoi :** les organes isolés n'enseignent pas les **rapports anatomiques** —
-justement ce que les examens interrogent.
-
-**Travaux**
-
-1. **Scène corps complet** — modèle basse densité comme carte de navigation ;
-   zoom sur une région → chargement du modèle haute densité (transition continue,
-   pas de coupure). Utilise le streaming LOD du Sprint 2.
-2. **Vues par système** — squelettique, musculaire, cardiovasculaire, nerveux,
-   digestif, respiratoire, urinaire, endocrinien, lymphatique, tégumentaire.
-   Isolation d'un système, les autres passent en `ghostMaterial`.
-3. **Rapports anatomiques** — mode « voisinage » : afficher ce qui touche la
-   structure sélectionnée, avec étiquettes de relation.
-4. **Régions topographiques** — quadrants abdominaux, triangles cervicaux, médiastin,
-   loges des membres : les découpages réellement enseignés.
-5. **Vue coupes radiologiques** — série de coupes transverses façon TDM, navigation
-   à la molette, avec correspondance 3D synchronisée. Passerelle vers l'imagerie médicale.
-6. **Boussole de navigation** — plans et axes anatomiques toujours visibles
-   (antérieur/postérieur, proximal/distal…), presets de caméra normalisés.
-
-**Terminé quand :** on parcourt le corps entier sans rechargement de page, chaque
-système s'isole, la vue coupes reste synchronisée avec la 3D.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : un smoke sur chaque route `/systemes/[slug]`, pour qu'un système ajouté sans page se voie tout de suite.
-
----
-
-## Sprint 8 — Révision, quiz et mode examen
-
-**Pourquoi :** c'est ce qui transforme un bel atlas en outil utilisé la veille
-d'un partiel. C'est le sprint qui crée la rétention.
-
-**Travaux**
-
-1. **Quiz 3D** — « cliquez sur le ventricule gauche » sur le modèle réel :
-   identification spatiale, pas QCM textuel. Scoring, feedback immédiat, correction en 3D.
-2. **Modes** — identification, remplissage d'étiquettes, correspondance
-   fonction↔structure, cas clinique (symptômes → structure), contre-la-montre.
-3. **Flashcards SRS** — répétition espacée (SM-2), file de révision quotidienne,
-   cartes générées depuis le contenu du Sprint 5, cartes personnelles autorisées.
-4. **Suivi de progression** — maîtrise par système, série de jours, points faibles,
-   heatmap d'activité. **Tout en `localStorage`/IndexedDB** — aucun compte, aucun serveur.
-5. **Mode examen** — session chronométrée, format inspiré des épreuves nigériennes,
-   correction détaillée avec renvoi 3D vers chaque erreur.
-6. **Import/export** — sauvegarde de progression en fichier JSON : c'est la seule
-   synchronisation possible sans backend, et elle suffit.
-
-**Terminé quand :** un étudiant peut réviser 30 minutes en boucle fermée
-(apprendre → tester → revoir ses erreurs), progression conservée après rechargement.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : un test du moteur de répétition espacée sur données figées : une régression de SRS est invisible à l'œil et coûteuse à l'étudiant.
-
----
-
-## Sprint 9 — Offline & terrain nigérien
-
-**Pourquoi :** connexion intermittente, forfaits data coûteux, coupures de courant.
-Une app qui exige le réseau est une app inutilisable ici.
-
-**Travaux**
-
-1. **PWA complète** — manifest, installable, icônes maskable, écran de démarrage
-   aux couleurs Gremah, mise à jour en arrière-plan avec invite discrète.
-2. **Service Worker** — précache du shell ; modèles et images en cache à la demande,
-   avec **gestion de quota** et éviction explicite. Zéro appel réseau après installation.
-3. **Packs hors-ligne** — l'étudiant choisit les systèmes à télécharger, voit la
-   taille avant, gère l'espace occupé. Le contrôle appartient à l'utilisateur.
-4. **Mode data-light** — détection `saveData`/2G : textures basse résolution,
-   pas de post-processing, images différées, avertissement avant tout gros téléchargement.
-5. **Résilience** — reprise de téléchargement interrompu, indicateur d'état réseau,
-   dégradation propre sans jamais d'écran blanc, sauvegarde d'état avant fermeture.
-6. **Terrain** — tests sur Android bas de gamme réels (Chrome, écran ~720p) et
-   sous throttling 2G/3G. Résultats consignés dans `docs/perf-terrain.md`.
-
-**Terminé quand :** mode avion après première visite → l'app fonctionne entièrement ;
-un pack système se télécharge et se supprime proprement.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : un test hors ligne réel — service worker installé, réseau coupé, l'atlas répond — et la garantie du §2 bis : un compte n'est jamais une condition d'accès à ce qui est déjà téléchargé.
 
 ---
 
@@ -565,15 +416,11 @@ Garde-fou légué par ce sprint : les trois tests de frontière serveur (pas de 
 
 ---
 
-## Phase II — la référence internationale
-
----
-
 ## Sprint 12 — Bibliothèque anatomique : de 9 à 60+ structures
 
 **Pourquoi c'est le sprint qui débloque tous les autres :** neuf organes isolés
 ne font pas un atlas de référence, quelle que soit la qualité du moteur. Et
-aucun autre sprint de la phase II n'a de sens à neuf organes — traduire neuf
+aucun sprint de la file n'a de sens à neuf organes — traduire neuf
 fiches, en faire un parcours d'apprentissage ou communiquer dessus revient à
 soigner l'emballage d'une boîte vide.
 
@@ -615,7 +462,7 @@ un bien commun d'origine nigérienne, c'est cohérent, et c'est un argument.
    passe d'un plafond global à un plafond **par structure**.
 5. **Hiérarchie** — les structures ne sont plus une liste plate mais un arbre
    (système → région → organe → sous-structure), ce que le contenu et la
-   navigation par système du Sprint 7 attendent déjà.
+   navigation par système du Sprint 19 attendent déjà.
 6. **Page crédits** — provenance, licences, auteurs des modèles, lisiblement.
 
 **Terminé quand :** 60+ structures chargeables, chacune avec sa provenance et sa
@@ -628,7 +475,89 @@ Garde-fou légué par ce sprint : le test de provenance (un modèle sans licence
 
 ---
 
-## Sprint 13 — Bilinguisme FR/EN à parité
+## Ce qui vient — sprints 13 à 28, dans l'ordre
+
+**La numérotation est désormais l'ordre d'exécution.** Un sprint ne commence
+que lorsque le précédent est clos (voir le [rituel](#rituel-de-clôture-de-sprint)) :
+plus de file de priorités à côté du plan, plus d'arbitrage à refaire à chaque
+fois. Les dépendances ont été résolues une bonne fois en fixant cette suite.
+
+---
+
+## Sprint 13 — Cycle de vie du compte & données personnelles
+
+**Pourquoi :** le Sprint 11 a livré l'inscription et la connexion, et s'est arrêté
+là. Le dépôt stocke aujourd'hui prénom, nom, email, pays et région d'étudiants
+réels, sans qu'aucun d'eux ne puisse récupérer son compte, corriger une faute de
+frappe dans son adresse, ou partir. Ce n'est pas une lacune de confort : dès qu'un
+seul étudiant s'inscrit, l'obligation court.
+
+**Travaux**
+
+1. **Réinitialisation de mot de passe** — jeton à usage unique, à durée courte,
+   haché en base comme un mot de passe. Le message « si ce compte existe » doit
+   être identique dans les deux cas, sinon la page redevient un outil d'énumération.
+2. **Vérification d'adresse** — sans elle, on ne peut pas envoyer de
+   réinitialisation avec confiance, et n'importe qui peut occuper l'adresse d'un autre.
+3. **Envoi d'emails** — le seul service externe que le projet aura à assumer.
+   Choisir en connaissance de cause (Resend, Postmark, SMTP), documenter le coût,
+   et **ne jamais bloquer l'accès au contenu si l'envoi échoue**.
+4. **Suppression de compte** — effacement réel, y compris les compteurs de
+   limitation de débit. Confirmation explicite, pas de rétention silencieuse.
+5. **Export de ses données** — un JSON, dans la même page. C'est peu de code et
+   ça règle la question du droit d'accès.
+6. **Modification du profil** — nom, pays, région, mot de passe.
+7. **Pages légales** — politique de confidentialité (ce qu'on stocke, pourquoi,
+   combien de temps, chez qui : MongoDB Atlas, Vercel), mentions légales, CGU.
+   En français **et** en anglais dès leur écriture, parce que l'audience l'est.
+8. **Cookies** — l'app n'utilise qu'un cookie de session strictement nécessaire.
+   Le dire clairement vaut mieux qu'une bannière qui laisse croire au pire.
+
+**Terminé quand :** un étudiant peut créer, vérifier, récupérer, modifier,
+exporter et supprimer son compte sans écrire à l'auteur, et chaque donnée stockée
+est justifiée par écrit sur une page publique.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test du parcours de récupération et de suppression, y compris l'effacement des compteurs de limitation de débit.
+
+---
+
+## Sprint 14 — Tests de bout en bout et non-régression visuelle
+
+**Pourquoi :** les tests unitaires passent, et aucun ne lance l'application. La 3D
+— le produit — n'est vérifiée par rien. Un écran noir sur WebGL2, une régression
+de thème, un parcours d'inscription cassé : tout cela sort en production sans
+qu'aucun garde-fou ne bronche. CLAUDE.md §3 prévoit Playwright ; il n'est pas installé.
+
+**Travaux**
+
+1. **Playwright installé et câblé en CI** — smoke sur chaque route, dans les deux
+   thèmes, en desktop et en mobile émulé.
+2. **Captures WebGL de référence** — un rendu qui change doit se voir dans la
+   diff. Tolérance de pixels assumée, pas d'égalité stricte qui rendrait le test
+   inutilisable.
+3. **Parcours complets** — inscription → connexion → atlas → déconnexion, et le
+   parcours de récupération du Sprint 13.
+4. **Test du chemin de repli** — forcer WebGL2 alors que WebGPU est disponible, et
+   vérifier la parité visuelle raisonnable exigée par la charte §5.1.
+5. **Budget de performance en CI** — Lighthouse sur `/` et `/atlas`, seuils qui
+   cassent le build.
+6. **Test d'accessibilité automatisé** (axe-core) — il ne remplace pas l'audit
+   manuel du Sprint 10, il empêche les régressions entre deux audits.
+7. **Banc mémoire** — charger et décharger 20 structures, vérifier que
+   `renderer.info.memory` revient à son niveau initial (charte §5.4).
+
+**Terminé quand :** casser la 3D, le thème clair ou l'inscription fait échouer la
+CI avant la revue, pas après le déploiement.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : toute la chaîne Playwright — c'est le sprint dont le livrable **est** la CI.
+
+---
+
+## Sprint 15 — Bilinguisme FR/EN à parité
 
 **Pourquoi :** aujourd'hui l'anglais se réduit à un champ `english` par organe.
 Un visiteur anglophone tombe sur une interface française avec un mot traduit —
@@ -661,7 +590,201 @@ Garde-fou légué par ce sprint : le test de complétude bilingue : un champ FR 
 
 ---
 
-## Sprint 14 — Refonte de l'accueil et du système de thème
+## Sprint 16 — Interaction anatomique sérieuse
+
+**Pourquoi :** un atlas ne se contente pas de tourner : on doit y **entrer**.
+
+**Travaux**
+
+1. **Coupes avec capping** — jusqu'à 3 plans (sagittal, coronal, transverse),
+   poignées manipulables, et surtout **surface de coupe pleine** via stencil : une
+   coupe creuse est un bug anatomique, pas un choix esthétique. Presets par organe.
+2. **Explosion & écorché** — séparation animée des sous-parties le long des normales ;
+   pelage couche par couche (peau → fascia → muscle → os → viscères) piloté par un slider.
+3. **Hotspots v2** — refonte de `hotspots.ts` : clustering au dézoom, occlusion
+   (un point derrière l'organe s'estompe), **navigation clavier complète**, ancrage
+   des libellés sans chevauchement, deep-link `?organe=coeur&point=aorte`.
+4. **Sélection par maillage** — cliquer la structure elle-même, pas seulement le point :
+   raycast → nom de sous-maillage → fiche. Survol = contour, clic = focus caméra.
+5. **Outils d'étude** — règle 3D (distances en mm, échelle réelle), rapporteur,
+   annotations personnelles ancrées en 3D et persistées, capture d'écran annotée
+   partageable (Canvas → PNG, tout local).
+6. **Comparaison côte à côte** — deux organes, deux viewports, caméras synchronisables
+   (remplace l'actuel `compare` en images fixes).
+
+**Terminé quand :** on peut couper un cœur, voir l'intérieur plein, mesurer une paroi,
+annoter, et partager l'URL qui restitue exactement la vue.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test par outil d'interaction (coupe avec capping, mesure, navigation clavier des hotspots) — l'accessibilité §5.6 se vérifie ou se perd.
+
+---
+
+## Sprint 17 — Solde du moteur : TSL, relief, lisibilité
+
+**Pourquoi ici et pas plus tôt :** ce sprint ramasse ce que les sprints 1 et 3 ont
+laissé — `materials/tsl-materials.ts` est encore le stub de 8 lignes hérité, et il
+manque SSAO, profondeur de champ et contour de sélection. Le placer après
+l'interaction (Sprint 16) est délibéré : un outil de coupe utilisable sert un
+étudiant avant qu'un shader soit parfait, et le contour de sélection n'a de sens
+qu'une fois qu'il existe une sélection fine à souligner.
+
+C'est aussi la dernière marche avant les animations (Sprint 18), qui ont besoin du
+compute WebGPU que ce sprint installe.
+
+**Travaux**
+
+1. **Pile TSL réelle** — chaque matériau de `materials/library.ts` reçoit sa
+   variante node, avec parité visuelle vérifiée contre le chemin WebGL2. Le
+   chemin WebGPU cesse de rendre « les mêmes matériaux, en plus récent ».
+2. **Compute shaders** — l'infrastructure que le flux sanguin et l'air attendent,
+   avec son repli en instancing pour WebGL2. Livrée avec une démonstration
+   mesurée, pas seulement câblée.
+3. **SSAO / GTAO** — le relief des sillons et des scissures, promis au §5 de
+   CLAUDE.md. C'est ce qui sépare un organe « propre » d'un organe crédible.
+4. **Profondeur de champ** en mode focus, cohérente avec le CameraRig.
+5. **Contour de sélection** (edge detect) et `highlightMaterial` — contour animé et
+   pulsation sur la structure active, pour que la sélection se lise sans lire.
+6. **`vesselMaterial`** — dégradé artériel/veineux le long de la courbe.
+7. **IBL procédural** — pas de `.hdr` téléchargé : le budget réseau du §1 vaut
+   aussi pour l'éclairage.
+8. **Budget mesuré** — les 8 ms CPU en `medium` de la charte §5.3 sont enfin
+   chiffrées sur un appareil réel, et le chiffre est écrit ici.
+
+**Terminé quand :** les deux chemins de rendu donnent la même image à tolérance
+assumée, le relief et le contour sont visibles en `high` et `medium`, `low` reste
+sans passe, et le budget frame est un nombre relevé et non une intention.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : la capture de référence par matériau et par chemin
+de rendu — un shader qui change doit se voir dans la diff, pas dans un retour
+d'utilisateur.
+
+---
+
+## Sprint 18 — Physiologie animée
+
+**Pourquoi :** l'anatomie statique s'apprend dans un livre. Le mouvement est ce
+qu'un livre ne peut pas faire — c'est la justification même de la 3D.
+
+**Travaux**
+
+1. **Cœur battant** — animation squelettique du cycle cardiaque, vitesse réglable,
+   pause à n'importe quelle phase, corrélation avec un tracé ECG synchronisé.
+2. **Flux sanguin** — particules GPU (compute WebGPU, repli instancing + shader
+   WebGL2) le long de courbes vasculaires ; rouge/bleu selon oxygénation ; le
+   passage pulmonaire fait basculer la couleur. Débit lié au cycle cardiaque.
+3. **Respiration** — diaphragme et cage thoracique animés, expansion alvéolaire,
+   échange gazeux visualisé.
+4. **Autres boucles** — péristaltisme intestinal, filtration rénale (néphron en
+   coupe), accommodation du cristallin, influx nerveux le long d'un axone.
+5. **Chronologie interactive** — barre de scrubbing pour chaque processus :
+   avancer, reculer, boucler un segment. C'est l'outil de révision, pas une vidéo.
+6. **Discipline de performance** — chaque animation déclare son coût et sa durée
+   d'activité ; le render-on-demand reste maître. `low` : animations simplifiées
+   ou statiques, jamais un blocage.
+
+**Terminé quand :** 5 processus physiologiques scrubables, 60 fps en `high`,
+aucune fuite mémoire après 10 minutes de lecture continue.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le banc mémoire : dix minutes d'animation continue sans que `renderer.info.memory` dérive.
+
+---
+
+## Sprint 19 — Corps entier & navigation par système
+
+**Pourquoi :** les organes isolés n'enseignent pas les **rapports anatomiques** —
+justement ce que les examens interrogent.
+
+**Travaux**
+
+1. **Scène corps complet** — modèle basse densité comme carte de navigation ;
+   zoom sur une région → chargement du modèle haute densité (transition continue,
+   pas de coupure). Utilise le streaming LOD du Sprint 2.
+2. **Vues par système** — squelettique, musculaire, cardiovasculaire, nerveux,
+   digestif, respiratoire, urinaire, endocrinien, lymphatique, tégumentaire.
+   Isolation d'un système, les autres passent en `ghostMaterial`.
+3. **Rapports anatomiques** — mode « voisinage » : afficher ce qui touche la
+   structure sélectionnée, avec étiquettes de relation.
+4. **Régions topographiques** — quadrants abdominaux, triangles cervicaux, médiastin,
+   loges des membres : les découpages réellement enseignés.
+5. **Vue coupes radiologiques** — série de coupes transverses façon TDM, navigation
+   à la molette, avec correspondance 3D synchronisée. Passerelle vers l'imagerie médicale.
+6. **Boussole de navigation** — plans et axes anatomiques toujours visibles
+   (antérieur/postérieur, proximal/distal…), presets de caméra normalisés.
+
+**Terminé quand :** on parcourt le corps entier sans rechargement de page, chaque
+système s'isole, la vue coupes reste synchronisée avec la 3D.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un smoke sur chaque route `/systemes/[slug]`, pour qu'un système ajouté sans page se voie tout de suite.
+
+---
+
+## Sprint 20 — Révision, quiz et mode examen
+
+**Pourquoi :** c'est ce qui transforme un bel atlas en outil utilisé la veille
+d'un partiel. C'est le sprint qui crée la rétention.
+
+**Travaux**
+
+1. **Quiz 3D** — « cliquez sur le ventricule gauche » sur le modèle réel :
+   identification spatiale, pas QCM textuel. Scoring, feedback immédiat, correction en 3D.
+2. **Modes** — identification, remplissage d'étiquettes, correspondance
+   fonction↔structure, cas clinique (symptômes → structure), contre-la-montre.
+3. **Flashcards SRS** — répétition espacée (SM-2), file de révision quotidienne,
+   cartes générées depuis le contenu du Sprint 5, cartes personnelles autorisées.
+4. **Suivi de progression** — maîtrise par système, série de jours, points faibles,
+   heatmap d'activité. **Tout en `localStorage`/IndexedDB** — aucun compte, aucun serveur.
+5. **Mode examen** — session chronométrée, format inspiré des épreuves nigériennes,
+   correction détaillée avec renvoi 3D vers chaque erreur.
+6. **Import/export** — sauvegarde de progression en fichier JSON : c'est la seule
+   synchronisation possible sans backend, et elle suffit.
+
+**Terminé quand :** un étudiant peut réviser 30 minutes en boucle fermée
+(apprendre → tester → revoir ses erreurs), progression conservée après rechargement.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test du moteur de répétition espacée sur données figées : une régression de SRS est invisible à l'œil et coûteuse à l'étudiant.
+
+---
+
+## Sprint 21 — Offline & terrain nigérien
+
+**Pourquoi :** connexion intermittente, forfaits data coûteux, coupures de courant.
+Une app qui exige le réseau est une app inutilisable ici.
+
+**Travaux**
+
+1. **PWA complète** — manifest, installable, icônes maskable, écran de démarrage
+   aux couleurs Gremah, mise à jour en arrière-plan avec invite discrète.
+2. **Service Worker** — précache du shell ; modèles et images en cache à la demande,
+   avec **gestion de quota** et éviction explicite. Zéro appel réseau après installation.
+3. **Packs hors-ligne** — l'étudiant choisit les systèmes à télécharger, voit la
+   taille avant, gère l'espace occupé. Le contrôle appartient à l'utilisateur.
+4. **Mode data-light** — détection `saveData`/2G : textures basse résolution,
+   pas de post-processing, images différées, avertissement avant tout gros téléchargement.
+5. **Résilience** — reprise de téléchargement interrompu, indicateur d'état réseau,
+   dégradation propre sans jamais d'écran blanc, sauvegarde d'état avant fermeture.
+6. **Terrain** — tests sur Android bas de gamme réels (Chrome, écran ~720p) et
+   sous throttling 2G/3G. Résultats consignés dans `docs/perf-terrain.md`.
+
+**Terminé quand :** mode avion après première visite → l'app fonctionne entièrement ;
+un pack système se télécharge et se supprime proprement.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : un test hors ligne réel — service worker installé, réseau coupé, l'atlas répond — et la garantie du §2 bis : un compte n'est jamais une condition d'accès à ce qui est déjà téléchargé.
+
+---
+
+## Sprint 22 — Refonte de l'accueil et du système de thème
 
 **Pourquoi :** l'accueil actuel est fonctionnel et convenu. Or c'est la première
 preuve de sérieux que voit un enseignant à qui on envoie le lien — avant même le
@@ -702,7 +825,7 @@ Garde-fou légué par ce sprint : les captures de référence des deux thèmes, 
 
 ---
 
-## Sprint 15 — L'atlas devient un parcours d'apprentissage
+## Sprint 23 — L'atlas devient un parcours d'apprentissage
 
 **Pourquoi :** aujourd'hui la page d'apprentissage se **lit**. On fait défiler une
 fiche à côté d'un modèle qui tourne. C'est un livre avec une illustration animée —
@@ -721,7 +844,7 @@ exactement ce que la 3D était censée dépasser.
 4. **Comparaison** — deux structures côte à côte, caméras synchronisées, pour les
    confusions classiques que les examens exploitent.
 5. **Carnet personnel** — annotations ancrées en 3D, captures annotées, listes de
-   révision, export. Alimente le SRS du Sprint 8.
+   révision, export. Alimente le SRS du Sprint 20.
 6. **Progression lisible** — par système, avec les points faibles identifiés.
    Stockée localement ; la synchronisation via le compte est une décision à part.
 
@@ -734,7 +857,7 @@ Garde-fou légué par ce sprint : un parcours guidé joué de bout en bout en CI
 
 ---
 
-## Sprint 16 — Rayonnement
+## Sprint 24 — Rayonnement
 
 **Pourquoi :** un atlas que personne ne trouve n'est pas une référence.
 
@@ -743,7 +866,7 @@ Garde-fou légué par ce sprint : un parcours guidé joué de bout en bout en CI
 1. **SEO bilingue** — une page indexable par structure et par langue, données
    structurées `MedicalEntity`, sitemap, `hreflang`. C'est ainsi qu'on arrive sur
    un atlas : par une recherche de structure, pas par la page d'accueil.
-2. **Partage** — URL restituant exactement la vue 3D (Sprint 4), aperçus Open
+2. **Partage** — URL restituant exactement la vue 3D (Sprint 16), aperçus Open
    Graph générés par structure, export d'image annotée.
 3. **Crédits et licences** — page dédiée : modèles (CC BY-SA), sources
    bibliographiques, code (MIT). La distinction doit être limpide.
@@ -765,115 +888,7 @@ Garde-fou légué par ce sprint : la validation du `sitemap.xml`, des `hreflang`
 
 ---
 
-## Sprint 17 — Qualité scientifique et v1.0
-
-**Pourquoi :** c'est ce qui sépare un beau projet d'une référence citable. Une
-erreur d'anatomie sur une plateforme internationale coûte plus cher qu'un bug.
-
-**Travaux**
-
-1. **Relecture externe** — faire relire chaque système par des enseignants
-   d'anatomie, francophones **et** anglophones. Consigner qui a relu quoi et quand.
-2. **Traçabilité** — chaque fiche porte sa date de relecture et son relecteur.
-   Une fiche non relue est signalée comme telle plutôt que présentée comme sûre.
-3. **Corrections** — traiter les retours comme des bugs bloquants (CLAUDE.md §8).
-4. **Audit final** — accessibilité WCAG AA, performance sur appareils réels,
-   parcours complet dans les deux langues et les deux thèmes.
-5. **Versionnage du contenu** — un atlas qui évolue doit dire ce qui a changé :
-   journal des modifications de contenu, distinct de celui du code.
-6. **v1.0** — la version qu'on peut présenter à une faculté sans réserve.
-
-**Terminé quand :** toutes les cases de « Définition de terminé » (CLAUDE.md §11)
-sont cochées et au moins un enseignant extérieur a validé chaque système.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : le contrôle de traçabilité : une fiche sans relecteur ni date se signale d'elle-même au lieu de passer pour sûre.
-
----
-
-## Phase III — finir vraiment
-
-Ces cinq sprints sont sortis d'un audit du dépôt, pas du plan initial. Ils
-couvrent ce qui sépare une application « fonctionnelle » d'une application
-**terminée** — celle qu'on confie à des inconnus, et qui tient dans la durée.
-
----
-
-## Sprint 18 — Cycle de vie du compte & données personnelles
-
-**Pourquoi :** le Sprint 11 a livré l'inscription et la connexion, et s'est arrêté
-là. Le dépôt stocke aujourd'hui prénom, nom, email, pays et région d'étudiants
-réels, sans qu'aucun d'eux ne puisse récupérer son compte, corriger une faute de
-frappe dans son adresse, ou partir. Ce n'est pas une lacune de confort : dès qu'un
-seul étudiant s'inscrit, l'obligation court.
-
-**Travaux**
-
-1. **Réinitialisation de mot de passe** — jeton à usage unique, à durée courte,
-   haché en base comme un mot de passe. Le message « si ce compte existe » doit
-   être identique dans les deux cas, sinon la page redevient un outil d'énumération.
-2. **Vérification d'adresse** — sans elle, on ne peut pas envoyer de
-   réinitialisation avec confiance, et n'importe qui peut occuper l'adresse d'un autre.
-3. **Envoi d'emails** — le seul service externe que le projet aura à assumer.
-   Choisir en connaissance de cause (Resend, Postmark, SMTP), documenter le coût,
-   et **ne jamais bloquer l'accès au contenu si l'envoi échoue**.
-4. **Suppression de compte** — effacement réel, y compris les compteurs de
-   limitation de débit. Confirmation explicite, pas de rétention silencieuse.
-5. **Export de ses données** — un JSON, dans la même page. C'est peu de code et
-   ça règle la question du droit d'accès.
-6. **Modification du profil** — nom, pays, région, mot de passe.
-7. **Pages légales** — politique de confidentialité (ce qu'on stocke, pourquoi,
-   combien de temps, chez qui : MongoDB Atlas, Vercel), mentions légales, CGU.
-   En français **et** en anglais dès leur écriture, parce que l'audience l'est.
-8. **Cookies** — l'app n'utilise qu'un cookie de session strictement nécessaire.
-   Le dire clairement vaut mieux qu'une bannière qui laisse croire au pire.
-
-**Terminé quand :** un étudiant peut créer, vérifier, récupérer, modifier,
-exporter et supprimer son compte sans écrire à l'auteur, et chaque donnée stockée
-est justifiée par écrit sur une page publique.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : un test du parcours de récupération et de suppression, y compris l'effacement des compteurs de limitation de débit.
-
----
-
-## Sprint 19 — Tests de bout en bout et non-régression visuelle
-
-**Pourquoi :** les tests unitaires passent, et aucun ne lance l'application. La 3D
-— le produit — n'est vérifiée par rien. Un écran noir sur WebGL2, une régression
-de thème, un parcours d'inscription cassé : tout cela sort en production sans
-qu'aucun garde-fou ne bronche. CLAUDE.md §3 prévoit Playwright ; il n'est pas installé.
-
-**Travaux**
-
-1. **Playwright installé et câblé en CI** — smoke sur chaque route, dans les deux
-   thèmes, en desktop et en mobile émulé.
-2. **Captures WebGL de référence** — un rendu qui change doit se voir dans la
-   diff. Tolérance de pixels assumée, pas d'égalité stricte qui rendrait le test
-   inutilisable.
-3. **Parcours complets** — inscription → connexion → atlas → déconnexion, et le
-   parcours de récupération du Sprint 18.
-4. **Test du chemin de repli** — forcer WebGL2 alors que WebGPU est disponible, et
-   vérifier la parité visuelle raisonnable exigée par la charte §5.1.
-5. **Budget de performance en CI** — Lighthouse sur `/` et `/atlas`, seuils qui
-   cassent le build.
-6. **Test d'accessibilité automatisé** (axe-core) — il ne remplace pas l'audit
-   manuel du Sprint 10, il empêche les régressions entre deux audits.
-7. **Banc mémoire** — charger et décharger 20 structures, vérifier que
-   `renderer.info.memory` revient à son niveau initial (charte §5.4).
-
-**Terminé quand :** casser la 3D, le thème clair ou l'inscription fait échouer la
-CI avant la revue, pas après le déploiement.
-
-**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
-dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
-Garde-fou légué par ce sprint : toute la chaîne Playwright — c'est le sprint dont le livrable **est** la CI.
-
----
-
-## Sprint 20 — Exploitation, supervision et coûts
+## Sprint 25 — Exploitation, supervision et coûts
 
 **Pourquoi :** le projet a maintenant une base de données et des routes serveur.
 Si Atlas sature son palier gratuit, si une route se met à échouer, si un étudiant
@@ -893,7 +908,7 @@ ne peut plus se connecter un dimanche soir — personne ne l'apprend.
    le palier gratuit, le seuil de bascule et ce qu'on fait en cas de dépassement.
    Un atlas gratuit pour des étudiants doit savoir ce qu'il coûte à son auteur.
 6. **Mises à jour de dépendances** — Dependabot ou équivalent, avec la CI du
-   Sprint 19 comme filet. three.js évolue vite ; ne pas suivre coûte plus cher.
+   Sprint 14 comme filet. three.js évolue vite ; ne pas suivre coûte plus cher.
 7. **Plan de reprise** — que faire si Atlas est indisponible ? Réponse attendue :
    le contenu et la 3D restent accessibles, seule la connexion tombe. À vérifier,
    pas à supposer.
@@ -907,7 +922,7 @@ Garde-fou légué par ce sprint : une restauration de sauvegarde rejouée, et le
 
 ---
 
-## Sprint 21 — Portabilité : récupérer la clé USB de salle de TP
+## Sprint 26 — Portabilité : récupérer la clé USB de salle de TP
 
 **Pourquoi :** le §2 bis a coûté quelque chose de précis, et le dit franchement :
 un hôte purement statique « ne porterait plus les comptes ». Au Niger, une salle
@@ -937,7 +952,43 @@ Garde-fou légué par ce sprint : le build « atlas seul » vérifié en CI, sin
 
 ---
 
-## Sprint 22 — Pérennité et passation
+## Sprint 27 — Audit final, qualité scientifique et v1.0
+
+**Pourquoi :** c'est ce qui sépare un beau projet d'une référence citable. Une
+erreur d'anatomie sur une plateforme internationale coûte plus cher qu'un bug.
+
+Ce sprint solde aussi ce que le Sprint 10 avait laissé — onboarding, audit
+d'accessibilité, Lighthouse, sitemap. Ces travaux étaient annoncés comme de la
+finition ; ils ne valaient rien tant que le produit à finir n'existait pas.
+
+**Travaux**
+
+1. **Relecture externe** — faire relire chaque système par des enseignants
+   d'anatomie, francophones **et** anglophones. Consigner qui a relu quoi et quand.
+2. **Traçabilité** — chaque fiche porte sa date de relecture et son relecteur.
+   Une fiche non relue est signalée comme telle plutôt que présentée comme sûre.
+3. **Corrections** — traiter les retours comme des bugs bloquants (CLAUDE.md §8).
+4. **Audit final** — accessibilité WCAG AA, performance sur appareils réels,
+   parcours complet dans les deux langues et les deux thèmes.
+5. **Versionnage du contenu** — un atlas qui évolue doit dire ce qui a changé :
+   journal des modifications de contenu, distinct de celui du code.
+6. **Onboarding cinématique** — le disque solaire s'ouvre sur le corps. Reste du
+   Sprint 10, à sa place ici : on n'accueille bien que dans un produit fini.
+7. **Lighthouse ≥ 95** en Performance et Accessibilité, audit WCAG AA manuel,
+   `robots.txt` et `sitemap.xml`. Le §11 les exige depuis le début ; ils n'ont
+   jamais été mesurés, et la CI du Sprint 14 rend enfin la mesure automatique.
+8. **v1.0** — la version qu'on peut présenter à une faculté sans réserve.
+
+**Terminé quand :** toutes les cases de « Définition de terminé » (CLAUDE.md §11)
+sont cochées et au moins un enseignant extérieur a validé chaque système.
+
+**Clôture** — dérouler le [rituel](#rituel-de-clôture-de-sprint) :
+dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
+Garde-fou légué par ce sprint : le contrôle de traçabilité : une fiche sans relecteur ni date se signale d'elle-même au lieu de passer pour sûre.
+
+---
+
+## Sprint 28 — Pérennité et passation
 
 **Pourquoi :** Gremah Anatomy est aujourd'hui le projet d'une seule personne, et
 tout ce qui compte — les décisions, les pièges, les raisons — vit dans sa tête et
@@ -969,36 +1020,21 @@ Garde-fou légué par ce sprint : rien de neuf : ce sprint vérifie que tout ce 
 
 ---
 
-## Ce qui bloque, en une lecture
+## Ce qui bloque, et qui ne se code pas
 
-| Blocage                                            | Sprint | Nature                                            |
-| -------------------------------------------------- | ------ | ------------------------------------------------- |
-| 69 structures sur 78 n'ont pas de modèle           | 12     | 🔒 Manuel — export Blender depuis Z-Anatomy       |
-| Les 9 modèles actuels n'ont pas de licence établie | 12     | ⚠️ Juridique — l'atlas n'est pas rediffusable     |
-| `tsl-materials.ts` est encore un stub de 8 lignes  | 1, 3   | La promesse « moderne » du §1 n'est pas tenue     |
-| Aucun test ne lance l'application                  | 19     | La 3D n'est vérifiée par rien                     |
-| Aucune récupération de mot de passe                | 18     | Obligation dès le premier inscrit                 |
-| Ni PWA ni service worker                           | 9      | « Hors ligne » du §11 n'est pas commencé          |
-| Lighthouse et WCAG AA jamais mesurés               | 10, 19 | Deux cases du §11 sont des vœux, pas des constats |
+Ces points ne se lèvent pas en écrivant du code : ils demandent un geste humain,
+un compte externe ou une décision. Tant qu'ils tiennent, la file avance à vide.
+Le détail des gestes attendus est en fin de fichier, **À faire à la main**.
 
----
-
-## Ordre recommandé
-
-L'ordre des numéros n'est pas l'ordre d'exécution. Voici celui qui débloque le plus tôt :
-
-1. **Sprint 12, fin** — importer par vagues de dix structures. Rien d'autre n'a de
-   sens à neuf organes : traduire, communiquer ou bâtir un parcours d'apprentissage
-   sur une boîte vide, c'est soigner l'emballage.
-2. **Sprint 18** — dès qu'un étudiant s'inscrit, l'horloge tourne. C'est court et
-   ça lève un risque réel.
-3. **Sprint 19** — chaque sprint suivant devient plus sûr, donc plus rapide.
-   Investir tôt, pas juste avant la v1.0.
-4. **Sprint 13** — le bilinguisme, une fois qu'il y a du contenu à traduire.
-5. **Sprints 4, 3 (reste), 6** — la profondeur 3D, dans cet ordre : l'interaction
-   sert à quelque chose avant que les shaders soient parfaits.
-6. **Sprints 9, 14, 15** — offline, accueil, apprentissage.
-7. **Sprints 16, 20, 21, 10, 17, 22** — rayonnement, exploitation, v1.0, passation.
+| Blocage                                            | Sprint | Nature                                             |
+| -------------------------------------------------- | ------ | -------------------------------------------------- |
+| 69 structures sur 78 n'ont pas de modèle           | 12     | 🔒 Manuel — export Blender depuis Z-Anatomy        |
+| Les 9 modèles actuels n'ont pas de licence établie | 12     | ⚠️ Juridique — l'atlas n'est pas rediffusable      |
+| Aucun envoi d'email possible                       | 13     | 🔒 Compte externe à ouvrir, coût à assumer         |
+| `main` n'est pas protégé côté GitHub               | tous   | 🔒 Réglage de dépôt — le rituel repose dessus      |
+| Aucun Android d'entrée de gamme pour mesurer       | 17, 21 | 🔒 Matériel — le critère du §5.2 reste théorique   |
+| Zarma absent du glossaire                          | 15     | 🔒 Humain — inventer un terme serait pire que rien |
+| Aucun relecteur enseignant identifié               | 27     | 🔒 Humain — à recruter bien avant le sprint 27     |
 
 ---
 
@@ -1006,36 +1042,107 @@ L'ordre des numéros n'est pas l'ordre d'exécution. Voici celui qui débloque l
 
 > **Règle de tenue.** Une case n'est cochée que si la fonctionnalité existe dans
 > le dépôt et passe `npm run lint && npm run typecheck && npm test && npm run build`.
-> Un travail « presque fini » reste 🟨, avec son reste listé. Se mentir ici coûte
-> plus cher que le retard qu'on cherche à masquer.
+> Un travail « presque fini » reste 🟨, avec son reste **reversé dans un sprint de
+> la file** — jamais laissé flotter. Se mentir ici coûte plus cher que le retard
+> qu'on cherche à masquer.
 >
-> **Dernière vérification :** 13 août 2026, travaux du Sprint 12 en cours.
+> **Dernière vérification :** 13 août 2026. Sprint en cours : **12**.
 
-| Sprint | État        | Branche                  | Notes                                                                                                                                                                                                                             |
-| ------ | ----------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0      | ✅ terminé  | `sprint-0/fondations`    | Purge, export statique, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.                                                                                                                       |
-| 1      | ✅ terminé  | `sprint-1/moteur-v2`     | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils commutables, CameraRig, overlay `?debug=1`, 18 tests.                                                                                                                     |
-| 2      | ✅ terminé  | `sprint-2/assets`        | 28,6 Mo → 7,9 Mo par niveau (3 LOD), décodeurs câblés, budget mémoire en octets, streaming progressif.                                                                                                                            |
-| 3      | 🟨 en cours | fusionné dans `main`     | Tissus translucides, rayon X, fantôme, bloom + grain/vignette, halo solaire. Reste : SSAO, DOF, pile WebGPU.                                                                                                                      |
-| 4      | ⬜ à faire  | `sprint-4/interaction`   |                                                                                                                                                                                                                                   |
-| 5      | 🟨 en cours | fusionné dans `main`     | FR langue source, 28 champs/organe, 16 sources, ancrage Niger, vernaculaire. Reste : 20+ structures, i18n EN.                                                                                                                     |
-| 6      | ⬜ à faire  | `sprint-6/physiologie`   |                                                                                                                                                                                                                                   |
-| 7      | ⬜ à faire  | `sprint-7/corps-entier`  |                                                                                                                                                                                                                                   |
-| 8      | ⬜ à faire  | `sprint-8/revision`      |                                                                                                                                                                                                                                   |
-| 9      | ⬜ à faire  | `sprint-9/offline`       |                                                                                                                                                                                                                                   |
-| 10     | 🟨 en cours | fusionné dans `main`     | Vercel, Open Graph, JSON-LD, `prefers-reduced-motion`. Reste : onboarding, audit WCAG AA, Lighthouse ≥ 95, sitemap.                                                                                                               |
-| 11     | 🟨 en cours | fusionné dans `main`     | Vitrine 3D, `/atlas/`, contact, à propos, comptes Atlas (scrypt + HMAC), limitation de débit. 61 tests.                                                                                                                           |
-| 12     | 🟨 en cours | `sprint-12/bibliotheque` | Taxonomie 78 structures / 12 systèmes, provenance + test bloquant, budget par structure, `anatomie:import`, page /credits. Reste : **importer les modèles** (9 livrés sur 78) et solder la dette de provenance des neuf premiers. |
-| 13     | ⬜ à faire  | `sprint-13/bilingue`     | Schéma `{fr, en}`, routes par langue, test de complétude, glossaire haoussa/zarma.                                                                                                                                                |
-| 14     | ⬜ à faire  | `sprint-14/accueil-v2`   | Direction artistique écrite d'abord, scène signature, thème clair conçu et non dérivé.                                                                                                                                            |
-| 15     | ⬜ à faire  | `sprint-15/apprendre`    | Parcours guidés, vérification sur le modèle, carnet, comparaison.                                                                                                                                                                 |
-| 16     | ⬜ à faire  | `sprint-16/rayonnement`  | SEO bilingue par structure, crédits/licences, signalement d'erreur en un clic.                                                                                                                                                    |
-| 17     | ⬜ à faire  | `sprint-17/v1`           | Relecture par des enseignants, traçabilité, audit, v1.0.                                                                                                                                                                          |
-| 18     | ⬜ à faire  | `sprint-18/compte`       | Récupération, vérification d'adresse, suppression, export, pages légales. Le reste du Sprint 11 est ici, parce que c'est une obligation et non de la finition.                                                                    |
-| 19     | ⬜ à faire  | `sprint-19/e2e`          | Playwright, captures 3D de référence, Lighthouse et axe-core en CI, banc mémoire.                                                                                                                                                 |
-| 20     | ⬜ à faire  | `sprint-20/exploitation` | Journaux, suivi d'erreurs, disponibilité, sauvegarde restaurée pour de vrai, coûts.                                                                                                                                               |
-| 21     | ⬜ à faire  | `sprint-21/portabilite`  | Build « atlas seul », mode enseignant, distribution hors ligne testée sans réseau.                                                                                                                                                |
-| 22     | ⬜ à faire  | `sprint-22/passation`    | Schémas d'architecture, ADR, gouvernance du contenu, continuité d'accès.                                                                                                                                                          |
+| Sprint | État        | Branche                  | Notes                                                                                                                                       |
+| ------ | ----------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0      | ✅ terminé  | `sprint-0/fondations`    | Purge, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.                                                  |
+| 1      | 🟨 partiel  | `sprint-1/moteur-v2`     | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils, CameraRig, overlay `?debug=1`. Reste TSL et compute → Sprint 17.                   |
+| 2      | ✅ terminé  | `sprint-2/assets`        | 28,6 Mo → 12,7 Mo sur 3 LOD, décodeurs câblés, budget mémoire en octets, streaming progressif.                                              |
+| 3      | 🟨 partiel  | `fusionné dans `main``   | Tissus translucides, rayon X, fantôme, bloom, grain/vignette, halo solaire. Reste SSAO, DOF, contour → Sprint 17.                           |
+| 5      | 🟨 partiel  | `fusionné dans `main``   | FR langue source, 28 champs/organe, 16 sources, ancrage Niger. Reste : structures → Sprint 12, anglais → Sprint 15.                         |
+| 10     | 🟨 partiel  | `fusionné dans `main``   | Vercel, Open Graph, JSON-LD, `prefers-reduced-motion`. Reste onboarding, WCAG AA, Lighthouse, sitemap → Sprint 27.                          |
+| 11     | 🟨 partiel  | `fusionné dans `main``   | Vitrine 3D, `/atlas/`, contact, comptes Atlas (scrypt + HMAC), limitation de débit. Reste le cycle de vie du compte → Sprint 13.            |
+| 12     | 🟨 en cours | `sprint-12/bibliotheque` | Taxonomie 78 structures, provenance + test bloquant, budget par structure, `anatomie:import`, `/credits`. **Reste : importer les modèles.** |
+| 13     | ⬜ à faire  | `sprint-13/compte`       | Récupération, vérification d'adresse, suppression, export, pages légales.                                                                   |
+| 14     | ⬜ à faire  | `sprint-14/e2e`          | Playwright, captures 3D de référence, Lighthouse et axe-core en CI, banc mémoire.                                                           |
+| 15     | ⬜ à faire  | `sprint-15/bilingue`     | Schéma `{fr, en}`, routes par langue, test de complétude, glossaire haoussa/zarma.                                                          |
+| 16     | ⬜ à faire  | `sprint-16/interaction`  | Coupes avec capping, écorché, mesure, hotspots v2, navigation clavier.                                                                      |
+| 17     | ⬜ à faire  | `sprint-17/moteur-solde` | Pile TSL réelle, compute, SSAO, DOF, contour, budget frame chiffré.                                                                         |
+| 18     | ⬜ à faire  | `sprint-18/physiologie`  | Cœur battant, flux sanguin, respiration, chronologie scrubable.                                                                             |
+| 19     | ⬜ à faire  | `sprint-19/corps-entier` | Scène corps complet, routes `/systemes/[slug]`, voisinage, boussole.                                                                        |
+| 20     | ⬜ à faire  | `sprint-20/revision`     | Quiz 3D, flashcards SRS, mode examen, progression par système.                                                                              |
+| 21     | ⬜ à faire  | `sprint-21/offline`      | PWA, service worker, packs par système, mode data-light.                                                                                    |
+| 22     | ⬜ à faire  | `sprint-22/accueil-v2`   | Direction artistique écrite d'abord, scène signature, thème clair conçu.                                                                    |
+| 23     | ⬜ à faire  | `sprint-23/apprendre`    | Parcours guidés, vérification sur le modèle, carnet, comparaison.                                                                           |
+| 24     | ⬜ à faire  | `sprint-24/rayonnement`  | SEO bilingue par structure, partage, signalement d'erreur en un clic.                                                                       |
+| 25     | ⬜ à faire  | `sprint-25/exploitation` | Journaux, suivi d'erreurs, disponibilité, sauvegarde restaurée, coûts.                                                                      |
+| 26     | ⬜ à faire  | `sprint-26/portabilite`  | Build « atlas seul », mode enseignant, distribution hors ligne.                                                                             |
+| 27     | ⬜ à faire  | `sprint-27/v1`           | Relecture enseignante, traçabilité, audit WCAG AA et Lighthouse, v1.0.                                                                      |
+| 28     | ⬜ à faire  | `sprint-28/passation`    | Schémas d'architecture, ADR, gouvernance du contenu, continuité d'accès.                                                                    |
+
+---
+
+## À faire à la main
+
+Le code n'atteint pas ces points : ils demandent un geste humain, un compte
+externe ou une décision. Ils sont classés par le sprint qu'ils bloquent — un
+geste fait trop tard arrête la file, un geste fait tôt ne coûte rien.
+
+**Avant tout — un réglage GitHub**
+
+- Protéger `main` : exiger une pull request et le job `verify` au vert, interdire
+  la poussée directe. Sans ce réglage, le rituel de clôture repose sur la seule
+  discipline, et la discipline cède un vendredi soir.
+
+**Sprint 12 — le verrou actuel**
+
+- Installer Blender, ouvrir le fichier Z-Anatomy et **exporter les structures en
+  `.obj`**, par vagues d'une dizaine, en suivant les noms de `taxonomie.ts`.
+  `npm run anatomie:import -- --liste` dit exactement ce qui manque ; tout le
+  reste du pipeline est automatique.
+- **Trancher le sort des neuf modèles hérités.** Leur licence est inconnue, donc
+  l'atlas n'est pas rediffusable aujourd'hui. Le plus simple est de les
+  ré-exporter depuis Z-Anatomy comme les autres : cela règle la question au lieu
+  de la documenter.
+- Rédiger la fiche de contenu de chaque structure importée. C'est le travail de
+  fond du projet, et il n'a pas de raccourci.
+
+**Sprint 13 — compte et données personnelles**
+
+- Ouvrir un compte d'envoi d'emails (Resend ou Postmark, palier gratuit
+  suffisant) et vérifier le domaine expéditeur.
+- Décider et écrire : durée de conservation des comptes, sous-traitants
+  (MongoDB Atlas, Vercel, l'expéditeur), adresse de contact pour l'exercice des
+  droits. Ce sont des décisions, pas des paramètres.
+
+**Sprint 15 — bilinguisme**
+
+- Trouver un locuteur zarma pour le glossaire. Inventer un terme serait pire que
+  le laisser vide.
+- Décider qui relit l'anglais. Une traduction non relue tient la promesse à
+  moitié, ce qui est pire que ne rien promettre.
+
+**Sprints 17 et 21 — la cible réelle**
+
+- Se procurer un **Android d'entrée de gamme** — celui à 150 000 FCFA — et le
+  garder pour les mesures. Tant qu'il n'existe pas, les 30 fps du §5.2 sont une
+  intention et les budgets restent invérifiables.
+- Tester une fois sur une connexion réellement lente, pas sur un throttling de
+  navigateur.
+
+**Sprint 25 — exploitation**
+
+- Ouvrir les comptes de supervision (suivi d'erreurs, ping de disponibilité) avec
+  une adresse que tu lis vraiment.
+- **Restaurer une sauvegarde MongoDB pour de vrai, au moins une fois.** Une
+  sauvegarde jamais restaurée n'est pas une sauvegarde.
+
+**Sprint 27 — qualité scientifique**
+
+- Contacter des enseignants d'anatomie, francophones et anglophones, **bien avant**
+  le sprint : c'est le délai le plus long du projet et il ne se rattrape pas. Une
+  faculté au Niger et un contact ailleurs suffisent à rendre l'affaire jouable.
+
+**Sprint 28 — continuité**
+
+- Décider où vivent les accès de secours (domaine, Vercel, Atlas, dépôt) et qui
+  peut les récupérer. Sujet inconfortable, et c'est précisément pour ça qu'on
+  l'écrit.
 
 ---
 

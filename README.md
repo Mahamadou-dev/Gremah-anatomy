@@ -65,7 +65,8 @@ Les modes sombre et clair sont tous deux de premier ordre : le sombre pour la
 ## Documentation
 
 - **[CLAUDE.md](CLAUDE.md)** — cahier de charge : exigences, architecture, charte 3D, conventions.
-- **[SPRINT.md](SPRINT.md)** — feuille de route en 10 sprints.
+- **[SPRINT.md](SPRINT.md)** — feuille de route : 29 sprints, où la numérotation
+  est l'ordre d'exécution, plus l'état réel de chacun.
 
 ## Avertissement
 
