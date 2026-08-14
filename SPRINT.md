@@ -499,9 +499,26 @@ seul étudiant s'inscrit, l'obligation court.
    être identique dans les deux cas, sinon la page redevient un outil d'énumération.
 2. **Vérification d'adresse** — sans elle, on ne peut pas envoyer de
    réinitialisation avec confiance, et n'importe qui peut occuper l'adresse d'un autre.
-3. **Envoi d'emails** — le seul service externe que le projet aura à assumer.
-   Choisir en connaissance de cause (Resend, Postmark, SMTP), documenter le coût,
-   et **ne jamais bloquer l'accès au contenu si l'envoi échoue**.
+3. **Envoi d'emails — décidé : SMTP Gmail**, depuis `mahamadou8877@gmail.com`,
+   avec un **mot de passe d'application** Google. Aucun service tiers, aucun
+   abonnement, aucun domaine à vérifier : l'expéditeur est l'adresse déjà publiée
+   dans le pied de page et sur `/a-propos`, donc l'étudiant reconnaît celui qui
+   lui écrit. Ce que ce choix coûte, et qu'il faut savoir avant de le faire :
+   - **500 messages par jour** en compte gratuit. Large ici — un message par
+     inscription et par mot de passe oublié — mais c'est un plafond réel, et
+     l'atteindre suspend l'envoi pour 24 h.
+   - **La réputation est celle de Gmail, pas la tienne** : les messages passent
+     souvent en « promotions » ou en indésirables chez d'autres fournisseurs. On
+     l'accepte parce que le volume est faible et l'enjeu ponctuel.
+   - **Le mot de passe d'application est un secret de premier ordre** : il ouvre
+     la boîte d'envoi. Il vit dans les variables d'environnement Vercel, jamais
+     dans le dépôt, jamais sous un préfixe `NEXT_PUBLIC_` (CLAUDE.md §2 bis).
+   - **Le transport reste remplaçable** : une seule fonction `envoyerEmail()`
+     isole SMTP du reste. Si le volume ou la délivrabilité l'exigent un jour, on
+     change de fournisseur sans toucher aux parcours.
+   - **L'envoi ne bloque jamais l'accès au contenu.** Si Gmail refuse, l'atlas
+     reste ouvert et l'erreur est journalisée, pas affichée comme un échec de
+     l'étudiant.
 4. **Suppression de compte** — effacement réel, y compris les compteurs de
    limitation de débit. Confirmation explicite, pas de rétention silencieuse.
 5. **Export de ses données** — un JSON, dans la même page. C'est peu de code et
@@ -1091,10 +1108,10 @@ geste fait trop tard arrête la file, un geste fait tôt ne coûte rien.
 
 **Sprint 12 — le verrou actuel**
 
-- Installer Blender, ouvrir le fichier Z-Anatomy et **exporter les structures en
-  `.obj`**, par vagues d'une dizaine, en suivant les noms de `taxonomie.ts`.
-  `npm run anatomie:import -- --liste` dit exactement ce qui manque ; tout le
-  reste du pipeline est automatique.
+- Ouvrir le fichier Z-Anatomy dans Blender et **exporter les structures en
+  `.glb`**, par vagues d'une dizaine. La procédure exacte — réglages d'export,
+  pièges, nommage — est dans **[docs/import-zanatomy.md](docs/import-zanatomy.md)**.
+  `npm run anatomie:import -- --liste` dit ce qui manque ; le reste est automatique.
 - **Trancher le sort des neuf modèles hérités.** Leur licence est inconnue, donc
   l'atlas n'est pas rediffusable aujourd'hui. Le plus simple est de les
   ré-exporter depuis Z-Anatomy comme les autres : cela règle la question au lieu
@@ -1104,8 +1121,15 @@ geste fait trop tard arrête la file, un geste fait tôt ne coûte rien.
 
 **Sprint 13 — compte et données personnelles**
 
-- Ouvrir un compte d'envoi d'emails (Resend ou Postmark, palier gratuit
-  suffisant) et vérifier le domaine expéditeur.
+- **Créer le mot de passe d'application Gmail** pour `mahamadou8877@gmail.com` :
+  activer la validation en deux étapes sur le compte Google (elle est obligatoire
+  pour la suite), puis <https://myaccount.google.com/apppasswords>, nommer la clé
+  « Gremah Anatomy », et **copier les 16 caractères tout de suite** — Google ne
+  les réaffiche jamais. Les déposer dans les variables d'environnement Vercel
+  (`GMAIL_UTILISATEUR`, `GMAIL_MOT_DE_PASSE_APP`), pas dans le dépôt.
+- Envoyer un message d'essai à une adresse **non-Gmail** (Yahoo, Outlook) et
+  vérifier où il atterrit : c'est le seul moyen de savoir ce que verra un
+  étudiant qui n'est pas chez Google.
 - Décider et écrire : durée de conservation des comptes, sous-traitants
   (MongoDB Atlas, Vercel, l'expéditeur), adresse de contact pour l'exercice des
   droits. Ce sont des décisions, pas des paramètres.
