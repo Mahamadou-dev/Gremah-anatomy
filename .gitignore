@@ -36,6 +36,10 @@ yarn-error.log*
 # outils locaux (réglages machine, non partagés)
 .claude/settings.local.json
 
+# Inventaire des objets Z-Anatomy : relevé sur la machine qui possède le .blend,
+# donc généré et propre à chaque poste (CLAUDE.md §9).
+assets/models-src/zanatomy-objets.json
+
 # typescript
 next-env.d.ts
 *.tsbuildinfo
