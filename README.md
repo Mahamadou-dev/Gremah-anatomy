@@ -67,8 +67,8 @@ Les modes sombre et clair sont tous deux de premier ordre : le sombre pour la
 - **[CLAUDE.md](CLAUDE.md)** — cahier de charge : exigences, architecture, charte 3D, conventions.
 - **[SPRINT.md](SPRINT.md)** — feuille de route : 29 sprints, où la numérotation
   est l'ordre d'exécution, plus l'état réel de chacun.
-- **[docs/import-zanatomy.md](docs/import-zanatomy.md)** — exporter une structure
-  depuis Z-Anatomy, pas à pas : la seule étape manuelle du pipeline 3D.
+- **[docs/import-zanatomy.md](docs/import-zanatomy.md)** — importer les
+  structures depuis Z-Anatomy : export Blender automatisé, sans interface.
 
 ## Avertissement
 
@@ -111,7 +111,8 @@ un modèle sans provenance ne se déploie pas.
 ```bash
 # 1. la déclarer dans app/content/taxonomie.ts (elle démarre en « planifiee »)
 npm run anatomie:import -- --liste                      # ce qui reste à importer
-# 2. exporter l'objet depuis Z-Anatomy en .glb — voir docs/import-zanatomy.md
+# 2. exporter depuis Z-Anatomy — Blender piloté en arrière-plan, sans interface
+npm run anatomie:blender -- --blend=C:/…/Z-Anatomy.blend --structure=aorte
 npm run anatomie:import -- --dossier=… --structure=aorte
 npm run models:build -- --only=aorte                    # 3 niveaux de LOD, < 2 Mo
 # 3. passer la structure en « livree » et rédiger sa fiche dans app/content/organes.ts

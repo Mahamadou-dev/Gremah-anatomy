@@ -1108,10 +1108,13 @@ geste fait trop tard arrête la file, un geste fait tôt ne coûte rien.
 
 **Sprint 12 — le verrou actuel**
 
-- Ouvrir le fichier Z-Anatomy dans Blender et **exporter les structures en
-  `.glb`**, par vagues d'une dizaine. La procédure exacte — réglages d'export,
-  pièges, nommage — est dans **[docs/import-zanatomy.md](docs/import-zanatomy.md)**.
-  `npm run anatomie:import -- --liste` dit ce qui manque ; le reste est automatique.
+- **Télécharger le fichier Z-Anatomy** (<https://www.z-anatomy.com>, plusieurs
+  giga-octets) et noter son chemin. C'est désormais le **seul** geste manuel :
+  l'export Blender est automatisé et tourne sans interface —
+  `npm run anatomie:blender -- --blend=… --inventaire` puis sans `--inventaire`.
+  Procédure : **[docs/import-zanatomy.md](docs/import-zanatomy.md)**.
+- Compléter `sourceObjet` dans la taxonomie pour les structures que l'inventaire
+  signale comme introuvables : du copier-coller, pas de la manipulation 3D.
 - **Trancher le sort des neuf modèles hérités.** Leur licence est inconnue, donc
   l'atlas n'est pas rediffusable aujourd'hui. Le plus simple est de les
   ré-exporter depuis Z-Anatomy comme les autres : cela règle la question au lieu
