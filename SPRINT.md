@@ -1108,13 +1108,13 @@ geste fait trop tard arrête la file, un geste fait tôt ne coûte rien.
 
 **Sprint 12 — le verrou actuel**
 
-- **Télécharger le fichier Z-Anatomy** (<https://www.z-anatomy.com>, plusieurs
-  giga-octets) et noter son chemin. C'est désormais le **seul** geste manuel :
-  l'export Blender est automatisé et tourne sans interface —
-  `npm run anatomie:blender -- --blend=… --inventaire` puis sans `--inventaire`.
-  Procédure : **[docs/import-zanatomy.md](docs/import-zanatomy.md)**.
-- Compléter `sourceObjet` dans la taxonomie pour les structures que l'inventaire
-  signale comme introuvables : du copier-coller, pas de la manipulation 3D.
+- **Plus rien à télécharger ni à manipuler.** La source (83 Mo) est récupérée par
+  `npm run anatomie:blender -- --telecharger`, et l'export Blender tourne sans
+  interface. Procédure : **[docs/import-zanatomy.md](docs/import-zanatomy.md)**.
+- Reste à arbitrer, structure par structure : **31 des 78 ne trouvent pas leur
+  objet** dans la source (nom différent, ou absent du modèle). Chaque cas se
+  règle en posant `sourceObjet` dans la taxonomie — un choix anatomique, pas une
+  manipulation 3D.
 - **Trancher le sort des neuf modèles hérités.** Leur licence est inconnue, donc
   l'atlas n'est pas rediffusable aujourd'hui. Le plus simple est de les
   ré-exporter depuis Z-Anatomy comme les autres : cela règle la question au lieu

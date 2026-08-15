@@ -43,13 +43,26 @@ def arguments():
     return valeurs
 
 
+# Suffixes de latéralité et de rôle propres à Z-Anatomy, relevés dans la source :
+# « Lung.l » / « Lung.r » (gauche, droite), « .j » (jonction osseuse), « .i »
+# (insertion musculaire), « .ol » / « .or ». Une structure anatomique les
+# regroupe : les deux poumons font l'organe « poumons », pas deux organes.
+SUFFIXES = {"l", "r", "j", "i", "ol", "or", "jl", "jr", "il", "ir", "b", "m"}
+
+
 def normaliser(nom):
     """
-    Comparaison tolérante : Z-Anatomy écrit « Vertebra cervicalis », la taxonomie
-    peut porter « Vertebrae cervicales », et Blender suffixe les doublons en
-    « .001 ». On compare donc sans accents, sans casse, sans ponctuation.
+    Comparaison tolérante. Z-Anatomy nomme ses objets **en anglais**, entre
+    parenthèses quand la structure est facultative, et suffixés par la latéralité
+    — « (Accessory parotid gland).l ». Blender ajoute « .001 » aux doublons. On
+    compare donc sans accents, sans casse, sans ponctuation et sans suffixe.
     """
-    nom = nom.split(".")[0] if nom[-4:-3] == "." and nom[-3:].isdigit() else nom
+    while "." in nom:
+        tete, queue = nom.rsplit(".", 1)
+        if queue.lower() in SUFFIXES or queue.isdigit():
+            nom = tete
+        else:
+            break
     sans_accent = unicodedata.normalize("NFKD", nom).encode("ascii", "ignore").decode()
     return "".join(c for c in sans_accent.lower() if c.isalnum() or c == " ").strip()
 

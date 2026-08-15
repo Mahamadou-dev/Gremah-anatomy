@@ -8,19 +8,29 @@ d'erreurs : un œil oublié dans l'_Outliner_ produit un `.glb` vide, et ça ne 
 voit qu'au chargement, trois étapes plus loin.
 
 **Blender embarque Python et s'exécute sans interface.** Tout est donc
-automatisé. Il reste **une seule chose** que la machine ne peut pas faire à ta
-place : télécharger le fichier source.
+automatisé, **téléchargement de la source compris**. Aucun geste manuel ne
+subsiste.
 
 ---
 
-## La seule étape manuelle
+## La source, en clair
 
-Télécharger Z-Anatomy depuis <https://www.z-anatomy.com> (ou la section
-_Releases_ de son dépôt GitHub) et noter où tu l'as mis. C'est un fichier lourd —
-plusieurs giga-octets. S'il existe des variantes découpées par système, elles
-conviennent aussi bien : l'export lit ce que tu lui donnes.
+| Quoi                | Combien                                       |
+| ------------------- | --------------------------------------------- |
+| Archive téléchargée | **83 Mo** — `Z-Anatomy.zip`                   |
+| Une fois extraite   | 377 Mo, dont `Startup.blend` de **307 Mo**    |
+| Ce qu'elle contient | **4 569 objets maillés**, ~4,1 M de triangles |
+| Licence             | **CC BY-SA 4.0** — le dérivé le reste (§9)    |
 
-Rien à ouvrir, rien à cliquer dans Blender.
+Elle vient du dépôt GitHub de Z-Anatomy
+(<https://github.com/Z-Anatomy/Models-of-human-anatomy>), par une URL HTTPS
+ordinaire : le script la récupère lui-même, une seule fois, dans `../z-anatomy`
+hors du dépôt.
+
+**Un point qui compte pour l'appariement :** contrairement à ce qu'on pourrait
+attendre d'un atlas en _Terminologia Anatomica_, Z-Anatomy nomme ses objets **en
+anglais**, suffixés par la latéralité — `Lung.l`, `Kidney.r`, `Cranium.j`. C'est
+donc l'anglais de la taxonomie qui sert de clé, pas le latin.
 
 ---
 
@@ -29,7 +39,7 @@ Rien à ouvrir, rien à cliquer dans Blender.
 ### 1. L'inventaire — une fois, avant tout le reste
 
 ```bash
-npm run anatomie:blender -- --blend="C:/chemin/Z-Anatomy.blend" --inventaire
+npm run anatomie:blender -- --telecharger --inventaire
 ```
 
 Elle relève les noms réels des objets de la source et les compare à ceux que la
@@ -46,10 +56,10 @@ dans son champ `sourceObjet`. C'est du copier-coller depuis
 
 ```bash
 # tout ce qui n'est pas encore livré
-npm run anatomie:blender -- --blend="C:/chemin/Z-Anatomy.blend"
+npm run anatomie:blender
 
 # ou une seule structure, pour vérifier avant de lancer la vague
-npm run anatomie:blender -- --blend="…" --structure=crane-entier
+npm run anatomie:blender -- --structure=crane-entier
 ```
 
 Blender tourne en arrière-plan. Pour chaque structure, le script démasque l'objet
@@ -89,6 +99,7 @@ npm run models:check && npm test                           # budgets et provenan
 | Symptôme                                  | Cause                                                            |
 | ----------------------------------------- | ---------------------------------------------------------------- |
 | `Blender introuvable`                     | Renseigner `BLENDER_EXE` avec le chemin de `blender.exe`         |
+| `Source Z-Anatomy absente`                | Ajouter `--telecharger` une fois, ou `--blend=<chemin>`          |
 | `✗ <id> — aucun objet pour […]`           | Le nom cherché n'existe pas : relever le vrai dans l'inventaire  |
 | `⚠ <id> … 2 Ko` (vide)                    | Objet trouvé mais sans maillage — vérifier le nom dans la source |
 | `budget dépassé (max 2 Mo par structure)` | Ajouter une dérogation dans `OVERRIDES` de `optimize-models.mjs` |
@@ -106,7 +117,7 @@ Ils sont donc à ré-exporter comme les autres — `brain`, `eyeball`, `heart`,
 `intestine`, `kidneys`, `liver`, `lungs`, `pancreas`, `skin` :
 
 ```bash
-npm run anatomie:blender -- --blend="…" --structure=heart
+npm run anatomie:blender -- --structure=heart
 ```
 
 Le script écrit alors une provenance Z-Anatomy vérifiée à la place de la mention
