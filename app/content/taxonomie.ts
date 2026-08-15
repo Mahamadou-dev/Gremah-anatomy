@@ -30,10 +30,18 @@ export type Structure = {
   english: string;
   statut: StructureStatut;
   /**
-   * Nom de l'objet dans la source Z-Anatomy, quand il est connu. C'est ce que
-   * `scripts/import-anatomie.mjs` cherche dans l'arbre source.
+   * Nom de l'objet dans la source Z-Anatomy, quand il est connu — c'est ce que
+   * `scripts/anatomie-blender.mjs` cherche dans l'arbre source.
+   *
+   * Trois formes, parce que la source ne se découpe pas comme un atlas :
+   *   - `"Stomach"` — un objet, un organe, le cas simple ;
+   *   - `["Left atrium", "Right atrium"]` — Z-Anatomy décompose la plupart des
+   *     viscères en sous-parties, et **aucun objet « Heart » n'existe** : le cœur
+   *     se compose de ses cavités, ses valves et ses piliers ;
+   *   - `"~lobe of left lung"` — le tilde prend tout objet **contenant** ce
+   *     texte, ce qui évite d'énumérer cinq lobes ou vingt-quatre côtes.
    */
-  sourceObjet?: string;
+  sourceObjet?: string | string[];
 };
 
 export type Region = {
@@ -120,6 +128,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Vertebra lumbalis",
             english: "Lumbar vertebra",
             statut: "planifiee",
+            sourceObjet: "~Vertebra L",
           },
           {
             id: "sacrum",
@@ -163,6 +172,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Radius et ulna",
             english: "Radius and ulna",
             statut: "planifiee",
+            sourceObjet: ["Radius", "Ulna"],
           },
           {
             id: "os-coxal",
@@ -178,6 +188,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Tibia et fibula",
             english: "Tibia and fibula",
             statut: "planifiee",
+            sourceObjet: ["Tibia", "Fibula"],
           },
         ],
       },
@@ -192,6 +203,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Articulatio glenohumeralis",
             english: "Shoulder joint",
             statut: "planifiee",
+            sourceObjet: "~glenohumeral",
           },
           {
             id: "articulation-genou",
@@ -235,6 +247,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus rectus abdominis",
             english: "Rectus abdominis",
             statut: "planifiee",
+            sourceObjet: "Rectus abdominis muscle",
           },
           {
             id: "grand-dorsal",
@@ -242,6 +255,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus latissimus dorsi",
             english: "Latissimus dorsi",
             statut: "planifiee",
+            sourceObjet: "Latissimus dorsi muscle",
           },
           {
             id: "trapeze",
@@ -249,6 +263,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus trapezius",
             english: "Trapezius",
             statut: "planifiee",
+            sourceObjet: "~part of trapezius muscle",
           },
         ],
       },
@@ -263,6 +278,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus biceps brachii",
             english: "Biceps brachii",
             statut: "planifiee",
+            sourceObjet: "~head of biceps brachii",
           },
           {
             id: "deltoide",
@@ -270,6 +286,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus deltoideus",
             english: "Deltoid",
             statut: "planifiee",
+            sourceObjet: "~part of deltoid muscle",
           },
           {
             id: "quadriceps",
@@ -277,6 +294,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus quadriceps femoris",
             english: "Quadriceps femoris",
             statut: "planifiee",
+            sourceObjet: ["Rectus femoris muscle", "~vastus"],
           },
           {
             id: "triceps-sural",
@@ -284,6 +302,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Musculus triceps surae",
             english: "Triceps surae",
             statut: "planifiee",
+            sourceObjet: ["~gastrocnemius", "Soleus muscle"],
           },
         ],
       },
@@ -306,6 +325,13 @@ export const SYSTEMES: Systeme[] = [
             latin: "Cor",
             english: "Heart",
             statut: "livree",
+            sourceObjet: [
+              "Left atrium",
+              "Right atrium",
+              "Left ventricle",
+              "Right ventricle",
+              "~papillary muscle",
+            ],
           },
           {
             id: "valves-cardiaques",
@@ -313,6 +339,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Valvae cordis",
             english: "Cardiac valves",
             statut: "planifiee",
+            sourceObjet: ["Aortic valve", "~atrioventricular valve", "~leaflet of pulmonary valve"],
           },
           {
             id: "arteres-coronaires",
@@ -371,6 +398,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Cavitas nasi",
             english: "Nasal cavity",
             statut: "planifiee",
+            sourceObjet: "Mucosa of nasal cavity",
           },
           {
             id: "larynx",
@@ -436,6 +464,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Intestinum",
             english: "Intestine",
             statut: "livree",
+            sourceObjet: ["~colon", "~duodenum"],
           },
           {
             id: "colon",
@@ -495,7 +524,14 @@ export const SYSTEMES: Systeme[] = [
         nom: "Haut appareil urinaire",
         english: "Upper urinary tract",
         structures: [
-          { id: "kidneys", nom: "Reins", latin: "Renes", english: "Kidneys", statut: "livree" },
+          {
+            id: "kidneys",
+            nom: "Reins",
+            latin: "Renes",
+            english: "Kidneys",
+            statut: "livree",
+            sourceObjet: "Kidney",
+          },
           {
             id: "uretere",
             nom: "Uretère",
@@ -672,6 +708,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Auris interna",
             english: "Inner ear",
             statut: "planifiee",
+            sourceObjet: "~cochlea",
           },
           {
             id: "osselets",
