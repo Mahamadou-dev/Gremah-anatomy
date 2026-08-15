@@ -2,15 +2,14 @@
 /**
  * Pilote l'export Z-Anatomy sans ouvrir Blender (Sprint 12).
  *
- * `docs/import-zanatomy.md` décrivait huit gestes à répéter 78 fois dans
- * l'interface. Ce script les exécute : il lit la taxonomie, demande à Blender
- * d'exporter en arrière-plan, et rend compte structure par structure. La seule
- * chose qu'il ne peut pas faire à ta place est de télécharger le `.blend` —
- * plusieurs giga-octets, sur un site qui n'a pas d'API.
+ * Sortir une structure de Z-Anatomy demandait huit gestes dans l'interface, à
+ * répéter 78 fois. Ce script les exécute : il récupère la source si elle manque,
+ * lit la taxonomie, pilote Blender en arrière-plan, et rend compte structure par
+ * structure. Aucun geste manuel ne subsiste.
  *
- *   npm run anatomie:blender -- --blend=C:/…/Z-Anatomy.blend --inventaire
- *   npm run anatomie:blender -- --blend=C:/…/Z-Anatomy.blend
- *   npm run anatomie:blender -- --blend=… --structure=crane-entier
+ *   npm run anatomie:blender -- --telecharger --inventaire   # la première fois
+ *   npm run anatomie:blender                                 # exporte le reste
+ *   npm run anatomie:blender -- --structure=crane-entier     # une seule
  *
  * L'inventaire s'exécute une fois : il liste les noms réels des objets de la
  * source, ce qui permet de vérifier ce que la taxonomie cherche avant de lancer
@@ -48,11 +47,27 @@ if (!blender) {
   process.exit(1);
 }
 
-const blend = arg("blend");
+/**
+ * La source, telle qu'elle est réellement distribuée : une archive de 83 Mo dans
+ * le dépôt GitHub de Z-Anatomy, qui contient `Startup.blend` (~307 Mo une fois
+ * extrait). Pas de « plusieurs giga-octets » : c'est une simple URL HTTPS, donc
+ * le téléchargement n'a aucune raison d'être un geste manuel.
+ */
+const ARCHIVE =
+  "https://raw.githubusercontent.com/Z-Anatomy/Models-of-human-anatomy/master/Z-Anatomy.zip";
+const CACHE = resolve(process.env.ZANATOMY_CACHE ?? "../z-anatomy");
+const BLEND_CACHE = join(CACHE, "extrait/Z-Anatomy/Startup.blend");
+
+let blend = arg("blend") ?? (existsSync(BLEND_CACHE) ? BLEND_CACHE : null);
+
+if (!blend && drapeau("telecharger")) blend = await telecharger();
+
 if (!blend || !existsSync(blend)) {
   console.error(
-    `Il manque --blend=<chemin vers le fichier Z-Anatomy>.\n` +
-      `  Téléchargement : https://www.z-anatomy.com (ou la section Releases du dépôt GitHub).`,
+    `Source Z-Anatomy absente.\n\n` +
+      `  npm run anatomie:blender -- --telecharger      # 83 Mo, une seule fois\n` +
+      `  npm run anatomie:blender -- --blend=<chemin>   # si tu l'as déjà ailleurs\n\n` +
+      `Licence CC BY-SA 4.0 : les modèles dérivés le restent (CLAUDE.md §9).`,
   );
   process.exit(1);
 }
@@ -81,12 +96,13 @@ if (aExporter.length === 0) {
   process.exit(1);
 }
 
-// Les clés de recherche vont du plus sûr au plus large : l'objet nommé dans la
-// taxonomie s'il est connu, sinon le latin — c'est ainsi que Z-Anatomy nomme —
-// et enfin l'anglais, que la source utilise pour quelques ensembles.
+// Les clés vont du plus sûr au plus large : le nom d'objet posé dans la
+// taxonomie s'il est connu, puis l'**anglais** — c'est ainsi que Z-Anatomy nomme
+// ses objets, contrairement à ce qu'on pouvait supposer d'un atlas en
+// Terminologia Anatomica — et le latin en dernier recours.
 const plan = aExporter.map((s) => ({
   id: s.id,
-  cles: [s.sourceObjet, s.latin, s.english].filter(Boolean),
+  cles: [s.sourceObjet, s.english, s.latin].filter(Boolean),
 }));
 const planChemin = join(tmpdir(), `gremah-plan-${Date.now()}.json`);
 writeFileSync(planChemin, JSON.stringify(plan));
@@ -117,6 +133,38 @@ if (parEtat("exporte").length > 0) {
   console.log(`\nÉtape suivante :\n  npm run anatomie:import -- --dossier=${sortie}`);
 }
 
+/** Récupère et extrait l'archive Z-Anatomy. Idempotent : ne retélécharge pas. */
+async function telecharger() {
+  mkdirSync(CACHE, { recursive: true });
+  const zip = join(CACHE, "Z-Anatomy.zip");
+
+  if (!existsSync(zip)) {
+    console.log(`Téléchargement de Z-Anatomy (83 Mo) → ${zip}`);
+    const reponse = await fetch(ARCHIVE);
+    if (!reponse.ok) {
+      console.error(
+        `Échec du téléchargement (${reponse.status}). Récupérer l'archive à la main :\n  ${ARCHIVE}`,
+      );
+      process.exit(1);
+    }
+    writeFileSync(zip, Buffer.from(await reponse.arrayBuffer()));
+  }
+
+  // `tar` lit les .zip sur Windows 10+, macOS et Linux : c'est le seul
+  // décompresseur qu'on puisse supposer présent sans ajouter de dépendance.
+  const extrait = join(CACHE, "extrait");
+  mkdirSync(extrait, { recursive: true });
+  console.log("Extraction…");
+  execFileSync("tar", ["-xf", zip, "-C", extrait], { stdio: "inherit" });
+
+  if (!existsSync(BLEND_CACHE)) {
+    console.error(`Archive extraite, mais ${BLEND_CACHE} est absent — contenu inattendu.`);
+    process.exit(1);
+  }
+  console.log(`Source prête : ${BLEND_CACHE}\n`);
+  return BLEND_CACHE;
+}
+
 function lancer(argumentsPython) {
   // `-b` : pas d'interface. Blender écrit beaucoup sur sa sortie standard ; on
   // la laisse passer telle quelle, le rapport exploitable est le fichier JSON.
@@ -127,9 +175,11 @@ function lancer(argumentsPython) {
 
 /** Ce que la taxonomie cherche, et ce que la source contient — côte à côte. */
 function rapprocher(objets) {
+  // Même normalisation que côté Blender : suffixes de latéralité (`.l`, `.r`),
+  // de jonction (`.j`) et d'insertion (`.i`), parenthèses, doublons `.001`.
   const normaliser = (nom) =>
     nom
-      .replace(/\.\d{3}$/, "")
+      .replace(/(\.(l|r|j|i|ol|or|jl|jr|il|ir|b|m|\d{3}))+$/i, "")
       .normalize("NFKD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
@@ -138,7 +188,7 @@ function rapprocher(objets) {
   const presents = new Set(objets.map((o) => normaliser(o.nom)));
   const manquantes = STRUCTURES.filter(
     (s) =>
-      ![s.sourceObjet, s.latin, s.english].filter(Boolean).some((c) => presents.has(normaliser(c))),
+      ![s.sourceObjet, s.english, s.latin].filter(Boolean).some((c) => presents.has(normaliser(c))),
   );
   return (
     `\n${STRUCTURES.length - manquantes.length}/${STRUCTURES.length} structures trouvent ` +
