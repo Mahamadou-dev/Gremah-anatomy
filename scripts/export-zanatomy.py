@@ -149,16 +149,28 @@ def main():
 
     resultats = []
     for structure in plan:
-        cles = [normaliser(c) for c in structure["cles"]]
         objets = []
-        for cle in cles:
-            objets.extend(index.get(cle, []))
+        for cle_brute in structure["cles"]:
+            # Le tilde demande explicitement une correspondance par contenu :
+            # « ~lobe of left lung » ramène les deux lobes sans les énumérer.
+            if cle_brute.startswith("~"):
+                motif = normaliser(cle_brute[1:])
+                for nom, candidats in index.items():
+                    if motif in nom:
+                        objets.extend(candidats)
+            else:
+                objets.extend(index.get(normaliser(cle_brute), []))
+
         if not objets:
             # Repêchage : « Costae » doit ramener « Costa I », « Costa II »…
-            for cle in cles:
+            for cle in (normaliser(c) for c in structure["cles"] if not c.startswith("~")):
                 for nom, candidats in index.items():
                     if nom.startswith(cle[:-1] if cle.endswith("e") else cle):
                         objets.extend(candidats)
+
+        # Les repères anatomiques de Z-Anatomy (suffixe `.j`) sont des maillages
+        # vides : ils ne dessinent rien et gonfleraient le fichier de nœuds.
+        objets = [o for o in dict.fromkeys(objets) if len(o.data.polygons) > 0]
 
         if not objets:
             resultats.append({"id": structure["id"], "etat": "introuvable", "cles": structure["cles"]})

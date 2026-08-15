@@ -102,7 +102,9 @@ if (aExporter.length === 0) {
 // Terminologia Anatomica — et le latin en dernier recours.
 const plan = aExporter.map((s) => ({
   id: s.id,
-  cles: [s.sourceObjet, s.english, s.latin].filter(Boolean),
+  cles: [...(Array.isArray(s.sourceObjet) ? s.sourceObjet : [s.sourceObjet]), s.english, s.latin]
+    .filter(Boolean)
+    .map(String),
 }));
 const planChemin = join(tmpdir(), `gremah-plan-${Date.now()}.json`);
 writeFileSync(planChemin, JSON.stringify(plan));
@@ -186,10 +188,20 @@ function rapprocher(objets) {
       .replace(/[^a-z0-9 ]/g, "")
       .trim();
   const presents = new Set(objets.map((o) => normaliser(o.nom)));
-  const manquantes = STRUCTURES.filter(
-    (s) =>
-      ![s.sourceObjet, s.english, s.latin].filter(Boolean).some((c) => presents.has(normaliser(c))),
-  );
+  const manquantes = STRUCTURES.filter((s) => {
+    const cles = [
+      ...(Array.isArray(s.sourceObjet) ? s.sourceObjet : [s.sourceObjet]),
+      s.english,
+      s.latin,
+    ].filter(Boolean);
+    // Une clé en tilde vise plusieurs objets : elle est satisfaite dès qu'un seul
+    // nom la contient, là où une clé simple exige une égalité.
+    return !cles.some((c) =>
+      c.startsWith("~")
+        ? [...presents].some((n) => n.includes(normaliser(c.slice(1))))
+        : presents.has(normaliser(c)),
+    );
+  });
   return (
     `\n${STRUCTURES.length - manquantes.length}/${STRUCTURES.length} structures trouvent ` +
     `un objet de même nom.\n` +
