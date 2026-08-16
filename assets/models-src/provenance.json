@@ -53,14 +53,379 @@
     }
   },
   "modeles": {
-    "brain": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "eyeball": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "heart": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "intestine": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "kidneys": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "liver": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "lungs": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "pancreas": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false },
-    "skin": { "source": "heritee-du-fork", "identifiantOrigine": null, "verifie": false }
+    "brain": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "eyeball": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "heart": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "intestine": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "kidneys": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "liver": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "lungs": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "pancreas": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "skin": {
+      "source": "heritee-du-fork",
+      "identifiantOrigine": null,
+      "verifie": false
+    },
+    "femur": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "femur",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "c3a212f61c3d1785"
+    },
+    "trachee": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "trachee",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "31100a86d27eb2d1"
+    },
+    "estomac": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "estomac",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "1ee29381b20fa8c3"
+    },
+    "vesicule-biliaire": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "vesicule-biliaire",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "155d850d7aa1cbdc"
+    },
+    "glande-surrenale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "glande-surrenale",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "f18ef8ce06acaa75"
+    },
+    "thyroide": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "thyroide",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "9e19ec13819c2117"
+    },
+    "rate": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "rate",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "7adba2bed53931e7"
+    },
+    "testicule": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "testicule",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "0bbcdb8d811e880b"
+    },
+    "prostate": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Prostate",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "b3ef538620215f0c"
+    },
+    "crane-entier": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Frontal bone + Parietal bone + Occipital bone + Temporal bone + Sphenoid bone + Ethmoid bone + Maxilla + Zygomatic bone + Nasal bone + Palatine bone + Vomer + Lacrimal bone + Inferior nasal concha bone",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "4f2b94dde9ef27b6"
+    },
+    "mandibule": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Mandible",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "7e4ac85d7530de82"
+    },
+    "os-temporal": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Temporal bone",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "0109aea8ea47bfeb"
+    },
+    "colonne-vertebrale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~Vertebra",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "155f75b77861909e"
+    },
+    "vertebre-cervicale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~Vertebra C",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "922217a782196684"
+    },
+    "vertebre-lombale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~Vertebra L",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "25411136abf6fb54"
+    },
+    "sacrum": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~sacrum",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "17c2e2daf7315080"
+    },
+    "sternum": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~of sternum",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "6e55f0c6623f88d0"
+    },
+    "cotes": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~rib",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "55571d60bcb10e2d"
+    },
+    "humerus": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~humerus",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "329ab75d715f671a"
+    },
+    "radius-ulna": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Radius + Ulna",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "b9fa4ab24220096f"
+    },
+    "os-coxal": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~hip bone",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "9649d6df13d4dfe1"
+    },
+    "tibia-fibula": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Tibia + Fibula",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "58b5809887a89b69"
+    },
+    "articulation-scapulohumerale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~glenohumeral",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "49d4ce567de63440"
+    },
+    "articulation-genou": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~knee joint",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "9287952f2e877b41"
+    },
+    "articulation-coxofemorale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~hip joint",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "f6fb336c8c67b20b"
+    },
+    "diaphragme": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~diaphragm",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "7e50ab550c6080fe"
+    },
+    "grand-droit-abdomen": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Rectus abdominis muscle",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "fa690de2dd8d23af"
+    },
+    "grand-dorsal": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Latissimus dorsi muscle",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "c4597244f74fa0db"
+    },
+    "trapeze": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~part of trapezius muscle",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "1a57a381b25f4d59"
+    },
+    "biceps-brachial": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~head of biceps brachii",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "808be02181f5d324"
+    },
+    "deltoide": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~part of deltoid muscle",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "7c297c28bef153bb"
+    },
+    "quadriceps": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Rectus femoris muscle + ~vastus",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "9808f62df91d0d92"
+    },
+    "triceps-sural": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~gastrocnemius + Soleus muscle",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "998ad65df1b47b2f"
+    },
+    "valves-cardiaques": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Aortic valve + ~atrioventricular valve + ~leaflet of pulmonary valve",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "96dc10036cf74cf3"
+    },
+    "tronc-pulmonaire": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Pulmonary trunk",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "472677f3783d42dd"
+    },
+    "cavite-nasale": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Mucosa of nasal cavity",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "e2a4ca244ce5e4c4"
+    },
+    "larynx": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Epiglottis + Thyroid cartilage + ~cricoid + ~arytenoid",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "c49ae4e91e92e8f3"
+    },
+    "colon": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~colon",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "a5ff042155de48b8"
+    },
+    "glandes-salivaires": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Parotid gland + Submandibular gland + ~sublingual gland",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "4a0e910010e8b504"
+    },
+    "vessie": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Urinary bladder",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "95f693b5518dd482"
+    },
+    "cervelet": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~cerebellum + ~cerebelli",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "8de4891563f9ada9"
+    },
+    "tronc-cerebral": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Midbrain + Pons + Medulla oblongata",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "4e6f102ceaad8835"
+    },
+    "oreille-interne": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~cochlea",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "e528a142d9478b1b"
+    },
+    "osselets": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~incus + ~malleus + ~stapes",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "95362eeafdc1bf8e"
+    },
+    "hypophyse": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~hypophysis",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "204eb90627456ca6"
+    },
+    "thymus": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~thymus",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "5184aa76f7cc79c4"
+    },
+    "noeuds-lymphatiques": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "~nodes",
+      "verifie": true,
+      "importeLe": "2026-08-16",
+      "hashSource": "cd18a88911b692ea"
+    }
   }
 }

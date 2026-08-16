@@ -67,6 +67,13 @@ const OVERRIDES = {
   // 2,05 Mo au réglage commun. La peau est une surface presque plane : elle
   // supporte une décimation plus franche sans perte visible de silhouette.
   skin: { ratio: 0.6, texture: 0.5 },
+  // 2,22 Mo au réglage commun : la colonne réunit cinquante vertèbres, chacune
+  // couverte de reliefs (apophyses, facettes) que la décimation générale
+  // préserve trop fidèlement. Vue entière, ces détails sont sous le pixel.
+  // Cinquante vertèbres couvertes d'apophyses et de facettes : le ratio seul ne
+  // mordait pas, `simplify` butait sur son seuil d'erreur. Vue entière, ces
+  // reliefs tiennent sous le pixel — on ouvre donc l'erreur tolérée.
+  "colonne-vertebrale": { ratio: 0.3, error: 6 },
 };
 
 /** Rebâtir une seule structure : `--only=skin`. Le reste du manifeste est conservé. */
@@ -100,7 +107,14 @@ for (const file of sources) {
   }
   const path = join(SRC, file);
   const bytes = readFileSync(path);
-  const hash = createHash("sha256").update(bytes).digest("hex").slice(0, 16);
+  // L'empreinte couvre la source **et** les réglages : sans cela, ajouter une
+  // dérogation ne régénérait rien — le script répondait « inchangé » alors que
+  // c'est précisément le réglage qu'on venait de changer.
+  const hash = createHash("sha256")
+    .update(bytes)
+    .update(JSON.stringify(OVERRIDES[name] ?? null))
+    .digest("hex")
+    .slice(0, 16);
   sourceBytes += bytes.byteLength;
 
   const previous = manifest.organs[name];
@@ -117,8 +131,15 @@ for (const file of sources) {
     const level = override
       ? {
           ...base,
-          ratio: base.ratio * override.ratio,
-          texture: Math.round(base.texture * override.texture),
+          // Une dérogation ne porte souvent que sur un axe : la moitié absente
+          // vaut 1, sinon elle produisait un NaN qui cassait silencieusement le
+          // redimensionnement des textures.
+          ratio: base.ratio * (override.ratio ?? 1),
+          texture: Math.round(base.texture * (override.texture ?? 1)),
+          // Le ratio n'est qu'un plafond : `simplify` s'arrête d'abord sur son
+          // seuil d'erreur géométrique. Sur une pièce très détaillée, baisser le
+          // ratio ne change donc rien — c'est l'erreur tolérée qu'il faut ouvrir.
+          error: base.error * (override.error ?? 1),
         }
       : base;
     // Chaque niveau repart de la source : décimer un niveau déjà décimé accumule

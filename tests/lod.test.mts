@@ -18,7 +18,11 @@ const MODELS = join(ROOT, "public", "models");
 /** Budgets du Sprint 2. Un dépassement doit casser la CI, pas surprendre un
  *  étudiant au moment de sa facture data. */
 const MAX_SINGLE_GLB_MB = 2; // CLAUDE.md §9
-const MAX_LEVEL_SET_MB = 8; // ce qu'un étudiant télécharge au plus, tous organes
+// Ce qu'un étudiant attend pour **une** structure, à un niveau de détail donné.
+// L'ancienne borne plafonnait le catalogue entier à 8 Mo : tenable à neuf
+// organes, elle cassait mécaniquement en grandissant, alors qu'on ne télécharge
+// jamais le catalogue — c'est la même erreur que le garde-fou global de la CI.
+const MAX_LEVEL_MB = 1.5;
 
 test("lodUrl dérive les niveaux depuis l'URL de base", () => {
   assert.equal(lodUrl("/models/heart.glb", 0), "/models/heart.glb");
@@ -76,21 +80,13 @@ test("chaque .glb livré tient sous 2 Mo", () => {
   assert.deepEqual(oversized, []);
 });
 
-test("chaque niveau complet tient sous 8 Mo", () => {
-  const files = readdirSync(MODELS).filter((file) => file.endsWith(".glb"));
-  const sets = {
-    0: files.filter((file) => !/-lod[12]\.glb$/.test(file)),
-    1: files.filter((file) => file.endsWith("-lod1.glb")),
-    2: files.filter((file) => file.endsWith("-lod2.glb")),
-  };
-  for (const [level, group] of Object.entries(sets)) {
-    const mb =
-      group.reduce((sum, file) => sum + statSync(join(MODELS, file)).size, 0) / 1024 / 1024;
-    assert.ok(
-      mb < MAX_LEVEL_SET_MB,
-      `le niveau ${level} pèse ${mb.toFixed(2)} Mo (max ${MAX_LEVEL_SET_MB} Mo)`,
-    );
-  }
+test("aucun niveau d'une structure ne dépasse ce qu'on attend au chargement", () => {
+  const trop = readdirSync(MODELS)
+    .filter((file) => file.endsWith(".glb"))
+    .map((file) => ({ file, mb: statSync(join(MODELS, file)).size / 1024 / 1024 }))
+    .filter((entree) => entree.mb > MAX_LEVEL_MB)
+    .map((entree) => `${entree.file} = ${entree.mb.toFixed(2)} Mo`);
+  assert.deepEqual(trop, [], `au-dessus de ${MAX_LEVEL_MB} Mo pour un seul niveau`);
 });
 
 test("le manifeste couvre tous les organes et tous les niveaux", () => {

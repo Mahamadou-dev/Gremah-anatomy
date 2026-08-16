@@ -98,7 +98,10 @@ for (const id of aTraiter) {
     continue;
   }
 
-  const entree = join(dossier, `${structure.sourceObjet ?? id}.glb`);
+  // Le fichier porte toujours l'identifiant : c'est ainsi que
+  // `anatomie-blender.mjs` l'écrit, y compris quand la structure est composée de
+  // plusieurs objets source (« cotes.glb » pour quarante-huit côtes).
+  const entree = join(dossier, `${id}.glb`);
   if (!existsSync(entree)) {
     if (cible) {
       console.error(`✗ ${id} : ${entree} introuvable (export Blender manquant ?)`);
@@ -134,7 +137,12 @@ for (const id of aTraiter) {
 
   provenance.modeles[id] = {
     source: SOURCE_PAR_DEFAUT,
-    identifiantOrigine: structure.sourceObjet ?? id,
+    // La trace de provenance garde le nom réel dans la source — un motif ou une
+    // liste quand la structure y est éclatée. Sans lui, impossible de rejouer
+    // l'import à l'identique quand Z-Anatomy évolue.
+    identifiantOrigine: Array.isArray(structure.sourceObjet)
+      ? structure.sourceObjet.join(" + ")
+      : (structure.sourceObjet ?? structure.english ?? id),
     verifie: true,
     importeLe: new Date().toISOString().slice(0, 10),
     hashSource: hash,
