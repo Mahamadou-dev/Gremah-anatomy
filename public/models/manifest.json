@@ -1,183 +1,183 @@
 {
   "organs": {
     "brain": {
-      "hash": "2cd5e7178f1e5de7",
+      "hash": "9850e3384cd1d10f",
       "source": "brain.glb",
-      "sourceBytes": 2570592,
+      "sourceBytes": 3934544,
       "levels": [
         {
           "file": "brain.glb",
-          "bytes": 898184,
-          "triangles": 49098
+          "bytes": 965664,
+          "triangles": 47629
         },
         {
           "file": "brain-lod1.glb",
-          "bytes": 401964,
-          "triangles": 20770
+          "bytes": 640284,
+          "triangles": 29962
         },
         {
           "file": "brain-lod2.glb",
-          "bytes": 175684,
-          "triangles": 8308
+          "bytes": 344584,
+          "triangles": 14463
         }
       ]
     },
     "eyeball": {
-      "hash": "584337a2efc7d3c0",
+      "hash": "d4f8e696706a8c99",
       "source": "eyeball.glb",
-      "sourceBytes": 2203616,
+      "sourceBytes": 483888,
       "levels": [
         {
           "file": "eyeball.glb",
-          "bytes": 816460,
-          "triangles": 41632
+          "bytes": 135632,
+          "triangles": 7121
         },
         {
           "file": "eyeball-lod1.glb",
-          "bytes": 365280,
-          "triangles": 17612
+          "bytes": 44108,
+          "triangles": 2085
         },
         {
           "file": "eyeball-lod2.glb",
-          "bytes": 161984,
-          "triangles": 7044
+          "bytes": 21836,
+          "triangles": 867
         }
       ]
     },
     "heart": {
-      "hash": "ef48b43442dbbe28",
+      "hash": "bb8c78ab3dd57a39",
       "source": "heart.glb",
-      "sourceBytes": 3321148,
+      "sourceBytes": 1412228,
       "levels": [
         {
           "file": "heart.glb",
-          "bytes": 953516,
-          "triangles": 50254
+          "bytes": 303268,
+          "triangles": 16164
         },
         {
           "file": "heart-lod1.glb",
-          "bytes": 432984,
-          "triangles": 21262
+          "bytes": 134752,
+          "triangles": 6925
         },
         {
           "file": "heart-lod2.glb",
-          "bytes": 195856,
-          "triangles": 8502
+          "bytes": 56648,
+          "triangles": 2667
         }
       ]
     },
     "intestine": {
-      "hash": "d4423ba0c8f08ac7",
+      "hash": "fcdb4ae98d2242b0",
       "source": "intestine.glb",
-      "sourceBytes": 1980780,
+      "sourceBytes": 1633560,
       "levels": [
         {
           "file": "intestine.glb",
-          "bytes": 723532,
-          "triangles": 40136
+          "bytes": 304372,
+          "triangles": 16598
         },
         {
           "file": "intestine-lod1.glb",
-          "bytes": 331832,
-          "triangles": 16978
+          "bytes": 108876,
+          "triangles": 5743
         },
         {
           "file": "intestine-lod2.glb",
-          "bytes": 152080,
-          "triangles": 6792
+          "bytes": 43384,
+          "triangles": 2109
         }
       ]
     },
     "kidneys": {
-      "hash": "e3e0a58372d794d6",
+      "hash": "8cdf2b3bc2083f3f",
       "source": "kidneys.glb",
-      "sourceBytes": 2190764,
+      "sourceBytes": 97372,
       "levels": [
         {
           "file": "kidneys.glb",
-          "bytes": 785560,
-          "triangles": 42568
+          "bytes": 55788,
+          "triangles": 2994
         },
         {
           "file": "kidneys-lod1.glb",
-          "bytes": 352596,
-          "triangles": 18008
+          "bytes": 17948,
+          "triangles": 892
         },
         {
           "file": "kidneys-lod2.glb",
-          "bytes": 161072,
-          "triangles": 7202
+          "bytes": 7860,
+          "triangles": 332
         }
       ]
     },
     "liver": {
-      "hash": "e4f11a9c0762eb9d",
+      "hash": "6e78b1cb0def4a5e",
       "source": "liver.glb",
-      "sourceBytes": 2660384,
+      "sourceBytes": 720704,
       "levels": [
         {
           "file": "liver.glb",
-          "bytes": 1053140,
-          "triangles": 44898
+          "bytes": 190400,
+          "triangles": 9929
         },
         {
           "file": "liver-lod1.glb",
-          "bytes": 505728,
-          "triangles": 18980
+          "bytes": 61540,
+          "triangles": 2863
         },
         {
           "file": "liver-lod2.glb",
-          "bytes": 251512,
-          "triangles": 7582
+          "bytes": 28548,
+          "triangles": 1069
         }
       ]
     },
     "lungs": {
-      "hash": "81617c9fc2f2b7bf",
+      "hash": "ff3f3ce29e9b97f3",
       "source": "lungs.glb",
-      "sourceBytes": 4455976,
+      "sourceBytes": 800372,
       "levels": [
         {
           "file": "lungs.glb",
-          "bytes": 875036,
-          "triangles": 45600
+          "bytes": 134920,
+          "triangles": 7156
         },
         {
           "file": "lungs-lod1.glb",
-          "bytes": 372600,
-          "triangles": 19292
+          "bytes": 47128,
+          "triangles": 2326
         },
         {
           "file": "lungs-lod2.glb",
-          "bytes": 161168,
-          "triangles": 7716
+          "bytes": 21576,
+          "triangles": 921
         }
       ]
     },
     "pancreas": {
-      "hash": "e5213bf8ed66e8ed",
+      "hash": "0fade82d4763b566",
       "source": "pancreas.glb",
-      "sourceBytes": 4848556,
+      "sourceBytes": 95172,
       "levels": [
         {
           "file": "pancreas.glb",
-          "bytes": 919600,
-          "triangles": 45056
+          "bytes": 47760,
+          "triangles": 2588
         },
         {
           "file": "pancreas-lod1.glb",
-          "bytes": 392328,
-          "triangles": 19062
+          "bytes": 13408,
+          "triangles": 680
         },
         {
           "file": "pancreas-lod2.glb",
-          "bytes": 162484,
-          "triangles": 7624
+          "bytes": 4768,
+          "triangles": 200
         }
       ]
     },
     "skin": {
-      "hash": "8183ffe3527b3f07",
+      "hash": "fe2e8601dea2b237",
       "source": "skin.glb",
       "sourceBytes": 5789160,
       "levels": [
@@ -199,7 +199,7 @@
       ]
     },
     "articulation-coxofemorale": {
-      "hash": "d9bd4d531bc9f2d3",
+      "hash": "c5f7fea43189493c",
       "source": "articulation-coxofemorale.glb",
       "sourceBytes": 23444,
       "levels": [
@@ -221,7 +221,7 @@
       ]
     },
     "articulation-genou": {
-      "hash": "d35659c978aed635",
+      "hash": "1fb454726d84bb7a",
       "source": "articulation-genou.glb",
       "sourceBytes": 59376,
       "levels": [
@@ -243,7 +243,7 @@
       ]
     },
     "articulation-scapulohumerale": {
-      "hash": "02318529e69c4035",
+      "hash": "54082c209a60e0b0",
       "source": "articulation-scapulohumerale.glb",
       "sourceBytes": 77584,
       "levels": [
@@ -265,7 +265,7 @@
       ]
     },
     "biceps-brachial": {
-      "hash": "2f631db379f0935b",
+      "hash": "6cc7b9b9c80604d5",
       "source": "biceps-brachial.glb",
       "sourceBytes": 187216,
       "levels": [
@@ -287,7 +287,7 @@
       ]
     },
     "cavite-nasale": {
-      "hash": "4f2d9e88ec31f4d2",
+      "hash": "bdfb6384b2dfa113",
       "source": "cavite-nasale.glb",
       "sourceBytes": 189056,
       "levels": [
@@ -309,7 +309,7 @@
       ]
     },
     "cervelet": {
-      "hash": "a7f8e7a2048e6bb9",
+      "hash": "26fa33ca04c73e67",
       "source": "cervelet.glb",
       "sourceBytes": 175120,
       "levels": [
@@ -331,9 +331,9 @@
       ]
     },
     "colon": {
-      "hash": "1e933c10c34ed3bc",
+      "hash": "7fa1d95bb58f0c62",
       "source": "colon.glb",
-      "sourceBytes": 1601080,
+      "sourceBytes": 1600984,
       "levels": [
         {
           "file": "colon.glb",
@@ -375,7 +375,7 @@
       ]
     },
     "cotes": {
-      "hash": "41d2efa74b4e921b",
+      "hash": "dff24362ffc0b0e0",
       "source": "cotes.glb",
       "sourceBytes": 2545048,
       "levels": [
@@ -397,7 +397,7 @@
       ]
     },
     "crane-entier": {
-      "hash": "8200e2a6321383d7",
+      "hash": "5b2faccbf41ab45f",
       "source": "crane-entier.glb",
       "sourceBytes": 1524740,
       "levels": [
@@ -419,7 +419,7 @@
       ]
     },
     "deltoide": {
-      "hash": "575be65f06125d06",
+      "hash": "a62a4dea55536c3e",
       "source": "deltoide.glb",
       "sourceBytes": 568628,
       "levels": [
@@ -441,7 +441,7 @@
       ]
     },
     "diaphragme": {
-      "hash": "b7d52ceaea9920cb",
+      "hash": "43258f078110f29b",
       "source": "diaphragme.glb",
       "sourceBytes": 1094472,
       "levels": [
@@ -463,7 +463,7 @@
       ]
     },
     "estomac": {
-      "hash": "4890cba7062bc2de",
+      "hash": "097c22a81bf97632",
       "source": "estomac.glb",
       "sourceBytes": 173192,
       "levels": [
@@ -485,7 +485,7 @@
       ]
     },
     "femur": {
-      "hash": "ffccfaf8b4d37109",
+      "hash": "add3c35ee6a4fba4",
       "source": "femur.glb",
       "sourceBytes": 73696,
       "levels": [
@@ -507,7 +507,7 @@
       ]
     },
     "glande-surrenale": {
-      "hash": "c721203748c967ce",
+      "hash": "d22169f0ea0e49c2",
       "source": "glande-surrenale.glb",
       "sourceBytes": 115180,
       "levels": [
@@ -529,7 +529,7 @@
       ]
     },
     "glandes-salivaires": {
-      "hash": "72a3a6b127d658f2",
+      "hash": "a2bceeabe5baf9e1",
       "source": "glandes-salivaires.glb",
       "sourceBytes": 47112,
       "levels": [
@@ -551,7 +551,7 @@
       ]
     },
     "grand-dorsal": {
-      "hash": "8f2f911c7e504e81",
+      "hash": "30f47085d0bd46d8",
       "source": "grand-dorsal.glb",
       "sourceBytes": 429588,
       "levels": [
@@ -573,7 +573,7 @@
       ]
     },
     "grand-droit-abdomen": {
-      "hash": "d8fab5d51ccca636",
+      "hash": "aba00f7aa70c9fcf",
       "source": "grand-droit-abdomen.glb",
       "sourceBytes": 486476,
       "levels": [
@@ -595,7 +595,7 @@
       ]
     },
     "humerus": {
-      "hash": "21dcb1db36d90111",
+      "hash": "4d311b8b52dff558",
       "source": "humerus.glb",
       "sourceBytes": 83100,
       "levels": [
@@ -617,7 +617,7 @@
       ]
     },
     "hypophyse": {
-      "hash": "b249163f040f2707",
+      "hash": "e8d8e5aed568ccd0",
       "source": "hypophyse.glb",
       "sourceBytes": 26324,
       "levels": [
@@ -639,7 +639,7 @@
       ]
     },
     "larynx": {
-      "hash": "b4fd9bb9d8002ea9",
+      "hash": "e83e247c03867cf6",
       "source": "larynx.glb",
       "sourceBytes": 462624,
       "levels": [
@@ -661,7 +661,7 @@
       ]
     },
     "mandibule": {
-      "hash": "502f4cedad6d9073",
+      "hash": "4081272cc3c8b1f6",
       "source": "mandibule.glb",
       "sourceBytes": 373736,
       "levels": [
@@ -683,7 +683,7 @@
       ]
     },
     "noeuds-lymphatiques": {
-      "hash": "d53491735ac70502",
+      "hash": "597c102d5f43fcbd",
       "source": "noeuds-lymphatiques.glb",
       "sourceBytes": 1270020,
       "levels": [
@@ -705,7 +705,7 @@
       ]
     },
     "oreille-interne": {
-      "hash": "0c2078d220fac410",
+      "hash": "75a51490ce0d0146",
       "source": "oreille-interne.glb",
       "sourceBytes": 187016,
       "levels": [
@@ -727,7 +727,7 @@
       ]
     },
     "os-coxal": {
-      "hash": "5b7e340838a4b753",
+      "hash": "0dce69d8f0fcbc9a",
       "source": "os-coxal.glb",
       "sourceBytes": 75292,
       "levels": [
@@ -749,7 +749,7 @@
       ]
     },
     "os-temporal": {
-      "hash": "a056ad2cdd6bec3f",
+      "hash": "b0ca5a76a4d287f3",
       "source": "os-temporal.glb",
       "sourceBytes": 263532,
       "levels": [
@@ -771,7 +771,7 @@
       ]
     },
     "osselets": {
-      "hash": "a1e37401a894799a",
+      "hash": "94e88fc209fc76c3",
       "source": "osselets.glb",
       "sourceBytes": 213548,
       "levels": [
@@ -793,7 +793,7 @@
       ]
     },
     "prostate": {
-      "hash": "0e2f32da24fc71ca",
+      "hash": "66d1fb91cc948b80",
       "source": "prostate.glb",
       "sourceBytes": 9600,
       "levels": [
@@ -815,7 +815,7 @@
       ]
     },
     "quadriceps": {
-      "hash": "6529745aaf18d291",
+      "hash": "491cad09681608eb",
       "source": "quadriceps.glb",
       "sourceBytes": 675996,
       "levels": [
@@ -837,7 +837,7 @@
       ]
     },
     "radius-ulna": {
-      "hash": "469d29cb38e0dca0",
+      "hash": "892d20fb682cbbf0",
       "source": "radius-ulna.glb",
       "sourceBytes": 37484,
       "levels": [
@@ -859,7 +859,7 @@
       ]
     },
     "rate": {
-      "hash": "e8a49732ffc592c7",
+      "hash": "567c0e98bec1b027",
       "source": "rate.glb",
       "sourceBytes": 25092,
       "levels": [
@@ -881,7 +881,7 @@
       ]
     },
     "sacrum": {
-      "hash": "a62b58e0fd162df3",
+      "hash": "e0772c5049f3f91b",
       "source": "sacrum.glb",
       "sourceBytes": 252252,
       "levels": [
@@ -903,7 +903,7 @@
       ]
     },
     "sternum": {
-      "hash": "2b049bb6ab082c65",
+      "hash": "ae10f5cb68619265",
       "source": "sternum.glb",
       "sourceBytes": 144236,
       "levels": [
@@ -925,7 +925,7 @@
       ]
     },
     "testicule": {
-      "hash": "4d43d3072d29b546",
+      "hash": "ccff537cd61a9388",
       "source": "testicule.glb",
       "sourceBytes": 25980,
       "levels": [
@@ -947,7 +947,7 @@
       ]
     },
     "thymus": {
-      "hash": "39fdcc45e75f6daf",
+      "hash": "79013bb196742841",
       "source": "thymus.glb",
       "sourceBytes": 283620,
       "levels": [
@@ -969,7 +969,7 @@
       ]
     },
     "thyroide": {
-      "hash": "727d60a097e7bbe9",
+      "hash": "50373b2832fb759f",
       "source": "thyroide.glb",
       "sourceBytes": 47964,
       "levels": [
@@ -991,7 +991,7 @@
       ]
     },
     "tibia-fibula": {
-      "hash": "4b92d0435f6da89e",
+      "hash": "75387aeff3db6458",
       "source": "tibia-fibula.glb",
       "sourceBytes": 59804,
       "levels": [
@@ -1013,7 +1013,7 @@
       ]
     },
     "trachee": {
-      "hash": "4789c78e8f36086f",
+      "hash": "303042234dd28db1",
       "source": "trachee.glb",
       "sourceBytes": 87252,
       "levels": [
@@ -1035,7 +1035,7 @@
       ]
     },
     "trapeze": {
-      "hash": "13004c018f2a196e",
+      "hash": "a72e281bc0917bd1",
       "source": "trapeze.glb",
       "sourceBytes": 432880,
       "levels": [
@@ -1057,7 +1057,7 @@
       ]
     },
     "triceps-sural": {
-      "hash": "470b5f16d30c09c4",
+      "hash": "79eaf2f5204d4591",
       "source": "triceps-sural.glb",
       "sourceBytes": 418072,
       "levels": [
@@ -1079,7 +1079,7 @@
       ]
     },
     "tronc-cerebral": {
-      "hash": "80a68608f3998647",
+      "hash": "25156fd1d76a6c69",
       "source": "tronc-cerebral.glb",
       "sourceBytes": 406676,
       "levels": [
@@ -1101,7 +1101,7 @@
       ]
     },
     "tronc-pulmonaire": {
-      "hash": "7570d0d2ec555a54",
+      "hash": "5c0f841586fcf133",
       "source": "tronc-pulmonaire.glb",
       "sourceBytes": 6104,
       "levels": [
@@ -1123,7 +1123,7 @@
       ]
     },
     "valves-cardiaques": {
-      "hash": "ef5c341ef8786af8",
+      "hash": "a656283023f664e0",
       "source": "valves-cardiaques.glb",
       "sourceBytes": 613096,
       "levels": [
@@ -1145,7 +1145,7 @@
       ]
     },
     "vertebre-cervicale": {
-      "hash": "500af8c7a6908e11",
+      "hash": "2099a9a7f1cd325c",
       "source": "vertebre-cervicale.glb",
       "sourceBytes": 218216,
       "levels": [
@@ -1167,7 +1167,7 @@
       ]
     },
     "vertebre-lombale": {
-      "hash": "ec47d60fc6a70d5f",
+      "hash": "7dd9fc04c8031aa4",
       "source": "vertebre-lombale.glb",
       "sourceBytes": 325080,
       "levels": [
@@ -1189,7 +1189,7 @@
       ]
     },
     "vesicule-biliaire": {
-      "hash": "9b7140ff6cd4849c",
+      "hash": "72a29aac3692fb26",
       "source": "vesicule-biliaire.glb",
       "sourceBytes": 14256,
       "levels": [
@@ -1211,7 +1211,7 @@
       ]
     },
     "vessie": {
-      "hash": "71ca51533accdbe0",
+      "hash": "103e71e6ca0600b8",
       "source": "vessie.glb",
       "sourceBytes": 55824,
       "levels": [
@@ -1231,9 +1231,31 @@
           "triangles": 252
         }
       ]
+    },
+    "arbre-bronchique": {
+      "hash": "ff3f3ce29e9b97f3",
+      "source": "arbre-bronchique.glb",
+      "sourceBytes": 800372,
+      "levels": [
+        {
+          "file": "arbre-bronchique.glb",
+          "bytes": 134920,
+          "triangles": 7156
+        },
+        {
+          "file": "arbre-bronchique-lod1.glb",
+          "bytes": 47128,
+          "triangles": 2326
+        },
+        {
+          "file": "arbre-bronchique-lod2.glb",
+          "bytes": 21576,
+          "triangles": 921
+        }
+      ]
     }
   },
-  "generatedAt": "2026-08-16T22:13:29.758Z",
+  "generatedAt": "2026-08-19T11:40:03.648Z",
   "levels": [
     {
       "index": 0,

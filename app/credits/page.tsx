@@ -116,9 +116,11 @@ export default function CreditsPage() {
               <b>Provenance à établir — {MODELES_A_TRACER.length} modèle(s).</b> Les premiers
               modèles du projet proviennent du dépôt dont celui-ci est issu, sans fichier de licence
               joint. Leur chaîne de droits n&apos;est donc pas établie, et nous ne leur attribuons
-              aucune licence que nous ne pouvons pas prouver. Ils sont en cours de remplacement par
-              des imports Z-Anatomy tracés. Signaler cette page comme complète alors qu&apos;elle ne
-              l&apos;est pas serait exactement le genre de fausse caution que ce projet refuse.
+              aucune licence que nous ne pouvons pas prouver. Huit des neuf ont depuis été remplacés
+              par des imports Z-Anatomy tracés ; le dernier subsiste parce que la source ouverte
+              retenue ne modélise pas cette structure — il sera remplacé ou retiré, pas requalifié.
+              Signaler cette page comme complète alors qu&apos;elle ne l&apos;est pas serait
+              exactement le genre de fausse caution que ce projet refuse.
             </p>
             <p>
               Concernés :{" "}

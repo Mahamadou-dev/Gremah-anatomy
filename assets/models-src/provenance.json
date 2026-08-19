@@ -54,44 +54,60 @@
   },
   "modeles": {
     "brain": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "~white matter of telencephalon + ~gyrus + Thalamus + Hypothalamus",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "68dee62b2e4e5516"
     },
     "eyeball": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "~eyeball",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "febdc27b9fe6fcd8"
     },
     "heart": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "Left atrium + Right atrium + Left ventricle + Right ventricle + ~papillary muscle",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "bea353f8a9f607a0"
     },
     "intestine": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "~colon + ~duodenum",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "9ef217ff4bb08477"
     },
     "kidneys": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "Kidney",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "ab6024721774b092"
     },
     "liver": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "~segment of liver",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "5dfe496d0987848a"
     },
     "lungs": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "~lobe of left lung + ~lobe of right lung",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "4004dec57cd8d036"
     },
     "pancreas": {
-      "source": "heritee-du-fork",
-      "identifiantOrigine": null,
-      "verifie": false
+      "source": "z-anatomy",
+      "identifiantOrigine": "Pancreas",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "999c352edcc3f094"
     },
     "skin": {
       "source": "heritee-du-fork",
@@ -361,8 +377,8 @@
       "source": "z-anatomy",
       "identifiantOrigine": "~colon",
       "verifie": true,
-      "importeLe": "2026-08-16",
-      "hashSource": "a5ff042155de48b8"
+      "importeLe": "2026-08-19",
+      "hashSource": "49fe3c9a10004548"
     },
     "glandes-salivaires": {
       "source": "z-anatomy",
@@ -426,6 +442,13 @@
       "verifie": true,
       "importeLe": "2026-08-16",
       "hashSource": "cd18a88911b692ea"
+    },
+    "arbre-bronchique": {
+      "source": "z-anatomy",
+      "identifiantOrigine": "Bronchial tree",
+      "verifie": true,
+      "importeLe": "2026-08-19",
+      "hashSource": "4004dec57cd8d036"
     }
   }
 }

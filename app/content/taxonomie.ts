@@ -456,7 +456,14 @@ export const SYSTEMES: Systeme[] = [
         nom: "Poumons",
         english: "Lungs",
         structures: [
-          { id: "lungs", nom: "Poumons", latin: "Pulmones", english: "Lungs", statut: "livree" },
+          {
+            id: "lungs",
+            nom: "Poumons",
+            latin: "Pulmones",
+            english: "Lungs",
+            statut: "livree",
+            sourceObjet: ["~lobe of left lung", "~lobe of right lung"],
+          },
           {
             id: "arbre-bronchique",
             nom: "Arbre bronchique",
@@ -523,13 +530,21 @@ export const SYSTEMES: Systeme[] = [
         nom: "Glandes annexes",
         english: "Accessory glands",
         structures: [
-          { id: "liver", nom: "Foie", latin: "Hepar", english: "Liver", statut: "livree" },
+          {
+            id: "liver",
+            nom: "Foie",
+            latin: "Hepar",
+            english: "Liver",
+            statut: "livree",
+            sourceObjet: ["~segment of liver"],
+          },
           {
             id: "pancreas",
             nom: "Pancréas",
             latin: "Pancreas",
             english: "Pancreas",
             statut: "livree",
+            sourceObjet: "Pancreas",
           },
           {
             id: "vesicule-biliaire",
@@ -626,6 +641,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Encephalon",
             english: "Brain",
             statut: "livree",
+            sourceObjet: ["~white matter of telencephalon", "~gyrus", "Thalamus", "Hypothalamus"],
           },
           {
             id: "lobe-frontal",
@@ -727,6 +743,7 @@ export const SYSTEMES: Systeme[] = [
             latin: "Bulbus oculi",
             english: "Eyeball",
             statut: "livree",
+            sourceObjet: ["~eyeball"],
           },
           {
             id: "appareil-lacrymal",
