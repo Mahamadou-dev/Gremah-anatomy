@@ -123,3 +123,20 @@ test("toute structure déclarée livrée a bien son modèle", () => {
   const manquants = STRUCTURES_LIVREES.filter((s) => !manifest.organs[s.id]).map((s) => s.id);
   assert.deepEqual(manquants, [], `déclarée(s) livrée(s) sans modèle : ${manquants.join(", ")}`);
 });
+
+test("deux structures ne partagent jamais le même objet source", () => {
+  // Une valeur dupliquée signifie qu'une édition a débordé d'une entrée sur sa
+  // voisine — c'est ainsi que l'arbre bronchique s'est retrouvé à pointer les
+  // poumons. Présenter un modèle pour un autre est une erreur anatomique, donc
+  // un bug bloquant (CLAUDE.md §8), et rien ne le signalait à l'œil nu.
+  const vus = new Map<string, string>();
+  const doublons: string[] = [];
+  for (const structure of STRUCTURES) {
+    if (!structure.sourceObjet) continue;
+    const signature = JSON.stringify([structure.sourceObjet].flat());
+    const premier = vus.get(signature);
+    if (premier) doublons.push(`${structure.id} et ${premier} → ${signature}`);
+    else vus.set(signature, structure.id);
+  }
+  assert.deepEqual(doublons, [], "objet(s) source partagé(s) entre structures");
+});
