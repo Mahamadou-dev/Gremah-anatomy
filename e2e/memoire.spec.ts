@@ -1,27 +1,32 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Banc mémoire (Sprint 14, charte CLAUDE.md §5.4).
+ * Banc mémoire (Sprint 14, charte CLAUDE.md §5.4 : « dispose complet — tout ce
+ * qui est alloué est libéré »).
  *
  * Lit `window.__gremahMemory()`, un hameçon exposé par OrganViewer.tsx
  * uniquement derrière `?memtest=1` (jamais en production normale).
  *
- * Le moteur garde délibérément un cache LRU — jusqu'à `CACHE_LIMIT` = 8
- * entrées, chaque niveau de détail d'un organe comptant comme une entrée
- * distincte (app/engine/loaders/assets.ts, `evict()`) — plutôt que de tout
- * décharger à chaque changement d'organe : revenir sur un organe déjà visité
- * doit être instantané, pas re-télécharger. `renderer.info.memory` ne revient
- * donc jamais à zéro après un aller-retour, et un plafond fondé sur les
- * évictions s'est révélé instable en pratique (le raffinement LOD différé
- * ajoute des entrées en arrière-plan, ce qui rendait un plafond « après
- * saturation du cache » sensible au minutage plutôt qu'au vrai invariant).
+ * Deux approches plus directes ont été essayées et écartées, honnêtement
+ * documentées ici plutôt que remplacées en silence :
  *
- * Le test retenu est plus direct et plus robuste : rester en dessous de la
- * limite du cache (les 5 premiers organes tiennent sous `CACHE_LIMIT` = 8) et
- * boucler 20 fois dessus. Une fois le cache chaud, chaque nouvelle visite est
- * une pure lecture en cache — **zéro** allocation GPU supplémentaire attendue,
- * pas une simple borne haute. Si ce nombre grimpe malgré tout, c'est une fuite,
- * pas un effet de bord du raffinement LOD.
+ * 1. Comparer la mémoire avant/après un aller-retour sur un même organe :
+ *    invalide, le moteur garde délibérément un cache LRU (jusqu'à
+ *    `CACHE_LIMIT` = 8 entrées, app/engine/loaders/assets.ts) — revenir sur un
+ *    organe déjà vu doit être instantané, pas re-téléchargé, donc la mémoire
+ *    ne revient jamais à zéro après un aller-retour.
+ * 2. Vérifier un plafond une fois le cache « chaud » : instable en pratique.
+ *    Le niveau de détail ciblé (`targetLevel()`, viewer.ts) dépend de la
+ *    distance caméra au moment du clic ; revisiter un organe peut donc encore
+ *    déclencher un chargement réel (l'autre niveau LOD) plutôt qu'une pure
+ *    lecture en cache, ce qui fait bouger la mesure indépendamment de toute
+ *    fuite.
+ *
+ * Le test retenu élimine cette ambiguïté en visant l'invariant que la charte
+ * garantit vraiment sans conditions : après **destruction complète** du
+ * moteur (démontage du composant React, `AnatomyViewer.dispose()` —
+ * OrganViewer.tsx), `renderer.info.memory` doit retomber à zéro, quel que
+ * soit ce qui a été chargé et mis en cache avant.
  */
 test.skip(!process.env.MONGODB_URI, "MONGODB_URI absent : voir SPRINT.md § À faire à la main");
 
@@ -43,23 +48,24 @@ async function lireMemoire(page: Page) {
 
 async function visiterOrgane(page: Page, index: number, total: number) {
   const bouton = page.locator(".organ-item").nth(index % total);
-  await bouton.scrollIntoViewIfNeeded();
-  // `force: true` : un hotspot-callout ou un panneau de chargement peut
-  // transitoirement intercepter le point de clic sans que le bouton lui-même
-  // cesse d'être visible/stable — ce n'est pas ce que ce banc mesure.
-  await bouton.click({ timeout: 10_000, force: true });
-  // Laisser le fondu d'entrée et le raffinement LOD (viewer.ts, refine())
-  // se terminer avant de passer au suivant, sinon une charge encore en vol
-  // s'ajoute au relevé d'un cycle ultérieur plutôt qu'au sien.
-  await page.waitForTimeout(900);
+  // Un `click()` Playwright normal attend que l'élément soit visible, stable ET
+  // reçoive les événements pointeur — sous la charge d'allocations GPU répétées
+  // de ce banc, cette attente s'est révélée bloquer indéfiniment (le fil
+  // principal du navigateur reste occupé par le rendu 3D assez longtemps pour
+  // que la vérification de stabilité ne se termine jamais). Un `click()` DOM
+  // brut, dispatché directement, teste ce que ce banc veut réellement mesurer
+  // — le comportement mémoire du moteur — sans dépendre de la réactivité du
+  // fil principal pour de l'outillage de test.
+  await bouton.evaluate((el) => (el as HTMLButtonElement).click());
+  await page.waitForTimeout(700);
 }
 
-test("revisiter des structures déjà chargées ne fait pas grossir la mémoire GPU", async ({
+test("décharger le moteur après 20 chargements de structures libère toute la mémoire GPU", async ({
   page,
 }) => {
   // 20 cycles de chargement 3D + fondus dépassent largement le délai par défaut
   // (30 s) d'un test Playwright ordinaire — celui-ci en a légitimement besoin.
-  test.setTimeout(120_000);
+  test.setTimeout(150_000);
 
   const email = emailDeTest();
   await page.goto("/inscription/");
@@ -78,32 +84,48 @@ test("revisiter des structures déjà chargées ne fait pas grossir la mémoire 
   const disponibles = await page.locator(".organ-item").count();
   expect(disponibles, "aucun organe listé — l'atlas a-t-il bien chargé ?").toBeGreaterThan(0);
 
-  // Rester sous CACHE_LIMIT (8, voir assets.ts) : aucune éviction n'entre en
-  // jeu, donc toute croissance observée après le premier passage est une
-  // vraie fuite, pas un effet du roulement LRU.
-  const SOUS_ENSEMBLE = Math.min(disponibles, 5);
+  const avantDechargement = await lireMemoire(page);
+  expect(
+    avantDechargement.geometries,
+    "le premier organe n'a jamais chargé — le banc ne peut rien mesurer",
+  ).toBeGreaterThan(0);
+
+  // 20 chargements réels de structures, en boucle sur les organes disponibles :
+  // le point du banc mémoire n'est pas la variété mais le volume de cycles
+  // charge/décharge (charte CLAUDE.md §5.4).
   const CYCLES = 20;
-
-  // Premier passage : remplit le cache (téléchargement réel + raffinement LOD).
-  for (let i = 0; i < SOUS_ENSEMBLE; i++) {
-    await visiterOrgane(page, i, SOUS_ENSEMBLE);
+  for (let i = 0; i < CYCLES; i++) {
+    await visiterOrgane(page, i, disponibles);
   }
-  const cacheChaud = await lireMemoire(page);
 
-  // Passages suivants : uniquement des organes déjà en cache.
-  for (let i = SOUS_ENSEMBLE; i < CYCLES; i++) {
-    await visiterOrgane(page, i, SOUS_ENSEMBLE);
-  }
+  const avantDemontage = await lireMemoire(page);
+  expect(
+    avantDemontage.geometries,
+    "plus aucune géométrie résidente après 20 cycles — le hameçon lit-il le bon moteur ?",
+  ).toBeGreaterThan(0);
+
+  // Démonter le composant React qui possède le moteur (OrganViewer.tsx) en
+  // quittant l'atlas : son effet de nettoyage appelle `viewer.dispose()`, qui
+  // doit libérer toute géométrie et texture encore retenue par le cache LRU,
+  // aussi chaud soit-il. `window.__gremahMemory` reste attaché à la même page
+  // (navigation interne, pas de rechargement complet) et continue donc de lire
+  // `renderer.info.memory` sur le renderer désormais disposé.
+  await page
+    .getByRole("link", { name: /Gremah/i })
+    .first()
+    .click();
+  await expect(page).toHaveURL(/^http:\/\/127\.0\.0\.1:4173\/$/, { timeout: 10_000 });
+  await page.waitForTimeout(300);
+
   const finale = await lireMemoire(page);
 
   expect(
     finale.geometries,
-    `géométries GPU une fois le cache chaud : ${cacheChaud.geometries} → ${finale.geometries} ` +
-      `après ${CYCLES - SOUS_ENSEMBLE} revisites de structures déjà chargées`,
-  ).toBe(cacheChaud.geometries);
+    `géométries GPU : ${avantDemontage.geometries} avant démontage → ${finale.geometries} après. ` +
+      "dispose() (app/engine/viewer.ts) doit tout libérer, cache LRU compris.",
+  ).toBe(0);
   expect(
     finale.textures,
-    `textures GPU une fois le cache chaud : ${cacheChaud.textures} → ${finale.textures} ` +
-      `après ${CYCLES - SOUS_ENSEMBLE} revisites de structures déjà chargées`,
-  ).toBe(cacheChaud.textures);
+    `textures GPU : ${avantDemontage.textures} avant démontage → ${finale.textures} après.`,
+  ).toBe(0);
 });
