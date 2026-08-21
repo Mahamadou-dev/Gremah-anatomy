@@ -232,7 +232,8 @@
   font-weight: 500;
 }
 
-.account-badge button {
+.account-badge button,
+.account-badge a {
   display: grid;
   place-items: center;
   width: 28px;
@@ -247,7 +248,8 @@
     background 0.2s ease;
 }
 
-.account-badge button:hover {
+.account-badge button:hover,
+.account-badge a:hover {
   color: var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
@@ -272,4 +274,47 @@
   .field-with-button button {
     transition: none;
   }
+}
+
+/* ============================================================================
+   PROFIL — cycle de vie du compte (Sprint 13)
+   Une colonne, pas deux : il n'y a plus rien à convaincre une fois connecté.
+   ========================================================================= */
+
+.profile-page {
+  flex: 1;
+  display: grid;
+  gap: clamp(20px, 4vw, 32px);
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(32px, 7vh, 64px) var(--gutter);
+}
+
+.profile-section {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.profile-section h2 {
+  margin: 0;
+  font:
+    500 20px var(--font-serif),
+    serif;
+  color: var(--text);
+}
+
+.profile-section p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.profile-danger {
+  border-color: color-mix(in srgb, var(--ng-orange) 35%, var(--line-soft));
 }

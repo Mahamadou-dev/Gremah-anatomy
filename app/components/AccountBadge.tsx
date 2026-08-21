@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import Link from "next/link";
+import { LogOut, UserRound } from "lucide-react";
 import type { ProfilPublic } from "../lib/compte";
 
 /**
@@ -51,6 +52,9 @@ export function AccountBadge() {
   return (
     <p className="account-badge">
       <span>Bonjour</span> <b>{profil.prenom}</b>
+      <Link href="/profil/" aria-label="Mon profil" title="Mon profil">
+        <UserRound size={14} aria-hidden="true" />
+      </Link>
       <button
         type="button"
         onClick={seDeconnecter}
