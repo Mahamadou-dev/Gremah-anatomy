@@ -8,10 +8,12 @@ import {
   normaliserEmail,
   validerConnexion,
   validerInscription,
+  validerModification,
   LONGUEUR_MIN_MOT_DE_PASSE,
   PAYS,
   REGIONS_NIGER,
   type Inscription,
+  type ModificationProfil,
 } from "../app/lib/compte.ts";
 import {
   evaluer,
@@ -83,6 +85,48 @@ test("les listes pays/régions couvrent le public visé", () => {
   }
 });
 
+/* --- Modification de profil (Sprint 13) ------------------------------------- */
+
+const PROFIL_VALIDE: ModificationProfil = {
+  prenom: VALIDE.prenom,
+  nom: VALIDE.nom,
+  pays: VALIDE.pays,
+  region: VALIDE.region,
+  nouveauMotDePasse: "",
+  motDePasseActuel: "",
+};
+
+test("une modification de profil sans nouveau mot de passe passe", () => {
+  assert.ok(estValide(validerModification(PROFIL_VALIDE, VALIDE.email)));
+});
+
+test("un nouveau mot de passe exige le mot de passe actuel", () => {
+  const erreurs = validerModification(
+    { ...PROFIL_VALIDE, nouveauMotDePasse: "un-nouveau-mot-de-passe-long" },
+    VALIDE.email,
+  );
+  assert.ok(erreurs.motDePasseActuel);
+});
+
+test("le nouveau mot de passe reste soumis aux mêmes règles qu'à l'inscription", () => {
+  const erreurs = validerModification(
+    {
+      ...PROFIL_VALIDE,
+      nouveauMotDePasse: "court",
+      motDePasseActuel: "peu-importe",
+    },
+    VALIDE.email,
+  );
+  assert.ok(erreurs.nouveauMotDePasse);
+});
+
+test("le prénom et le nom restent obligatoires à la modification", () => {
+  for (const champ of ["prenom", "nom", "pays", "region"] as const) {
+    const erreurs = validerModification({ ...PROFIL_VALIDE, [champ]: "" }, VALIDE.email);
+    assert.ok(erreurs[champ], `le champ « ${champ} » est accepté vide`);
+  }
+});
+
 /* --- Limitation de débit ---------------------------------------------------- */
 
 test("en dessous des plafonds, la tentative passe", () => {
@@ -142,6 +186,15 @@ test("la connexion contrôle le débit avant de hacher", () => {
   // scrypt coûte ~100 ms et 32 Mo : le faire avant le contrôle offrirait à
   // l'attaquant exactement le calcul qu'il cherche à nous faire répéter.
   assert.ok(positionLimite < positionHachage, "le hachage précède le contrôle de débit");
+});
+
+test("la suppression de compte efface aussi ses compteurs de débit", () => {
+  // Garde-fou du Sprint 13 : un compte supprimé sans que ses compteurs le
+  // soient resterait bloqué jusqu'à expiration TTL si l'adresse était réutilisée
+  // tout de suite après — exactement ce que §13 du Suivi promet de régler.
+  const route = fichiers("app/api").find((f) => f.chemin.endsWith("compte/supprimer/route.ts"))!;
+  assert.match(route.code, /effacerToutPour/);
+  assert.match(route.code, /verifier\(saisie\.motDePasse/, "la suppression exige le mot de passe");
 });
 
 /* --- Invariants de sécurité ------------------------------------------------

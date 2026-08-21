@@ -8,7 +8,9 @@ export function SiteFooter() {
         <strong>{BRAND.name}</strong>
         <small>
           par {BRAND.author} · <Link href="/a-propos/">À propos</Link> ·{" "}
-          <Link href="/sources/">Sources</Link> · <Link href="/credits/">Crédits</Link>
+          <Link href="/sources/">Sources</Link> · <Link href="/credits/">Crédits</Link> ·{" "}
+          <Link href="/confidentialite/">Confidentialité</Link> ·{" "}
+          <Link href="/mentions-legales/">Mentions légales</Link> · <Link href="/cgu/">CGU</Link>
         </small>
       </div>
 

@@ -114,3 +114,14 @@ export async function verifierCreation(ip: string): Promise<Verdict> {
 export async function enregistrerCreation(ip: string): Promise<void> {
   await (await collection()).insertOne({ cle: `creation:${ip}`, horodatage: new Date() });
 }
+
+/**
+ * Efface tout compteur lié à un email lors de la suppression d'un compte.
+ *
+ * Le compteur par IP n'est pas de son ressort : il ne porte pas cette adresse,
+ * et le laisser vivre jusqu'à expiration TTL n'avantage ni ne pénalise personne
+ * une fois le compte parti.
+ */
+export async function effacerToutPour(email: string): Promise<void> {
+  await (await collection()).deleteMany({ cle: `email:${email}` });
+}
