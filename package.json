@@ -26,6 +26,7 @@
     "anatomie:blender": "node --experimental-strip-types scripts/anatomie-blender.mjs",
     "anatomie:import": "node --experimental-strip-types scripts/import-anatomie.mjs",
     "test": "node --experimental-strip-types --test \"tests/**/*.test.mts\"",
+    "e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -42,6 +43,7 @@
     "@gltf-transform/core": "^4.4.2",
     "@gltf-transform/extensions": "^4.4.2",
     "@gltf-transform/functions": "^4.4.2",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",

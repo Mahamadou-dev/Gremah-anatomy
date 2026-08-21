@@ -61,6 +61,41 @@ jobs:
           done
         shell: bash
 
+  # Sprint 14 : le livrable de ce sprint est cette chaîne elle-même — jusqu'ici
+  # rien ne lançait l'application dans un vrai navigateur, un écran noir ou un
+  # parcours d'inscription cassé sortaient donc sans qu'aucun garde-fou bronche.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: Playwright (smoke + parcours de compte)
+        run: npm run e2e
+        env:
+          # Tant que ces deux secrets ne sont pas posés côté dépôt GitHub
+          # (Settings → Secrets → Actions), les tests de e2e/comptes.spec.ts
+          # se sautent proprement — voir SPRINT.md, « À faire à la main » — et
+          # seuls les smokes publics de e2e/smoke.spec.ts tournent.
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_DB: ${{ secrets.MONGODB_DB }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
   # Auditer les dépendances sépare deux échecs qui ne se traitent pas pareil :
   # une régression du code se corrige dans la PR, une faille amont se planifie.
   audit:
