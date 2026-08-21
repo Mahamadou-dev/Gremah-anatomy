@@ -96,6 +96,33 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
+  # Sprint 14, point 5 : un budget de performance mesuré, pas supposé
+  # (CLAUDE.md §5.3). `/atlas/` redirige vers `/connexion/` sans les secrets de
+  # compte (voir lighthouserc.cjs) — c'est donc cette page qui est mesurée pour
+  # l'instant, honnêtement documentée comme telle plutôt que retirée.
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npm run lighthouse
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 14
+
   # Auditer les dépendances sépare deux échecs qui ne se traitent pas pareil :
   # une régression du code se corrige dans la PR, une faille amont se planifie.
   audit:

@@ -27,6 +27,7 @@
     "anatomie:import": "node --experimental-strip-types scripts/import-anatomie.mjs",
     "test": "node --experimental-strip-types --test \"tests/**/*.test.mts\"",
     "e2e": "playwright test",
+    "lighthouse": "lhci autorun",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -40,9 +41,11 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@gltf-transform/core": "^4.4.2",
     "@gltf-transform/extensions": "^4.4.2",
     "@gltf-transform/functions": "^4.4.2",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",

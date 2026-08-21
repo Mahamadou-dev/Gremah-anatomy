@@ -194,6 +194,15 @@ export class AnatomyViewer {
     callbacks.onReady?.(this.status);
   }
 
+  /**
+   * Mémoire GPU actuellement retenue par le backend. Réservé au banc mémoire
+   * du Sprint 14 (e2e/memoire.spec.ts) et à l'overlay `?debug=1` — jamais
+   * utilisé pour piloter une décision du moteur lui-même.
+   */
+  get memoryInfo() {
+    return this.renderer.info.memory;
+  }
+
   get status(): EngineStatus {
     return {
       backend: this.renderer.backend,
