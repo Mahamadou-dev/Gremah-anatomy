@@ -1043,15 +1043,15 @@ Ces points ne se lèvent pas en écrivant du code : ils demandent un geste humai
 un compte externe ou une décision. Tant qu'ils tiennent, la file avance à vide.
 Le détail des gestes attendus est en fin de fichier, **À faire à la main**.
 
-| Blocage                                            | Sprint | Nature                                             |
-| -------------------------------------------------- | ------ | -------------------------------------------------- |
-| 69 structures sur 78 n'ont pas de modèle           | 12     | 🔒 Manuel — export Blender depuis Z-Anatomy        |
-| Les 9 modèles actuels n'ont pas de licence établie | 12     | ⚠️ Juridique — l'atlas n'est pas rediffusable      |
-| Aucun envoi d'email possible                       | 13     | 🔒 Compte externe à ouvrir, coût à assumer         |
-| `main` n'est pas protégé côté GitHub               | tous   | 🔒 Réglage de dépôt — le rituel repose dessus      |
-| Aucun Android d'entrée de gamme pour mesurer       | 17, 21 | 🔒 Matériel — le critère du §5.2 reste théorique   |
-| Zarma absent du glossaire                          | 15     | 🔒 Humain — inventer un terme serait pire que rien |
-| Aucun relecteur enseignant identifié               | 27     | 🔒 Humain — à recruter bien avant le sprint 27     |
+| Blocage                                                    | Sprint | Nature                                                                                            |
+| ---------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| 21 structures sur 78 n'ont pas de modèle                   | 12     | 🔒 Manuel — arbitrer `sourceObjet`, puis export Blender depuis Z-Anatomy                          |
+| Le modèle `skin` hérité du fork n'a pas de licence établie | 12     | ⚠️ Juridique — les 8 autres modèles hérités sont retracés vers Z-Anatomy (CC BY-SA), reste `skin` |
+| Aucun envoi d'email possible                               | 13     | 🔒 Compte externe à ouvrir, coût à assumer                                                        |
+| `main` n'est pas protégé côté GitHub                       | tous   | 🔒 Réglage de dépôt — le rituel repose dessus                                                     |
+| Aucun Android d'entrée de gamme pour mesurer               | 17, 21 | 🔒 Matériel — le critère du §5.2 reste théorique                                                  |
+| Zarma absent du glossaire                                  | 15     | 🔒 Humain — inventer un terme serait pire que rien                                                |
+| Aucun relecteur enseignant identifié                       | 27     | 🔒 Humain — à recruter bien avant le sprint 27                                                    |
 
 ---
 
@@ -1063,34 +1063,34 @@ Le détail des gestes attendus est en fin de fichier, **À faire à la main**.
 > la file** — jamais laissé flotter. Se mentir ici coûte plus cher que le retard
 > qu'on cherche à masquer.
 >
-> **Dernière vérification :** 13 août 2026. Sprint en cours : **12**.
+> **Dernière vérification :** 21 août 2026. Sprint en cours : **12**.
 
-| Sprint | État        | Branche                  | Notes                                                                                                                                       |
-| ------ | ----------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0      | ✅ terminé  | `sprint-0/fondations`    | Purge, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.                                                  |
-| 1      | 🟨 partiel  | `sprint-1/moteur-v2`     | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils, CameraRig, overlay `?debug=1`. Reste TSL et compute → Sprint 17.                   |
-| 2      | ✅ terminé  | `sprint-2/assets`        | 28,6 Mo → 12,7 Mo sur 3 LOD, décodeurs câblés, budget mémoire en octets, streaming progressif.                                              |
-| 3      | 🟨 partiel  | `fusionné dans `main``   | Tissus translucides, rayon X, fantôme, bloom, grain/vignette, halo solaire. Reste SSAO, DOF, contour → Sprint 17.                           |
-| 5      | 🟨 partiel  | `fusionné dans `main``   | FR langue source, 28 champs/organe, 16 sources, ancrage Niger. Reste : structures → Sprint 12, anglais → Sprint 15.                         |
-| 10     | 🟨 partiel  | `fusionné dans `main``   | Vercel, Open Graph, JSON-LD, `prefers-reduced-motion`. Reste onboarding, WCAG AA, Lighthouse, sitemap → Sprint 27.                          |
-| 11     | 🟨 partiel  | `fusionné dans `main``   | Vitrine 3D, `/atlas/`, contact, comptes Atlas (scrypt + HMAC), limitation de débit. Reste le cycle de vie du compte → Sprint 13.            |
-| 12     | 🟨 en cours | `sprint-12/bibliotheque` | Taxonomie 78 structures, provenance + test bloquant, budget par structure, `anatomie:import`, `/credits`. **Reste : importer les modèles.** |
-| 13     | ⬜ à faire  | `sprint-13/compte`       | Récupération, vérification d'adresse, suppression, export, pages légales.                                                                   |
-| 14     | ⬜ à faire  | `sprint-14/e2e`          | Playwright, captures 3D de référence, Lighthouse et axe-core en CI, banc mémoire.                                                           |
-| 15     | ⬜ à faire  | `sprint-15/bilingue`     | Schéma `{fr, en}`, routes par langue, test de complétude, glossaire haoussa/zarma.                                                          |
-| 16     | ⬜ à faire  | `sprint-16/interaction`  | Coupes avec capping, écorché, mesure, hotspots v2, navigation clavier.                                                                      |
-| 17     | ⬜ à faire  | `sprint-17/moteur-solde` | Pile TSL réelle, compute, SSAO, DOF, contour, budget frame chiffré.                                                                         |
-| 18     | ⬜ à faire  | `sprint-18/physiologie`  | Cœur battant, flux sanguin, respiration, chronologie scrubable.                                                                             |
-| 19     | ⬜ à faire  | `sprint-19/corps-entier` | Scène corps complet, routes `/systemes/[slug]`, voisinage, boussole.                                                                        |
-| 20     | ⬜ à faire  | `sprint-20/revision`     | Quiz 3D, flashcards SRS, mode examen, progression par système.                                                                              |
-| 21     | ⬜ à faire  | `sprint-21/offline`      | PWA, service worker, packs par système, mode data-light.                                                                                    |
-| 22     | ⬜ à faire  | `sprint-22/accueil-v2`   | Direction artistique écrite d'abord, scène signature, thème clair conçu.                                                                    |
-| 23     | ⬜ à faire  | `sprint-23/apprendre`    | Parcours guidés, vérification sur le modèle, carnet, comparaison.                                                                           |
-| 24     | ⬜ à faire  | `sprint-24/rayonnement`  | SEO bilingue par structure, partage, signalement d'erreur en un clic.                                                                       |
-| 25     | ⬜ à faire  | `sprint-25/exploitation` | Journaux, suivi d'erreurs, disponibilité, sauvegarde restaurée, coûts.                                                                      |
-| 26     | ⬜ à faire  | `sprint-26/portabilite`  | Build « atlas seul », mode enseignant, distribution hors ligne.                                                                             |
-| 27     | ⬜ à faire  | `sprint-27/v1`           | Relecture enseignante, traçabilité, audit WCAG AA et Lighthouse, v1.0.                                                                      |
-| 28     | ⬜ à faire  | `sprint-28/passation`    | Schémas d'architecture, ADR, gouvernance du contenu, continuité d'accès.                                                                    |
+| Sprint | État        | Branche                  | Notes                                                                                                                                                                                                                                                                                                                                  |
+| ------ | ----------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0      | ✅ terminé  | `sprint-0/fondations`    | Purge, thème Niger, marque + og/icônes, CI, CONTRIBUTING, Prettier, dépôt détaché du fork.                                                                                                                                                                                                                                             |
+| 1      | 🟨 partiel  | `sprint-1/moteur-v2`     | `app/engine/` découpé, WebGPU + repli WebGL2, 3 profils, CameraRig, overlay `?debug=1`. Reste TSL et compute → Sprint 17.                                                                                                                                                                                                              |
+| 2      | ✅ terminé  | `sprint-2/assets`        | 28,6 Mo → 12,7 Mo sur 3 LOD, décodeurs câblés, budget mémoire en octets, streaming progressif.                                                                                                                                                                                                                                         |
+| 3      | 🟨 partiel  | `fusionné dans `main``   | Tissus translucides, rayon X, fantôme, bloom, grain/vignette, halo solaire. Reste SSAO, DOF, contour → Sprint 17.                                                                                                                                                                                                                      |
+| 5      | 🟨 partiel  | `fusionné dans `main``   | FR langue source, 28 champs/organe, 16 sources, ancrage Niger. Reste : structures → Sprint 12, anglais → Sprint 15.                                                                                                                                                                                                                    |
+| 10     | 🟨 partiel  | `fusionné dans `main``   | Vercel, Open Graph, JSON-LD, `prefers-reduced-motion`. Reste onboarding, WCAG AA, Lighthouse, sitemap → Sprint 27.                                                                                                                                                                                                                     |
+| 11     | 🟨 partiel  | `fusionné dans `main``   | Vitrine 3D, `/atlas/`, contact, comptes Atlas (scrypt + HMAC), limitation de débit. Reste le cycle de vie du compte → Sprint 13.                                                                                                                                                                                                       |
+| 12     | 🟨 en cours | `sprint-12/bibliotheque` | Taxonomie 78 structures, provenance + test bloquant, budget par structure, `anatomie:import`, `/credits`. **57/78 structures livrées** (statut corrigé pour refléter les modèles déjà importés). **Reste : arbitrer `sourceObjet` pour 21 structures**, et re-exporter ou trancher le sort des 9 modèles hérités sans licence établie. |
+| 13     | ⬜ à faire  | `sprint-13/compte`       | Récupération, vérification d'adresse, suppression, export, pages légales.                                                                                                                                                                                                                                                              |
+| 14     | ⬜ à faire  | `sprint-14/e2e`          | Playwright, captures 3D de référence, Lighthouse et axe-core en CI, banc mémoire.                                                                                                                                                                                                                                                      |
+| 15     | ⬜ à faire  | `sprint-15/bilingue`     | Schéma `{fr, en}`, routes par langue, test de complétude, glossaire haoussa/zarma.                                                                                                                                                                                                                                                     |
+| 16     | ⬜ à faire  | `sprint-16/interaction`  | Coupes avec capping, écorché, mesure, hotspots v2, navigation clavier.                                                                                                                                                                                                                                                                 |
+| 17     | ⬜ à faire  | `sprint-17/moteur-solde` | Pile TSL réelle, compute, SSAO, DOF, contour, budget frame chiffré.                                                                                                                                                                                                                                                                    |
+| 18     | ⬜ à faire  | `sprint-18/physiologie`  | Cœur battant, flux sanguin, respiration, chronologie scrubable.                                                                                                                                                                                                                                                                        |
+| 19     | ⬜ à faire  | `sprint-19/corps-entier` | Scène corps complet, routes `/systemes/[slug]`, voisinage, boussole.                                                                                                                                                                                                                                                                   |
+| 20     | ⬜ à faire  | `sprint-20/revision`     | Quiz 3D, flashcards SRS, mode examen, progression par système.                                                                                                                                                                                                                                                                         |
+| 21     | ⬜ à faire  | `sprint-21/offline`      | PWA, service worker, packs par système, mode data-light.                                                                                                                                                                                                                                                                               |
+| 22     | ⬜ à faire  | `sprint-22/accueil-v2`   | Direction artistique écrite d'abord, scène signature, thème clair conçu.                                                                                                                                                                                                                                                               |
+| 23     | ⬜ à faire  | `sprint-23/apprendre`    | Parcours guidés, vérification sur le modèle, carnet, comparaison.                                                                                                                                                                                                                                                                      |
+| 24     | ⬜ à faire  | `sprint-24/rayonnement`  | SEO bilingue par structure, partage, signalement d'erreur en un clic.                                                                                                                                                                                                                                                                  |
+| 25     | ⬜ à faire  | `sprint-25/exploitation` | Journaux, suivi d'erreurs, disponibilité, sauvegarde restaurée, coûts.                                                                                                                                                                                                                                                                 |
+| 26     | ⬜ à faire  | `sprint-26/portabilite`  | Build « atlas seul », mode enseignant, distribution hors ligne.                                                                                                                                                                                                                                                                        |
+| 27     | ⬜ à faire  | `sprint-27/v1`           | Relecture enseignante, traçabilité, audit WCAG AA et Lighthouse, v1.0.                                                                                                                                                                                                                                                                 |
+| 28     | ⬜ à faire  | `sprint-28/passation`    | Schémas d'architecture, ADR, gouvernance du contenu, continuité d'accès.                                                                                                                                                                                                                                                               |
 
 ---
 
@@ -1111,14 +1111,17 @@ geste fait trop tard arrête la file, un geste fait tôt ne coûte rien.
 - **Plus rien à télécharger ni à manipuler.** La source (83 Mo) est récupérée par
   `npm run anatomie:blender -- --telecharger`, et l'export Blender tourne sans
   interface. Procédure : **[docs/import-zanatomy.md](docs/import-zanatomy.md)**.
-- Reste à arbitrer, structure par structure : **31 des 78 ne trouvent pas leur
-  objet** dans la source (nom différent, ou absent du modèle). Chaque cas se
-  règle en posant `sourceObjet` dans la taxonomie — un choix anatomique, pas une
-  manipulation 3D.
-- **Trancher le sort des neuf modèles hérités.** Leur licence est inconnue, donc
-  l'atlas n'est pas rediffusable aujourd'hui. Le plus simple est de les
-  ré-exporter depuis Z-Anatomy comme les autres : cela règle la question au lieu
-  de la documenter.
+- **57 des 78 structures sont livrées** — le champ `statut` de la taxonomie a été
+  corrigé pour refléter les modèles déjà importés, il n'était pas à jour avec le
+  travail réel. Reste à arbitrer, structure par structure : **21 des 78 ne
+  trouvent pas leur objet** dans la source (nom différent, ou absent du modèle).
+  Chaque cas se règle en posant `sourceObjet` dans la taxonomie — un choix
+  anatomique, pas une manipulation 3D.
+- **Huit des neuf modèles hérités sont retracés vers Z-Anatomy** (licence
+  CC BY-SA établie). **Reste `skin`** : sa provenance dans
+  `assets/models-src/provenance.json` est encore `"heritee-du-fork"`,
+  `verifie: false` — soit on lui trouve un équivalent Z-Anatomy, soit on le
+  retire de l'atlas tant que sa licence n'est pas établie.
 - Rédiger la fiche de contenu de chaque structure importée. C'est le travail de
   fond du projet, et il n'a pas de raccourci.
 
