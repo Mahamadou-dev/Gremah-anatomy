@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import { AuthForm } from "./AuthForm";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
 import { BRAND, DISCLAIMER } from "../lib/brand";
 
 /**
@@ -34,6 +35,7 @@ export function AuthShell({
         </Link>
         <div className="landing-nav-actions">
           <ThemeToggle />
+          <LanguageToggle />
           <Link href="/" className="btn-ghost btn-compact">
             <ArrowLeft size={14} aria-hidden="true" /> Accueil
           </Link>

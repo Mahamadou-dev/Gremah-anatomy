@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { BRAND, SITE_URL } from "./lib/brand";
+import { LanguageProvider } from "./components/LanguageProvider";
 
 const sans = DM_Sans({
   variable: "--font-sans",
@@ -30,6 +31,14 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   applicationName: "Gremah Anatomy",
+  // Sprint 15 : le contenu bascule FR/EN côté client (LanguageProvider), pas
+  // par préfixe d'URL — voir SPRINT.md, « reste » du sprint. `hreflang`
+  // pointe donc les deux langues vers la même URL : c'est une déclaration
+  // honnête (« ce contenu existe dans ces deux langues ici »), pas une
+  // promesse de route dédiée.
+  alternates: {
+    languages: { fr: SITE_URL, en: SITE_URL, "x-default": SITE_URL },
+  },
   authors: [{ name: BRAND.author, url: BRAND.site }],
   creator: BRAND.author,
   publisher: BRAND.author,
@@ -113,7 +122,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${sans.variable} ${serif.variable}`}>{children}</body>
+      <body className={`${sans.variable} ${serif.variable}`}>
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }
