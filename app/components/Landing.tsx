@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
 import {
   ArrowRight,
@@ -15,7 +16,6 @@ import {
   Sparkles,
   WifiOff,
 } from "lucide-react";
-import { HeroCanvas } from "./HeroCanvas";
 import { ContactForm } from "./ContactForm";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
@@ -23,6 +23,28 @@ import { useReveal } from "../lib/use-reveal";
 import { BRAND, DISCLAIMER } from "../lib/brand";
 import { organs } from "../content/organes";
 import { SOURCES } from "../content/sources";
+
+/**
+ * Le moteur 3D (`HeroCanvas` → `engine/scenes/hero.ts` → three.js entier) pèse
+ * l'essentiel du JS de la page d'accueil. Importé statiquement, il était
+ * exécuté avant même le premier paint et dominait le TBT/LCP mesurés par
+ * Lighthouse sur un CPU de CI partagé (score Performance 0.68). `next/dynamic`
+ * avec `ssr:false` sort ce code du bundle initial de `/` : il n'est chargé et
+ * exécuté qu'après l'hydratation, une fois le texte et le HTML déjà visibles.
+ * Le repli affiché pendant le chargement reprend le poster statique de
+ * `HeroCanvas` (halo + libellé) pour qu'il n'y ait aucun saut visuel (CLS).
+ */
+const HeroCanvas = dynamic(() => import("./HeroCanvas").then((mod) => mod.HeroCanvas), {
+  ssr: false,
+  loading: () => (
+    <div className="hero-canvas" data-ready={false} data-failed={false}>
+      <div className="hero-poster" aria-hidden={false}>
+        <span className="hero-poster-halo" />
+        <span className="hero-poster-label">Préparation de la scène…</span>
+      </div>
+    </div>
+  ),
+});
 
 const PILIERS = [
   {

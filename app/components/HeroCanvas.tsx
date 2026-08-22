@@ -25,7 +25,25 @@ export function HeroCanvas() {
       onFailure: () => setFailed(true),
     });
     sceneRef.current = scene;
-    void scene.start();
+
+    // `requestIdleCallback` (repli : un court `setTimeout`) plutôt qu'un appel
+    // direct : ce composant est déjà chargé paresseusement (voir Landing.tsx),
+    // mais créer le renderer WebGL/WebGPU et démarrer le chargement des
+    // modèles reste le morceau de JS le plus coûteux de la page. Le repousser
+    // d'un tour laisse le thread principal finir l'hydratation et devenir
+    // interactif avant de payer ce coût — ça ne retarde le rendu de la scène
+    // que de quelques millisecondes, invisibles derrière le poster.
+    const idle =
+      typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback
+        : (cb: () => void) => window.setTimeout(cb, 1);
+    const cancelIdle =
+      typeof window.cancelIdleCallback === "function"
+        ? window.cancelIdleCallback
+        : window.clearTimeout;
+    const idleHandle = idle(() => {
+      if (sceneRef.current === scene) void scene.start();
+    });
 
     const onPointerMove = (event: PointerEvent) => {
       // Parallaxe relative à la fenêtre et non au canvas : le héros continue de
@@ -47,6 +65,7 @@ export function HeroCanvas() {
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
+      cancelIdle(idleHandle as number);
       scene.dispose();
       sceneRef.current = null;
     };
