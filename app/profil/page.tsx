@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import { ProfileForm } from "../components/ProfileForm";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { LanguageToggle } from "../components/LanguageToggle";
 import { BRAND } from "../lib/brand";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function ProfilPage() {
         </Link>
         <div className="landing-nav-actions">
           <ThemeToggle />
+          <LanguageToggle />
           <Link href="/atlas/" className="btn-ghost btn-compact">
             <ArrowLeft size={14} aria-hidden="true" /> Atlas
           </Link>

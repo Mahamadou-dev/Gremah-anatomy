@@ -27,6 +27,7 @@ test("les pages publiques répondent sans compte", async ({ page }) => {
     "/a-propos/",
     "/sources/",
     "/credits/",
+    "/glossaire/",
     "/confidentialite/",
     "/mentions-legales/",
     "/cgu/",
@@ -34,6 +35,35 @@ test("les pages publiques répondent sans compte", async ({ page }) => {
     const reponse = await page.goto(chemin);
     expect(reponse?.status(), `${chemin} a répondu ${reponse?.status()}`).toBeLessThan(400);
   }
+});
+
+test("la bascule de langue change la langue de l'interface sans quitter la page", async ({
+  page,
+}) => {
+  // Sprint 15 : la bascule ne navigue jamais — elle doit conserver la page en
+  // cours (SPRINT.md, « la bascule conserve le contexte »). La langue de départ
+  // n'est pas fixée ici : le navigateur de test annonce `en-US` par défaut, donc
+  // la détection automatique (app/lib/i18n.ts) peut déjà avoir basculé en
+  // anglais avant même le clic — seul l'aller-retour compte.
+  await page.goto("/");
+  const bouton = page.getByRole("button", { name: /switch language|changer de langue/i });
+  const html = page.locator("html");
+
+  // Le HTML statique arrive avant que React n'hydrate le bouton : cliquer trop
+  // tôt ne fait rien puisque le gestionnaire n'est pas encore attaché. Le
+  // laisser respirer plutôt que de courir après l'hydratation.
+  await page.waitForTimeout(400);
+  await expect(html).toHaveAttribute("lang", /^(fr|en)$/);
+  const avant = await html.getAttribute("lang");
+
+  await bouton.click();
+  await expect(html).not.toHaveAttribute("lang", avant ?? "");
+  await expect(page).toHaveURL(/^http:\/\/127\.0\.0\.1:4173\/$/);
+
+  // Un second clic revient à la langue de départ : la bascule est réversible,
+  // pas un aller simple.
+  await bouton.click();
+  await expect(html).toHaveAttribute("lang", avant ?? "");
 });
 
 test("l'atlas redirige vers la connexion sans session", async ({ page }) => {

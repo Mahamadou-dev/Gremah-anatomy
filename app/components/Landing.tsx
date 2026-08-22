@@ -19,6 +19,7 @@ import {
 import { ContactForm } from "./ContactForm";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
 import { useReveal } from "../lib/use-reveal";
 import { BRAND, DISCLAIMER } from "../lib/brand";
 import { organs } from "../content/organes";
@@ -126,6 +127,7 @@ export function Landing() {
 
         <div className="landing-nav-actions">
           <ThemeToggle />
+          <LanguageToggle />
           <Link href="/connexion/" className="btn-ghost btn-compact">
             Se connecter
           </Link>

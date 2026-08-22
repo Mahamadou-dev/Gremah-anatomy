@@ -26,6 +26,9 @@ import { AccountBadge } from "./AccountBadge";
 import { OrganViewer } from "./OrganViewer";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
+import { useLanguage } from "./LanguageProvider";
+import { translateOrgan } from "../content/traductions";
 import { organById, organs, type Organ, type OrganId } from "../content/organes";
 import { AVERTISSEMENT, SOURCE_BY_ID } from "../content/sources";
 
@@ -83,8 +86,15 @@ export function AnatomyApp({ initialOrgan = "heart" }: { initialOrgan?: OrganId 
   const [mobileLibrary, setMobileLibrary] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const prefetched = useRef(new Set<OrganId>());
-  const organ = organById[organId];
-  const reference = organById[organId === "heart" ? "brain" : "heart"];
+  const { lang } = useLanguage();
+  // La donnée reste française à la source (organById) ; l'affichage seul
+  // bascule, via `translateOrgan` (Sprint 15) — le moteur 3D et la recherche
+  // continuent de raisonner sur les identifiants et le contenu FR canonique.
+  const organ = useMemo(() => translateOrgan(organById[organId], lang), [organId, lang]);
+  const reference = useMemo(
+    () => translateOrgan(organById[organId === "heart" ? "brain" : "heart"], lang),
+    [organId, lang],
+  );
   const filteredOrgans = useMemo(
     () =>
       organs.filter((item) =>
@@ -162,6 +172,7 @@ export function AnatomyApp({ initialOrgan = "heart" }: { initialOrgan?: OrganId 
         </label>
         <AccountBadge />
         <ThemeToggle />
+        <LanguageToggle />
         <button
           className="mobile-library-trigger"
           onClick={() => setMobileLibrary(true)}
@@ -239,12 +250,15 @@ export function AnatomyApp({ initialOrgan = "heart" }: { initialOrgan?: OrganId 
           <div className="info-title-row" data-reveal>
             <div>
               <h1>{organ.name}</h1>
-              {/* Nomenclature : latin de la Terminologia Anatomica, puis anglais
-                  pour retrouver la littérature internationale. */}
+              {/* Nomenclature : FR, latin (Terminologia Anatomica) et EN affichés
+                  ensemble (Sprint 15, point 5) — quelle que soit la langue active,
+                  c'est justement ce qu'un étudiant cherche en lisant un article
+                  dans l'autre langue. Le titre ci-dessus porte déjà la langue
+                  courante ; cette ligne montre l'autre nom, pas un doublon. */}
               <p className="nomenclature">
                 <i>{organ.latin}</i>
                 <span>·</span>
-                {organ.english}
+                {lang === "fr" ? organ.en.name : organById[organId].name}
                 {organ.vernaculaire?.hausa && (
                   <>
                     <span>·</span>

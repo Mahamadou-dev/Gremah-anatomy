@@ -29,6 +29,37 @@ export type FaitClinique = {
   source: string;
 };
 
+/**
+ * Traduction anglaise d'un organe (Sprint 15 — CLAUDE.md §3 « FR/EN à parité »).
+ *
+ * Le français reste la langue source et vit sur les champs de premier niveau
+ * de `Organ` — c'est `english` en dessous qui porte son miroir. Chaque champ
+ * ici correspond au même champ français, dans le même ordre, aligné par index
+ * pour les tableaux (`physiologie`, `pathologies`, `clinique`) et par `id` pour
+ * les hotspots — jamais réordonné, pour que `tests/contenu.test.mts` puisse
+ * vérifier la correspondance terme à terme sans heuristique.
+ */
+export type OrganTranslation = {
+  name: string;
+  description: string;
+  poetic: string;
+  taille: string;
+  poids: string;
+  situation: string;
+  fonction: string;
+  vascularisation: string;
+  innervation: string;
+  drainage: string;
+  histologie: string;
+  physiologie: string[];
+  rapports: string;
+  clinique: { titre: string; texte: string }[];
+  ancrageNiger?: { titre: string; texte: string };
+  pathologies: string[];
+  leSaviezVous: string;
+  hotspots: { id: string; label: string; detail: string }[];
+};
+
 export type Hotspot = {
   id: string;
   /** Libellé français affiché sur le point. */
@@ -91,4 +122,14 @@ export type Organ = {
 
   hotspots: Hotspot[];
   sources: string[];
+
+  /**
+   * Miroir anglais complet de tous les champs rédactionnels ci-dessus
+   * (Sprint 15). Obligatoire — pas de trou de traduction toléré ; voir
+   * `tests/contenu.test.mts`, « aucune structure publiée n'a de champ EN
+   * vide ». `name`/`description`/etc. redondent volontairement avec le champ
+   * `english` historique (le nom seul) : celui-ci reste pour compatibilité
+   * avec le code qui l'utilisait déjà, `en.name` est la référence à jour.
+   */
+  en: OrganTranslation;
 };

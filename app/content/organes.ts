@@ -135,6 +135,89 @@ export const organs: Organ[] = [
         color: "#d89bc4",
       },
     ],
+    en: {
+      name: "Heart",
+      description:
+        "A hollow, four-chambered muscular organ, the heart drives blood through two circulations wired in series: the pulmonary circuit toward the lungs, the systemic circuit toward the rest of the body. It works without rest from the fourth week of intrauterine life until death.",
+      poetic: "The pump that never stops",
+      taille: "About the size of the subject's clenched fist — 12 cm long by 8 cm wide",
+      poids: "250 to 350 g in the adult",
+      situation:
+        "Anterior and middle mediastinum, behind the sternum, two-thirds of its mass to the left of the midline",
+      fonction: "Drives blood flow through the systemic and pulmonary circulations",
+      vascularisation:
+        "Right and left coronary arteries, arising from the aortic sinuses just above the aortic valve",
+      innervation:
+        "Cardiac plexus: sympathetic fibres accelerate it, the vagus nerve (X) slows it. Automaticity itself is intrinsic to the heart",
+      drainage: "Coronary sinus to the right atrium; lymphatics to the tracheobronchial nodes",
+      histologie:
+        "Three layers: endocardium (endothelium), myocardium (striated cardiomyocytes linked by intercalated discs that couple the cells electrically), epicardium. Nodal tissue is modified myocardium, poor in myofibrils and rich in glycogen.",
+      physiologie: [
+        "The sinoatrial node, in the right atrial wall, fires spontaneously and sets the rhythm: the physiological pacemaker.",
+        "The impulse reaches the atrioventricular node, which delays it — this delay gives the atria time to empty before the ventricles contract.",
+        "The atrioventricular bundle and Purkinje network spread excitation through the whole ventricular myocardium in a few tens of milliseconds.",
+        "Cardiac output = heart rate × stroke volume. About 5 litres per minute at rest; up to 25 litres during exertion in a trained subject.",
+        "The Frank–Starling law: the more the ventricle fills in diastole, the more forcefully it contracts. This is what automatically matches right and left output.",
+      ],
+      rapports:
+        "Anteriorly: sternum and costal cartilages. Posteriorly: oesophagus, descending thoracic aorta, vertebrae. Inferiorly: the diaphragm's central tendon. Laterally: both lungs and the phrenic nerves.",
+      clinique: [
+        {
+          titre: "Coronary territories",
+          texte:
+            "The anterior interventricular artery supplies the anterior wall and the anterior two-thirds of the septum; the right coronary artery supplies the right ventricle and, in most subjects, the sinoatrial and atrioventricular nodes. An occlusion therefore produces a predictable territory of necrosis — the basis for reading an electrocardiogram.",
+        },
+        {
+          titre: "Referred pain",
+          texte:
+            "Cardiac afferent fibres reach the spinal cord through segments T1 to T4, the same segments as the chest wall and the medial side of the left upper limb. This is the anatomical explanation for the classic radiation of infarct pain to the jaw and left arm.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Rheumatic heart disease",
+        texte:
+          "A late complication of untreated group A streptococcal throat infections, it remains a major cause of valve disease in children and young adults in sub-Saharan Africa, though it has nearly disappeared from high-income countries. The mitral valve is affected most often. Screening a schoolchild's heart murmur is therefore not a trivial gesture there.",
+      },
+      pathologies: [
+        "Rheumatic heart disease",
+        "Coronary insufficiency",
+        "Heart failure",
+        "Atrial fibrillation",
+        "Peripartum cardiomyopathy",
+        "Congenital heart disease",
+        "Tuberculous pericarditis",
+      ],
+      leSaviezVous:
+        "The heart beats roughly 100,000 times a day — nearly 2.5 billion beats over a lifetime — and it starts beating around the fourth week of development, before its four chambers have even formed.",
+      hotspots: [
+        { id: "aorta", label: "Aorta", detail: "Main artery of the systemic circulation" },
+        {
+          id: "left-atrium",
+          label: "Left atrium",
+          detail: "Receives oxygenated blood from the pulmonary veins",
+        },
+        {
+          id: "right-atrium",
+          label: "Right atrium",
+          detail: "Receives venous blood from the venae cavae",
+        },
+        {
+          id: "left-ventricle",
+          label: "Left ventricle",
+          detail: "Thickest wall: it supplies the entire body",
+        },
+        {
+          id: "right-ventricle",
+          label: "Right ventricle",
+          detail: "Ejects blood to the lungs, at low pressure",
+        },
+        {
+          id: "mitral",
+          label: "Mitral valve",
+          detail: "Two cusps — the valve most often damaged by rheumatic disease",
+        },
+      ],
+    },
   },
 
   // ---------------------------------------------------------------- cerveau
@@ -240,6 +323,84 @@ export const organs: Organ[] = [
         color: "#d89bc4",
       },
     ],
+    en: {
+      name: "Brain",
+      description:
+        "Housed in the skull and protected by three meninges, the brain processes sensory information, commands movement, regulates vegetative functions and carries consciousness. It consumes about 20% of the body's oxygen for 2% of its mass.",
+      poetic: "Two percent of the weight, twenty percent of the oxygen",
+      taille: "About 16 cm long by 14 cm wide",
+      poids: "1,300 to 1,400 g in the adult",
+      situation: "Cranial cavity, surrounded by the dura mater, arachnoid and pia mater",
+      fonction: "Sensorimotor integration, higher functions, vegetative regulation",
+      vascularisation:
+        "Two internal carotid arteries and two vertebral arteries, joined in the cerebral arterial circle (circle of Willis) at the base of the skull",
+      innervation:
+        "Brain tissue itself feels no pain: headache arises from the meninges and vessels, innervated by the trigeminal nerve (V)",
+      drainage:
+        "Dural venous sinuses, then internal jugular veins. No classic lymphatic vessels: clearance runs through the cerebrospinal fluid",
+      histologie:
+        "A six-layered cortex of neurons (isocortex), white matter made of myelinated axons, and neuroglia (astrocytes, oligodendrocytes, microglia) ten times more numerous than neurons. Astrocytes take part in the blood–brain barrier.",
+      physiologie: [
+        "The frontal cortex carries planning, judgement, behavioural inhibition and, at its posterior part, voluntary motor command.",
+        "The parietal lobe integrates somatic sensation and builds the representation of space.",
+        "The temporal lobe processes hearing and, through the hippocampus, memory formation.",
+        "The occipital lobe receives the visual pathway; a lesion there causes a field cut, not total blindness.",
+        "The cerebellum does not command movement: it fine-tunes it. Its damage produces ataxia, not paralysis.",
+        "Cerebral blood flow is kept constant by autoregulation between 60 and 150 mmHg of mean arterial pressure.",
+      ],
+      rapports:
+        "Rests on the base of the skull, whose three fossae house the frontal lobes, the temporal lobes, and the cerebellum with the brainstem, respectively. The foramen magnum gives passage to the medulla oblongata — herniation at this level is fatal.",
+      clinique: [
+        {
+          titre: "Cerebral arterial circle",
+          texte:
+            "The anastomoses of the circle of Willis let some subjects compensate for the progressive occlusion of an internal carotid artery. This circle is complete and functional in only a minority of the population, though, which explains the variability of stroke presentations.",
+        },
+        {
+          titre: "Blood–brain barrier",
+          texte:
+            "Tight junctions between the endothelial cells of cerebral capillaries limit the passage of hydrophilic molecules and many antibiotics. Its permeability rises with meningeal inflammation — which makes certain treatments effective exactly when they are needed.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "The African meningitis belt",
+        texte:
+          "Niger lies within the meningitis belt, a band stretching from Senegal to Ethiopia where seasonal epidemics of meningococcal meningitis occur, typically during the dry season and the harmattan winds. Lumbar puncture is a first-line procedure there, and knowledge of the meningeal spaces stops being theoretical.",
+      },
+      pathologies: [
+        "Bacterial meningitis",
+        "Cerebral malaria",
+        "Stroke",
+        "Epilepsy",
+        "Head trauma",
+        "Intracranial tumours",
+        "Hydrocephalus",
+      ],
+      leSaviezVous:
+        "The brain contains no pain receptors at all. Brain surgery can be performed on an awake patient, who talks and moves while the surgeon maps the areas to spare.",
+      hotspots: [
+        {
+          id: "frontal",
+          label: "Frontal lobe",
+          detail: "Planning, motor speech, voluntary command",
+        },
+        {
+          id: "parietal",
+          label: "Parietal lobe",
+          detail: "Somatic sensation and spatial representation",
+        },
+        {
+          id: "temporal",
+          label: "Temporal lobe",
+          detail: "Hearing, memory, language comprehension",
+        },
+        {
+          id: "cerebellum",
+          label: "Cerebellum",
+          detail: "Coordination and fine-tuning of movement, balance",
+        },
+      ],
+    },
   },
 
   // ---------------------------------------------------------------- poumons
@@ -353,6 +514,85 @@ export const organs: Organ[] = [
         color: "#7fa88a",
       },
     ],
+    en: {
+      name: "Lungs",
+      description:
+        "Two spongy organs housed in the rib cage, separated by the mediastinum. The right lung has three lobes, the left only two — the cardiac notch yields the space taken up by the heart.",
+      poetic: "Seventy square metres of exchange, folded into the chest",
+      taille: "About 25 cm tall; alveolar exchange surface on the order of 70 m²",
+      poids: "About 1 kg for both, highly variable with blood content",
+      situation:
+        "Pleural cavities, on either side of the mediastinum, resting on the diaphragmatic domes",
+      fonction: "Gas exchange: oxygenating the blood and removing carbon dioxide",
+      vascularisation:
+        "Dual circulation: pulmonary arteries bring blood to be oxygenated, bronchial arteries, from the aorta, nourish the lung tissue itself",
+      innervation:
+        "Pulmonary plexus: the vagus (X) is bronchoconstrictor and secretory, the sympathetic bronchodilator",
+      drainage:
+        "Pulmonary veins to the left atrium; lymphatics to the hilar then tracheobronchial nodes",
+      histologie:
+        "About 300 million alveoli lined by very flat type I pneumocytes, where diffusion occurs. Type II pneumocytes secrete surfactant, which lowers surface tension and keeps alveoli from collapsing on expiration.",
+      physiologie: [
+        "Inspiration is active: contraction of the diaphragm and external intercostals creates negative intrathoracic pressure.",
+        "Resting expiration is passive — simply the elastic recoil of the lung and chest wall.",
+        "Gas exchange happens by passive diffusion along partial-pressure gradients, across a barrier about half a micrometre thick.",
+        "Hypoxic vasoconstriction redirects blood away from poorly ventilated areas toward well-ventilated ones: a local ventilation/perfusion match.",
+        "The mucociliary escalator constantly moves mucus and particles up toward the pharynx; tobacco smoke paralyses it.",
+      ],
+      rapports:
+        "The pulmonary hilum gives passage to the main bronchus and the pulmonary arteries and veins. The right lung relates to the superior vena cava and the azygos vein arch; the left to the aortic arch and the left subclavian artery.",
+      clinique: [
+        {
+          titre: "Why foreign bodies go right",
+          texte:
+            "The right main bronchus is wider, shorter and more vertical than the left. An inhaled foreign body or aspirated gastric contents therefore travel preferentially into the right lung, especially its lower lobe in a supine patient.",
+        },
+        {
+          titre: "Costodiaphragmatic recess",
+          texte:
+            "The pleura extends lower than the lower border of the lung, forming a recess where effusions collect. This is where a pleural effusion is tapped, and why dullness to percussion precedes the loss of breath sounds.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Pulmonary tuberculosis",
+        texte:
+          "Tuberculosis remains one of the leading infectious causes of death worldwide, and Africa carries a major share of the burden. Disease predominates in the lung apices, better ventilated but less perfused, where the high partial pressure of oxygen favours the aerobic bacillus. Any cough lasting more than two weeks should raise the suspicion.",
+      },
+      pathologies: [
+        "Pulmonary tuberculosis",
+        "Community-acquired pneumonia",
+        "Asthma",
+        "Chronic obstructive pulmonary disease",
+        "Pleural effusion",
+        "Pneumothorax",
+        "Infant bronchiolitis",
+      ],
+      leSaviezVous:
+        "Unfolded, the alveoli together would cover roughly half a tennis court — all packed into a volume comparable to two footballs.",
+      hotspots: [
+        { id: "trachea", label: "Trachea", detail: "Airway kept open by cartilage rings" },
+        {
+          id: "right-lung",
+          label: "Right lung",
+          detail: "Three lobes, separated by the oblique and horizontal fissures",
+        },
+        {
+          id: "left-lung",
+          label: "Left lung",
+          detail: "Two lobes and a cardiac notch, which houses the heart",
+        },
+        {
+          id: "bronchus",
+          label: "Main bronchus",
+          detail: "The right one is more vertical: foreign bodies travel down it",
+        },
+        {
+          id: "base",
+          label: "Lung base",
+          detail: "Rests on the diaphragm; site of gravity-dependent effusions",
+        },
+      ],
+    },
   },
 
   // ------------------------------------------------------------------- foie
@@ -449,6 +689,78 @@ export const organs: Organ[] = [
         color: "#6393d8",
       },
     ],
+    en: {
+      name: "Liver",
+      description:
+        "The body's largest gland, the liver occupies the right hypochondrium under the diaphragmatic dome. It receives all the venous blood from the digestive tract before it joins the general circulation: nothing absorbed escapes its control.",
+      poetic: "The mandatory filter for everything you eat",
+      taille: "About 25 cm wide by 15 cm tall",
+      poids: "1,400 to 1,600 g in the adult",
+      situation:
+        "Right hypochondrium and epigastrium, under the diaphragm, normally not palpable below the costal margin",
+      fonction: "Metabolism, detoxification, protein synthesis, bile secretion",
+      vascularisation:
+        "Dual supply: the hepatic portal vein provides about 75% of flow (nutrient-rich blood), the proper hepatic artery the remaining 25% (oxygenated blood)",
+      innervation: "Hepatic plexus: coeliac sympathetic and vagal fibres",
+      drainage:
+        "Hepatic veins to the inferior vena cava; lymphatics to the hepatic and coeliac nodes",
+      histologie:
+        "Hexagonal hepatic lobules centred on a central vein, bordered by portal spaces each containing a triad: a branch of the portal vein, a branch of the hepatic artery, a bile ductule. Hepatocytes are arranged in plates separated by sinusoids housing Kupffer cells, resident macrophages.",
+      physiologie: [
+        "First-pass effect: any drug taken orally crosses the liver before reaching the general circulation, which can destroy most of it before it acts.",
+        "Synthesis of albumin, clotting factors and transport proteins — hence the oedema and bleeding disorders of liver failure.",
+        "Secretion of 500 to 1,000 mL of bile per day, emulsifying fats and enabling the absorption of fat-soluble vitamins.",
+        "Storage of glycogen, iron, copper and vitamins A, D and B12.",
+        "The urea cycle: converting neurotoxic ammonia into urea that the kidney can excrete. Its failure produces hepatic encephalopathy.",
+      ],
+      rapports:
+        "Above, the diaphragm, to which it attaches by the falciform and coronary ligaments. Below and behind: gallbladder, right kidney, right colic flexure, stomach. Its posterior surface is grooved by the inferior vena cava.",
+      clinique: [
+        {
+          titre: "Portosystemic anastomoses",
+          texte:
+            "When portal pressure rises, blood takes detour routes into the caval circulation: oesophageal varices, periumbilical veins, rectal veins. Rupture of oesophageal varices is the most feared haemorrhagic complication of cirrhosis.",
+        },
+        {
+          titre: "Couinaud segmentation",
+          texte:
+            "The liver divides into eight segments, each with its own portal pedicle and venous drainage. This segmentation, invisible from the surface, is what makes planned partial hepatectomy and living-donor transplantation possible.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Hepatitis B",
+        texte:
+          "Chronic hepatitis B infection is strongly endemic in West Africa, where transmission mostly occurs in early childhood — the period when the risk of progressing to chronic infection is highest. It is the leading cause of cirrhosis and hepatocellular carcinoma in the region. Vaccination at birth is the most effective intervention.",
+      },
+      pathologies: [
+        "Chronic hepatitis B",
+        "Cirrhosis",
+        "Hepatocellular carcinoma",
+        "Amoebic liver abscess",
+        "Fatty liver disease",
+        "Obstructive jaundice",
+        "Hepatosplenic schistosomiasis",
+      ],
+      leSaviezVous:
+        "The liver is the only internal organ able to regenerate a functional mass after resection: this is what allows living-donor liver transplantation, with both donor and recipient rebuilding a working volume.",
+      hotspots: [
+        {
+          id: "right-lobe",
+          label: "Right lobe",
+          detail: "The largest; contains segments V to VIII",
+        },
+        {
+          id: "left-lobe",
+          label: "Left lobe",
+          detail: "Separated from the right by the falciform ligament",
+        },
+        {
+          id: "portal",
+          label: "Portal vein",
+          detail: "Brings blood from the digestive tract — 75% of hepatic flow",
+        },
+      ],
+    },
   },
 
   // ------------------------------------------------------------------ reins
@@ -546,6 +858,79 @@ export const organs: Organ[] = [
         color: "#6393d8",
       },
     ],
+    en: {
+      name: "Kidneys",
+      description:
+        "Two bean-shaped retroperitoneal organs, one on each side of the spine. They filter about 180 litres of plasma a day to excrete only one to two litres of urine: most of the kidney's work is reabsorption, not elimination.",
+      poetic: "180 litres filtered, a litre and a half returned",
+      taille: "About 11 cm tall, 6 cm wide, 3 cm thick",
+      poids: "120 to 170 g each",
+      situation:
+        "Retroperitoneum, between T12 and L3. The right kidney sits lower than the left, pushed down by the liver",
+      fonction:
+        "Filtration of plasma, fluid, electrolyte and acid-base balance, blood pressure regulation",
+      vascularisation:
+        "Renal arteries, direct branches of the abdominal aorta. They alone receive nearly 20% of cardiac output",
+      innervation: "Renal plexus, from the coeliac plexus — mainly sympathetic vasomotor",
+      drainage:
+        "Renal veins to the inferior vena cava; the longer left renal vein crosses in front of the aorta below the superior mesenteric artery",
+      histologie:
+        "About one million nephrons per kidney. Each nephron comprises a renal corpuscle (glomerulus and Bowman's capsule) and a tubule: proximal convoluted tubule, loop of the nephron, distal convoluted tubule. The cortex holds the glomeruli, the medulla the loops and collecting ducts.",
+      physiologie: [
+        "Glomerular filtration: about 125 mL per minute, driven by the hydrostatic pressure of the glomerular capillaries.",
+        "The proximal convoluted tubule reabsorbs two-thirds of the water and sodium outright, and all of the glucose and amino acids.",
+        "The loop of the nephron sets up a countercurrent medullary osmotic gradient: this gradient is what allows the urine to be concentrated.",
+        "Aldosterone acts on the distal and collecting tubule to retain sodium; antidiuretic hormone there makes the epithelium permeable to water.",
+        "The kidney secretes renin (blood pressure), erythropoietin (red cell production) and activates vitamin D — hence the anaemia and osteodystrophy of chronic kidney disease.",
+      ],
+      rapports:
+        "Anteriorly on the right: liver, second part of the duodenum, right colic flexure. On the left: stomach, spleen, pancreas, left colic flexure. Posteriorly: diaphragm, psoas major, quadratus lumborum, twelfth rib. An adrenal gland caps each upper pole.",
+      clinique: [
+        {
+          titre: "Ureteral narrowings",
+          texte:
+            "The ureter narrows at three points: at the pelvi-ureteric junction, where it crosses the iliac vessels, and where it passes through the bladder wall. A stone lodges preferentially at these sites, and renal colic pain radiates according to the level reached.",
+        },
+        {
+          titre: "Posterior renal relations",
+          texte:
+            "The upper pole of the kidney relates to the twelfth rib and the pleural recess. A renal puncture placed too high therefore risks a pneumothorax, and trauma to the loin can combine renal injury with haemothorax.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Urinary schistosomiasis",
+        texte:
+          "Schistosoma haematobium is endemic in Niger, especially around freshwater points where infection occurs. Eggs lodge in the bladder wall and terminal ureters, causing terminal haematuria — long dismissed as a normal sign of male puberty in some regions — followed by obstructive fibrosis and a risk of bladder carcinoma.",
+      },
+      pathologies: [
+        "Urinary schistosomiasis",
+        "Sickle cell nephropathy",
+        "Acute kidney injury from severe malaria",
+        "Post-streptococcal glomerulonephritis",
+        "Urinary lithiasis",
+        "Pyelonephritis",
+        "Hypertensive nephropathy",
+      ],
+      leSaviezVous:
+        "The kidney filters the equivalent of the entire plasma volume about sixty times a day. Without tubular reabsorption, an adult would be dehydrated in under thirty minutes.",
+      hotspots: [
+        {
+          id: "cortex",
+          label: "Renal cortex",
+          detail: "Contains the glomeruli — where filtration begins",
+        },
+        {
+          id: "medulla",
+          label: "Renal medulla",
+          detail: "Pyramids and nephron loops: where urine gets concentrated",
+        },
+        {
+          id: "ureter",
+          label: "Ureter",
+          detail: "Carries urine to the bladder by peristaltic waves",
+        },
+      ],
+    },
   },
 
   // -------------------------------------------------------------------- œil
@@ -641,6 +1026,77 @@ export const organs: Organ[] = [
         color: "#d89bc4",
       },
     ],
+    en: {
+      name: "Eye",
+      description:
+        "A globe about 24 mm across, housed in the bony orbit, the eye converts light into nerve impulses. The cornea provides two-thirds of the eye's refractive power; the lens supplies only the remainder, but it alone is adjustable.",
+      poetic: "Twenty-four millimetres between the world and thought",
+      taille: "About 24 mm anteroposterior diameter",
+      poids: "About 7 g",
+      situation: "Orbital cavity, surrounded by orbital fat and the six extraocular muscles",
+      fonction: "Transduces light into nerve impulses; forms the retinal image",
+      vascularisation:
+        "Ophthalmic artery, a branch of the internal carotid. The central retinal artery is an end artery: its occlusion causes sudden, permanent blindness",
+      innervation:
+        "Optic nerve (II) for vision; oculomotor (III), trochlear (IV) and abducens (VI) nerves for motility; ophthalmic branch of the trigeminal (V1) for corneal sensation",
+      drainage: "Ophthalmic veins to the cavernous sinus",
+      histologie:
+        "Three coats: sclera and cornea outermost, uvea (choroid, ciliary body, iris) in the middle, retina innermost. The retina has ten layers; cones, concentrated in the fovea, provide fine, colour vision, rods peripheral and night vision.",
+      physiologie: [
+        "The cornea, avascular and transparent, is nourished by the aqueous humour and atmospheric oxygen.",
+        "Accommodation: contraction of the ciliary muscle relaxes the zonule, the lens bulges, and near vision comes into focus.",
+        "Aqueous humour is secreted by the ciliary processes and reabsorbed at the iridocorneal angle. An obstacle to this reabsorption raises intraocular pressure: glaucoma.",
+        "Phototransduction relies on retinal, derived from vitamin A. Its deficiency impairs night vision first.",
+        "The optic disc contains no photoreceptors: it is the blind spot, which the brain fills in without our awareness.",
+      ],
+      rapports:
+        "The orbit is a bony cone whose very thin floor fractures easily (blow-out fracture). The orbital apex gives passage to the optic nerve through the optic canal, and to the oculomotor nerves through the superior orbital fissure.",
+      clinique: [
+        {
+          titre: "Pupillary light reflex",
+          texte:
+            "The afferent pathway runs through the optic nerve, the efferent pathway through the oculomotor nerve's parasympathetic fibres. Lighting one eye constricts both pupils: separating the direct from the consensual response localises the lesion to one pathway or the other.",
+        },
+        {
+          titre: "Cornea and sensitivity",
+          texte:
+            "The cornea is the most densely innervated tissue in the body, via the ophthalmic branch of the trigeminal nerve. This is what makes a simple corneal abrasion extremely painful, and the basis of the corneal reflex tested in brainstem examination.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Trachoma and vitamin A deficiency",
+        texte:
+          "Trachoma, an infection with Chlamydia trachomatis favoured by scarce water and crowding, remains a major cause of preventable blindness in the Sahel: conjunctival scarring turns the eyelid inward and the lashes scrape the cornea. Vitamin A deficiency, for its part, causes night blindness then xerophthalmia and can lead to irreversible vision loss in children.",
+      },
+      pathologies: [
+        "Trachoma",
+        "Xerophthalmia from vitamin A deficiency",
+        "Cataract",
+        "Glaucoma",
+        "Bacterial conjunctivitis",
+        "Diabetic retinopathy",
+        "Eye trauma",
+      ],
+      leSaviezVous:
+        'The image projected on the retina is inverted, and the visual field of each eye is processed by both hemispheres. What we call "seeing" is almost entirely a construction by the brain.',
+      hotspots: [
+        {
+          id: "cornea",
+          label: "Cornea",
+          detail: "Transparent and avascular: two-thirds of refraction",
+        },
+        {
+          id: "iris",
+          label: "Iris",
+          detail: "Muscular diaphragm that adjusts how much light gets in",
+        },
+        {
+          id: "optic",
+          label: "Optic nerve",
+          detail: "An extension of the central nervous system, wrapped in meninges",
+        },
+      ],
+    },
   },
 
   // --------------------------------------------------------------- intestin
@@ -738,6 +1194,79 @@ export const organs: Organ[] = [
         color: "#6393d8",
       },
     ],
+    en: {
+      name: "Intestine",
+      description:
+        "The small intestine absorbs nutrients, the colon recovers water and electrolytes. Its absorptive surface is multiplied by three nested levels of folding: circular folds, villi, microvilli.",
+      poetic: "Three nested folds, two hundred square metres of absorption",
+      taille:
+        "About 6 m of small bowel in the cadaver — markedly less in the living owing to muscular tone — and 1.5 m of colon",
+      poids: "About 1 kg altogether",
+      situation:
+        "Abdominal cavity, the small bowel mobile on its mesentery, the colon framing the abdomen",
+      fonction: "Final digestion, nutrient absorption, fluid and electrolyte recovery",
+      vascularisation:
+        "Coeliac trunk for the proximal duodenum, superior mesenteric artery for the small bowel and right colon, inferior mesenteric artery for the left colon and rectum",
+      innervation:
+        "Enteric nervous system — myenteric and submucosal plexuses — modulated by the vagus and splanchnic sympathetics",
+      drainage: "Mesenteric veins to the portal vein; lymphatics via lacteals to the thoracic duct",
+      histologie:
+        "Villi bearing brush-border enterocytes, mucus-secreting goblet cells, Paneth cells at the base of the crypts. Peyer's patches, lymphoid follicles of the ileum, form the mucosa's main immune barrier.",
+      physiologie: [
+        "The duodenum receives bile and pancreatic juice: most of chemical digestion happens here.",
+        "The jejunum absorbs carbohydrates, amino acids and lipids; the terminal ileum is the only site that absorbs vitamin B12 and bile salts.",
+        "Peristalsis moves as waves; segmentation, by contrast, mixes the contents without advancing them.",
+        "The colon reabsorbs about 1.5 litres of water a day and hosts a microbiota that notably synthesises vitamin K.",
+        "Disease of the terminal ileum therefore causes both megaloblastic anaemia and fat malabsorption.",
+      ],
+      rapports:
+        "The duodenum is retroperitoneal and moulds around the head of the pancreas. The mesentery, running obliquely from the duodenojejunal flexure to the right iliac fossa, carries the small bowel vessels. The appendix opens at the caecal pole, where the three colic taeniae converge.",
+      clinique: [
+        {
+          titre: "McBurney's point",
+          texte:
+            "The base of the appendix projects to the outer third of the line joining the right anterior superior iliac spine to the umbilicus. Appendiceal pain nonetheless begins periumbilically, following visceral afferent pathways, before localising once the parietal peritoneum is involved.",
+        },
+        {
+          titre: "Drummond's marginal artery",
+          texte:
+            "The marginal artery links the superior and inferior mesenteric territories along the colon. This anastomosis lets one territory compensate for the other, but the left colic flexure remains a poorly supplied watershed zone, a preferred site for ischaemic colitis.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Diarrhoeal disease and malnutrition",
+        texte:
+          "Diarrhoeal disease is among the leading causes of death in children under five worldwide, and sub-Saharan Africa carries a major share of the burden. Fluid and electrolyte loss kills before the infection itself does — which is why oral rehydration, which exploits the enterocyte's intact sodium-glucose cotransport, has saved more lives than most antibiotics.",
+      },
+      pathologies: [
+        "Acute diarrhoeal disease",
+        "Intestinal parasitosis",
+        "Typhoid fever and ileal perforation",
+        "Acute appendicitis",
+        "Intestinal obstruction",
+        "Malnutrition and environmental enteropathy",
+        "Amoebiasis",
+      ],
+      leSaviezVous:
+        "Oral rehydration solution works because the enterocyte's sodium-glucose transporter stays active even when the mucosa is under attack: adding sugar to salt opens a door that the infection has not shut.",
+      hotspots: [
+        {
+          id: "duodenum",
+          label: "Duodenum",
+          detail: "Receives bile and pancreatic juice; retroperitoneal and fixed",
+        },
+        {
+          id: "jejunum",
+          label: "Jejunum",
+          detail: "Tall, dense villi: the peak of absorption",
+        },
+        {
+          id: "colon",
+          label: "Colon",
+          detail: "Recovers water and electrolytes; hosts the microbiota",
+        },
+      ],
+    },
   },
 
   // --------------------------------------------------------------- pancréas
@@ -839,6 +1368,81 @@ export const organs: Organ[] = [
         color: "#d89bc4",
       },
     ],
+    en: {
+      name: "Pancreas",
+      description:
+        "A mixed gland stretched across the abdomen, retroperitoneal. Its exocrine part, the large majority, releases digestive enzymes into the duodenum; its endocrine part, under 2% of the mass, regulates blood sugar for the whole body.",
+      poetic: "Two percent of the gland decides all of blood sugar",
+      taille: "12 to 15 cm long",
+      poids: "70 to 100 g",
+      situation:
+        "Retroperitoneum, across the epigastric region, level with the first and second lumbar vertebrae",
+      fonction: "Secretion of digestive enzymes and hormonal regulation of blood sugar",
+      vascularisation:
+        "Pancreaticoduodenal arcades from the coeliac trunk and the superior mesenteric artery; splenic artery for the body and tail",
+      innervation: "Coeliac plexus: the vagus stimulates secretion, the sympathetic inhibits it",
+      drainage: "Splenic vein and superior mesenteric vein, so the portal system",
+      histologie:
+        "Serous acini producing proenzymes, drained by a duct system whose cells secrete bicarbonate. Scattered among them, the pancreatic islets (islets of Langerhans) contain β cells (insulin), α cells (glucagon) and δ cells (somatostatin).",
+      physiologie: [
+        "Enzymes are secreted in inactive form: trypsinogen is only activated once in the duodenum. This is the protection against self-digestion.",
+        "Bicarbonate neutralises the acidic chyme from the stomach, without which the pancreatic enzymes would not work.",
+        "Insulin drives glucose into muscle and fat cells and blocks the liver's glucose output.",
+        "Glucagon does the opposite: glycogenolysis then hepatic gluconeogenesis. The insulin/glucagon pair keeps blood sugar within a narrow range.",
+        "The absence of insulin mobilises fat and produces ketone bodies: diabetic ketoacidosis.",
+      ],
+      rapports:
+        "The head sits within the duodenal loop; the body crosses in front of the aorta, the inferior vena cava and the superior mesenteric vessels; the tail reaches the splenic hilum. The pancreatic duct joins the bile duct at the hepatopancreatic ampulla.",
+      clinique: [
+        {
+          titre: "Jaundice from the pancreatic head",
+          texte:
+            "The bile duct crosses through the head of the pancreas before opening into the duodenum. A tumour of the head compresses it and causes painless jaundice, without fever — a sign that should raise this diagnosis before any other.",
+        },
+        {
+          titre: "Posterior relations and pancreatitis",
+          texte:
+            "Its retroperitoneal position explains the boring pain that radiates to the back and eases with forward flexion, as well as the spread of necrotic collections along the fascial planes to the flanks.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Rising diabetes",
+        texte:
+          "The number of people living with diabetes is rising fast in low- and middle-income countries, driven by urbanisation and dietary change. Diagnosis there is often late, revealed by a complication. Knowing the physiology of the pancreatic islet is therefore no longer an academic curiosity in Nigerien practice.",
+      },
+      pathologies: [
+        "Type 1 and type 2 diabetes",
+        "Acute pancreatitis",
+        "Chronic pancreatitis",
+        "Pancreatic adenocarcinoma",
+        "Exocrine pancreatic insufficiency",
+        "Diabetic ketoacidosis",
+      ],
+      leSaviezVous:
+        "The pancreas secretes about a litre and a half of digestive juice each day, capable of digesting proteins, fats and carbohydrates. The one tissue it normally never digests is itself.",
+      hotspots: [
+        {
+          id: "head",
+          label: "Head",
+          detail: "Set within the duodenal loop; crossed by the bile duct",
+        },
+        {
+          id: "body",
+          label: "Body",
+          detail: "Crosses the aorta and the superior mesenteric vessels",
+        },
+        {
+          id: "tail",
+          label: "Tail",
+          detail: "Reaches the splenic hilum; rich in endocrine islets",
+        },
+        {
+          id: "duct",
+          label: "Pancreatic duct",
+          detail: "Joins the bile duct at the hepatopancreatic ampulla",
+        },
+      ],
+    },
   },
 
   // ------------------------------------------------------------------- peau
@@ -942,6 +1546,82 @@ export const organs: Organ[] = [
         color: "#d89bc4",
       },
     ],
+    en: {
+      name: "Skin",
+      description:
+        "The body's largest organ, the skin is a barrier against mechanical, chemical and infectious threats, a sensory organ and a thermal regulator. It also synthesises vitamin D under ultraviolet radiation.",
+      poetic: "Two square metres of living frontier",
+      taille: "1.5 to 2 m² of surface; from 0.5 mm at the eyelids to 4 mm at the heels",
+      poids: "About 4 kg without the hypodermis",
+      situation: "Covers the entire body surface and continues into the mucous membranes",
+      fonction: "Barrier, thermoregulation, sensation, vitamin D synthesis",
+      vascularisation:
+        "Superficial and deep dermal plexuses, fed by perforating arteries. This network can receive up to 10% of cardiac output in heavy heat",
+      innervation:
+        "Free nerve endings for pain and temperature; Meissner, Pacinian, Merkel and Ruffini corpuscles for touch, pressure and vibration",
+      drainage: "Dense dermal lymphatic network, draining to regional nodes",
+      histologie:
+        "Epidermis, a keratinised stratified squamous epithelium of five layers, renewed in about four weeks; connective dermis carrying vessels, nerves and appendages; fatty hypodermis. Melanocytes in the basal layer transfer melanin to neighbouring keratinocytes.",
+      physiologie: [
+        "Keratinisation gradually turns the keratinocyte into an anucleate horny cell: the barrier is made of dead cells.",
+        "Eccrine sweating dissipates heat by evaporation — a major mechanism under Sahelian climate, and the main source of insensible fluid loss.",
+        "Cutaneous vasodilation and vasoconstriction regulate heat exchange even before sweating kicks in.",
+        "Melanin absorbs ultraviolet light and protects keratinocyte DNA; in exchange, it slows the skin's synthesis of vitamin D.",
+        "Wound healing proceeds through haemostasis, inflammation, proliferation then remodelling, over several months.",
+      ],
+      rapports:
+        "Connected to deeper planes by the superficial fascia, except at areas of adherence (palm, sole, scalp). Skin tension lines guide surgical incisions: following them gives a thin scar, crossing them a widened one.",
+      clinique: [
+        {
+          titre: "Dermatomes",
+          texte:
+            "Each spinal nerve root innervates a defined skin territory. The pattern of a shingles rash or a sensory deficit therefore lets clinicians localise the lesion level without imaging — first-line reasoning wherever a scanner is not immediately available.",
+        },
+        {
+          titre: "The rule of nines",
+          texte:
+            "Estimating burned surface area in multiples of 9% guides fluid resuscitation. Depth is judged by dermal involvement: a superficial burn stays painful, a deep burn is numb because the nerve endings are destroyed.",
+        },
+      ],
+      ancrageNiger: {
+        titre: "Sickle cell leg ulcers",
+        texte:
+          "Sickle cell disease is especially common in sub-Saharan Africa. Occlusion of small skin vessels by sickled red cells causes chronic leg ulcers, typically peri-malleolar, very painful and slow to heal. They are a reminder that skin is a terminal vascular territory like any other.",
+      },
+      pathologies: [
+        "Sickle cell ulcers",
+        "Bacterial and fungal skin infections",
+        "Scabies",
+        "Burns",
+        "Eczema and atopic dermatitis",
+        "Albinism and skin cancer risk",
+        "Pressure sores",
+      ],
+      leSaviezVous:
+        "The epidermis fully renews itself in four to six weeks: the surface you touch today did not exist last month.",
+      hotspots: [
+        {
+          id: "epidermis",
+          label: "Epidermis",
+          detail: "Keratinised barrier, avascular, renewed within a month",
+        },
+        {
+          id: "dermis",
+          label: "Dermis",
+          detail: "Connective tissue carrying vessels, nerves and appendages",
+        },
+        {
+          id: "hypodermis",
+          label: "Hypodermis",
+          detail: "Fat tissue: thermal insulation and cushioning",
+        },
+        {
+          id: "follicle",
+          label: "Hair follicle",
+          detail: "With its arrector muscle and sebaceous gland",
+        },
+      ],
+    },
   },
 ];
 
