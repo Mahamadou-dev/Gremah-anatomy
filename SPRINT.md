@@ -572,6 +572,21 @@ CI avant la revue, pas après le déploiement.
 dépôt nettoyé, CI verte, fusion sur `main` par PR, Suivi mis à jour.
 Garde-fou légué par ce sprint : toute la chaîne Playwright — c'est le sprint dont le livrable **est** la CI.
 
+**Stabilisation post-clôture (sur `sprint-15/bilingue`) :** le job `lighthouse`
+posé par ce sprint échouait réellement en CI — Performance mesuré à 0,68/0,69
+sur `/`, contre le seuil `0,8`. Cause : `HeroCanvas` (et donc `three.js`, ~660 Ko
+minifié) était importé statiquement dans `Landing.tsx`, donc exécuté dans le
+même bundle que l'hydratation de la page d'accueil — TBT mesuré à ~1 020 ms en
+local. Correction : `next/dynamic({ ssr: false })` sur `HeroCanvas`
+(`app/components/Landing.tsx`) pour sortir le moteur 3D du JS initial, et
+démarrage de `HeroScene` derrière `requestIdleCallback` (`app/components/
+HeroCanvas.tsx`) pour laisser le thread principal finir l'hydratation avant de
+payer le coût du renderer. Aucun changement visuel ni fonctionnel : le poster
+statique déjà prévu comme repli s'affiche pendant ce court intervalle. Mesuré
+après correction : Performance 0,95/1,0 sur `/` (Lighthouse desktop, build de
+production local). Seuil `0,8` du `lighthouserc.cjs` conservé tel quel — pas
+besoin de l'assouplir.
+
 ---
 
 ## Sprint 15 — Bilinguisme FR/EN à parité
