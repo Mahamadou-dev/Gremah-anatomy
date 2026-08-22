@@ -42,6 +42,20 @@ const MODE_HINT: Record<ViewMode, string> = {
   fantome: "Couche de contexte estompée, pour situer sans masquer",
 };
 
+/**
+ * Hameçon de lecture réservé au banc mémoire du Sprint 14 (e2e/memoire.spec.ts).
+ * Gardé derrière `?memtest=1` pour ne jamais exister dans un build de production
+ * normal — un global sur `window` n'est acceptable ici que parce qu'il ne pilote
+ * rien côté moteur, il ne fait que le lire.
+ */
+function exposeMemoryHook(viewer: AnatomyViewer) {
+  if (typeof window === "undefined") return;
+  if (new URLSearchParams(window.location.search).get("memtest") !== "1") return;
+  (
+    window as unknown as { __gremahMemory?: () => { geometries: number; textures: number } }
+  ).__gremahMemory = () => viewer.memoryInfo;
+}
+
 export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompare }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<AnatomyViewer | null>(null);
@@ -104,6 +118,7 @@ export function OrganViewer({ organ, autoRotate, onAutoRotate, compare, onCompar
           setLoading(false);
           setProgress(0);
         });
+        exposeMemoryHook(created);
       });
 
     return () => {

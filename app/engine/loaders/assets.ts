@@ -1,8 +1,7 @@
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
+import type { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import type { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import type { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { disposeObject } from "./dispose";
 import type { AnatomyRenderer } from "../core/renderer";
 import { estimateResidentBytes, lodUrl, type LodLevel } from "./lod";
@@ -37,7 +36,7 @@ export type LoadOptions = {
 };
 
 export class AnatomyAssetManager {
-  private loader: GLTFLoader;
+  private loader: GLTFLoader | null = null;
   private draco: DRACOLoader | null = null;
   private ktx2: KTX2Loader | null = null;
   private cache = new Map<string, LoadedOrgan>();
@@ -45,6 +44,16 @@ export class AnatomyAssetManager {
   private current: LoadedOrgan | null = null;
   private maxAnisotropy: number;
   private budgetBytes: number;
+  private readonly renderer: AnatomyRenderer;
+  /**
+   * Les quatre loaders (`GLTFLoader`, Draco, KTX2, Meshopt) viennent de
+   * `three/examples/jsm` et pèsent l'essentiel du JS de ce module. Importés en
+   * haut de fichier, ils s'ajoutaient au chunk chargé dès la création du
+   * gestionnaire — y compris sur l'accueil, avant même qu'un modèle soit
+   * demandé. `import()` dynamique les isole dans leur propre chunk, chargé et
+   * évalué en parallèle du reste, au lieu d'alourdir un seul bloc de script.
+   */
+  private ready: Promise<void>;
 
   constructor(renderer: AnatomyRenderer, budgetBytes: number) {
     // L'anisotropie est ce qui empêche le détail des textures de ramper aux angles
@@ -52,6 +61,20 @@ export class AnatomyAssetManager {
     // vient du profil de qualité : sur `low` elle est le premier poste sacrifié.
     this.maxAnisotropy = renderer.maxAnisotropy;
     this.budgetBytes = budgetBytes;
+    this.renderer = renderer;
+    this.ready = this.initLoaders();
+  }
+
+  private async initLoaders() {
+    const [{ GLTFLoader }, { MeshoptDecoder }, { DRACOLoader }, { KTX2Loader }] = await Promise.all(
+      [
+        import("three/examples/jsm/loaders/GLTFLoader.js"),
+        import("three/examples/jsm/libs/meshopt_decoder.module.js"),
+        import("three/examples/jsm/loaders/DRACOLoader.js"),
+        import("three/examples/jsm/loaders/KTX2Loader.js"),
+      ],
+    );
+
     this.loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 
     // Draco et KTX2 sont câblés même si le pipeline actuel produit du meshopt +
@@ -66,8 +89,8 @@ export class AnatomyAssetManager {
       // Le transcodeur doit connaître les formats compressés du GPU pour choisir
       // sa cible (ASTC, ETC2, BC7…). Sans ça il déballerait tout en RGBA non
       // compressé, ce qui coûterait plus cher que de ne pas utiliser KTX2.
-      if (renderer.backend === "webgl2")
-        this.ktx2.detectSupport(renderer.raw as THREE.WebGLRenderer);
+      if (this.renderer.backend === "webgl2")
+        this.ktx2.detectSupport(this.renderer.raw as THREE.WebGLRenderer);
       this.loader.setKTX2Loader(this.ktx2);
     } catch {
       // Environnement sans Worker ni WASM : on garde le chemin meshopt, qui suffit
@@ -96,6 +119,7 @@ export class AnatomyAssetManager {
   }
 
   async load(baseUrl: string, { level, onProgress }: LoadOptions): Promise<LoadedOrgan> {
+    await this.ready;
     const url = lodUrl(baseUrl, level);
     const cached = this.cache.get(url);
     if (cached) {
@@ -126,7 +150,8 @@ export class AnatomyAssetManager {
     onProgress?: (progress: number) => void,
   ): Promise<LoadedOrgan> {
     let downloadedBytes = 0;
-    const gltf = await this.loader.loadAsync(url, (event) => {
+    // `ready` est déjà résolu ici : `parse` n'est appelé que depuis `load`, qui l'a attendu.
+    const gltf = await this.loader!.loadAsync(url, (event) => {
       downloadedBytes = Math.max(downloadedBytes, event.loaded);
       if (event.total > 0) onProgress?.(event.loaded / event.total);
     });

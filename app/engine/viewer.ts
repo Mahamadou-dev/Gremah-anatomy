@@ -65,6 +65,7 @@ export class AnatomyViewer {
   private materialLibrary: MaterialLibrary;
   private post: PostStack;
   private mode: ViewMode = "tissu";
+  private currentAccent = "#c99277";
 
   private container: HTMLElement;
   private callbacks: ViewerCallbacks;
@@ -193,6 +194,15 @@ export class AnatomyViewer {
     callbacks.onReady?.(this.status);
   }
 
+  /**
+   * Mémoire GPU actuellement retenue par le backend. Réservé au banc mémoire
+   * du Sprint 14 (e2e/memoire.spec.ts) et à l'overlay `?debug=1` — jamais
+   * utilisé pour piloter une décision du moteur lui-même.
+   */
+  get memoryInfo() {
+    return this.renderer.info.memory;
+  }
+
   get status(): EngineStatus {
     return {
       backend: this.renderer.backend,
@@ -317,7 +327,8 @@ export class AnatomyViewer {
     this.graph.scene.add(organ.pivot);
     organ.pivot.updateWorldMatrix(true, true);
 
-    this.dressOrgan(organ);
+    this.currentAccent = accent;
+    this.dressOrgan(organ, accent);
     if (this.crossSection) this.applyClipping(true);
     this.graph.setAccent(accent);
 
@@ -344,9 +355,9 @@ export class AnatomyViewer {
   }
 
   /** Applique les matériaux signature et repose le mode de vue courant. */
-  private dressOrgan(organ: LoadedOrgan) {
+  private dressOrgan(organ: LoadedOrgan, accent: string = this.currentAccent) {
     this.materialLibrary.reset();
-    this.materialLibrary.enhance(organ.meshes);
+    this.materialLibrary.enhance(organ.meshes, accent);
     if (this.mode !== "tissu") this.materialLibrary.setMode(organ.meshes, this.mode);
   }
 

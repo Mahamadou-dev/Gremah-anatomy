@@ -130,3 +130,58 @@ export function validerConnexion(saisie: { email?: string; motDePasse?: string }
 export function estValide(erreurs: ErreursChamps): boolean {
   return Object.keys(erreurs).length === 0;
 }
+
+/** Ce qu'un étudiant peut modifier sur son propre profil, mot de passe compris. */
+export type ModificationProfil = {
+  prenom: string;
+  nom: string;
+  pays: string;
+  region: string;
+  /** Vide = pas de changement. Rempli = nouveau mot de passe souhaité. */
+  nouveauMotDePasse: string;
+  /** Exigé dès que `nouveauMotDePasse` est rempli — confirme que c'est bien lui qui agit. */
+  motDePasseActuel: string;
+};
+
+export type ErreursModification = Partial<Record<keyof ModificationProfil, string>>;
+
+/**
+ * Revalide prénom/nom/pays/région comme à l'inscription, et le nouveau mot de
+ * passe s'il y en a un. Le mot de passe actuel n'est vérifié qu'ici pour le
+ * format ; sa correspondance avec le hachage stocké est du ressort de la route,
+ * qui seule a accès à la base.
+ */
+export function validerModification(
+  saisie: Partial<ModificationProfil>,
+  emailCourant: string,
+): ErreursModification {
+  const erreurs: ErreursModification = {};
+  const prenom = saisie.prenom?.trim() ?? "";
+  const nom = saisie.nom?.trim() ?? "";
+  const pays = saisie.pays?.trim() ?? "";
+  const region = saisie.region?.trim() ?? "";
+  const nouveauMotDePasse = saisie.nouveauMotDePasse ?? "";
+
+  if (prenom.length < 2) erreurs.prenom = "Indiquez votre prénom.";
+  if (prenom.length > 60) erreurs.prenom = "Prénom trop long.";
+  if (nom.length < 2) erreurs.nom = "Indiquez votre nom.";
+  if (nom.length > 60) erreurs.nom = "Nom trop long.";
+  if (pays.length < 2) erreurs.pays = "Choisissez un pays.";
+  if (region.length < 2) erreurs.region = "Indiquez votre région ou votre ville.";
+  if (region.length > 80) erreurs.region = "Région trop longue.";
+
+  if (nouveauMotDePasse.length > 0) {
+    if (nouveauMotDePasse.length < LONGUEUR_MIN_MOT_DE_PASSE) {
+      erreurs.nouveauMotDePasse = `Au moins ${LONGUEUR_MIN_MOT_DE_PASSE} caractères.`;
+    } else if (nouveauMotDePasse.length > LONGUEUR_MAX_MOT_DE_PASSE) {
+      erreurs.nouveauMotDePasse = "Mot de passe trop long.";
+    } else if (normaliserEmail(nouveauMotDePasse) === normaliserEmail(emailCourant)) {
+      erreurs.nouveauMotDePasse = "Le mot de passe ne peut pas être votre adresse email.";
+    }
+    if (!saisie.motDePasseActuel) {
+      erreurs.motDePasseActuel = "Confirmez votre mot de passe actuel pour le changer.";
+    }
+  }
+
+  return erreurs;
+}

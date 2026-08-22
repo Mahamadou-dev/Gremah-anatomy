@@ -58,7 +58,20 @@ export class MaterialLibrary {
    * On augmente celui qui existe — c'est aussi ce qui garantit que la vue « tissu »
    * reste exactement le rendu validé au Sprint 1.
    */
-  enhance(meshes: THREE.Mesh[]) {
+  enhance(meshes: THREE.Mesh[], accent?: string) {
+    const accentColor = accent ? new THREE.Color(accent) : null;
+    for (const material of collect(meshes)) {
+      if (!(material instanceof THREE.MeshStandardMaterial)) continue;
+      if (accentColor && isUntextured(material)) {
+        // Certains modèles importés (Sprint 12, pipeline Blender → Z-Anatomy)
+        // sortent sans matériau exploitable : blanc plat, parfois même un nom de
+        // matériau hérité d'une tout autre structure. Un organe blanc n'est pas
+        // un choix esthétique, c'est un champ vide — on le comble avec la teinte
+        // déjà choisie pour cet organe (`organes.ts`) plutôt que de l'exposer.
+        material.color.copy(accentColor).lerp(new THREE.Color(0xffffff), 0.5);
+      }
+    }
+
     const params = tissueForBudget(TISSUE_DEFAULTS, this.budget);
     if (params.subsurfaceStrength <= 0) {
       this.subsurfaceActive = false;
@@ -213,6 +226,15 @@ export class MaterialLibrary {
     this.owned.clear();
     this.originals = [];
   }
+}
+
+/** Pas de carte d'albédo et une couleur proche du blanc ou du gris neutre par
+ *  défaut de l'exportateur — donc rien à perdre à la teinter. */
+function isUntextured(material: THREE.MeshStandardMaterial) {
+  if (material.map) return false;
+  const { r, g, b } = material.color;
+  const neutral = Math.abs(r - g) < 0.02 && Math.abs(g - b) < 0.02;
+  return neutral && r > 0.55;
 }
 
 function collect(meshes: THREE.Mesh[]) {

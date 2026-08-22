@@ -11,7 +11,10 @@ import { COOKIE_SESSION, lireJeton } from "./app/lib/server/session";
  * la confrontation avec la base là où elle compte.
  *
  * L'accueil, la page à propos et les sources restent publics : ce sont eux qui
- * expliquent le projet à quelqu'un qui n'a pas encore de compte.
+ * expliquent le projet à quelqu'un qui n'a pas encore de compte. `/profil`
+ * rejoint `/atlas` dans la garde : `ProfileForm` redirige déjà côté client sur
+ * un `/api/moi` sans session, mais laisser passer la page elle-même publierait
+ * un instant de squelette vide avant la redirection — la garde l'évite.
  */
 export async function middleware(request: NextRequest) {
   const session = await lireJeton(request.cookies.get(COOKIE_SESSION)?.value);
@@ -30,5 +33,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/atlas/:path*"],
+  matcher: ["/atlas/:path*", "/profil/:path*"],
 };

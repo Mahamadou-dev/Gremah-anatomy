@@ -109,6 +109,18 @@ async function tryWebGPU(quality: QualitySettings): Promise<AnatomyRenderer | nu
   }
 }
 
+/**
+ * `?lecture-pixels=1` : réservé au test de parité visuelle du repli WebGL2
+ * (e2e/rendu-3d.spec.ts). Sans `preserveDrawingBuffer`, une lecture de pixels
+ * après coup (drawImage/toDataURL depuis la page) peut retomber sur un tampon
+ * déjà recyclé par le compositeur — indépendamment de ce qui a réellement été
+ * dessiné. Coûte une copie de tampon par frame : jamais activé hors de ce test.
+ */
+function pixelReadbackRequested(): boolean {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("lecture-pixels") === "1";
+}
+
 function createWebGL(quality: QualitySettings): AnatomyRenderer {
   const renderer = new THREE.WebGLRenderer({
     antialias: quality.antialias,
@@ -118,6 +130,7 @@ function createWebGL(quality: QualitySettings): AnatomyRenderer {
     // sert pas, le buffer est une dépense pure.
     stencil: false,
     depth: true,
+    preserveDrawingBuffer: pixelReadbackRequested(),
   });
   configure(renderer);
   const anisotropy = Math.min(quality.maxAnisotropy, renderer.capabilities.getMaxAnisotropy());

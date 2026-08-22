@@ -1109,13 +1109,24 @@ a:focus-visible {
   font-size: 12px;
   line-height: 1.58;
 }
-/* La table déborde sur un téléphone : elle défile seule, la page jamais. */
-.credit-table {
-  display: block;
+/* La table déborde sur un téléphone : c'est le conteneur qui défile, jamais
+   la page. Le défilement vit sur un `div` explicitement focusable (`tabIndex`,
+   `role="region"`) plutôt que sur la table elle-même : un axe-core (Sprint 14)
+   a relevé qu'une région défilante sans accès clavier est un vrai obstacle,
+   pas un détail — et un `<table role="region">` aurait cassé la sémantique de
+   lignes/colonnes pour un lecteur d'écran. */
+.credit-table-scroll {
   overflow-x: auto;
   width: 100%;
+}
+.credit-table-scroll:focus-visible {
+  outline: 2px solid var(--ng-sun, #f4a31c);
+  outline-offset: 2px;
+}
+.credit-table {
   border-collapse: collapse;
   font-size: 12.5px;
+  min-width: 100%;
 }
 .credit-table th,
 .credit-table td {

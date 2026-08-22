@@ -84,31 +84,38 @@ export default function CreditsPage() {
         </ul>
 
         <h2>Provenance modèle par modèle</h2>
-        <table className="credit-table">
-          <thead>
-            <tr>
-              <th>Modèle</th>
-              <th>Jeu de données</th>
-              <th>Identifiant d&apos;origine</th>
-              <th>Licence</th>
-            </tr>
-          </thead>
-          <tbody>
-            {modeles.map(([id, provenance]) => {
-              const source = SOURCES_MODELES[provenance.source];
-              return (
-                <tr key={id} data-a-tracer={provenance.verifie ? undefined : ""}>
-                  <td>
-                    <code>{id}</code>
-                  </td>
-                  <td>{source?.nom ?? provenance.source}</td>
-                  <td>{provenance.identifiantOrigine ?? "—"}</td>
-                  <td>{LICENCES[source?.licence ?? "indeterminee"].nom}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div
+          className="credit-table-scroll"
+          tabIndex={0}
+          role="region"
+          aria-label="Provenance modèle par modèle, défilement horizontal"
+        >
+          <table className="credit-table">
+            <thead>
+              <tr>
+                <th>Modèle</th>
+                <th>Jeu de données</th>
+                <th>Identifiant d&apos;origine</th>
+                <th>Licence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modeles.map(([id, provenance]) => {
+                const source = SOURCES_MODELES[provenance.source];
+                return (
+                  <tr key={id} data-a-tracer={provenance.verifie ? undefined : ""}>
+                    <td>
+                      <code>{id}</code>
+                    </td>
+                    <td>{source?.nom ?? provenance.source}</td>
+                    <td>{provenance.identifiantOrigine ?? "—"}</td>
+                    <td>{LICENCES[source?.licence ?? "indeterminee"].nom}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
 
         {MODELES_A_TRACER.length > 0 ? (
           <div className="disclaimer-block warn">
