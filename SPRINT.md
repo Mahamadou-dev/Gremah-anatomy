@@ -50,7 +50,7 @@ revenir en arrière.
 | 5   | Contenu sourcé          | 🟨   | Structures → **Sprint 12** ; anglais → **Sprint 15** |
 | 10  | Finition & lancement    | 🟨   | Onboarding, WCAG, Lighthouse → **Sprint 27**         |
 | 11  | Accueil & comptes       | 🟨   | Cycle de vie du compte → **Sprint 13**               |
-| 12  | Bibliothèque anatomique | 🟨   | **En cours** — 9 modèles sur 78                      |
+| 12  | Bibliothèque anatomique | 🟨   | **En cours** — 57 structures sur 78 (voir Suivi)     |
 
 ### Devant — sprints 13 à 28, dans l'ordre
 
